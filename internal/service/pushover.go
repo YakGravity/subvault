@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"subtrackr/internal/i18n"
 	"subtrackr/internal/models"
 	"time"
 )
@@ -14,13 +15,38 @@ import (
 // PushoverService handles sending notifications via Pushover
 type PushoverService struct {
 	settingsService *SettingsService
+	i18nService     *i18n.I18nService
 }
 
 // NewPushoverService creates a new Pushover service
-func NewPushoverService(settingsService *SettingsService) *PushoverService {
-	return &PushoverService{
+func NewPushoverService(settingsService *SettingsService, i18nService ...*i18n.I18nService) *PushoverService {
+	svc := &PushoverService{
 		settingsService: settingsService,
 	}
+	if len(i18nService) > 0 {
+		svc.i18nService = i18nService[0]
+	}
+	return svc
+}
+
+// t translates a message ID using the user's language setting
+func (p *PushoverService) t(messageID string) string {
+	if p.i18nService == nil {
+		return messageID
+	}
+	lang := p.settingsService.GetLanguage()
+	localizer := p.i18nService.NewLocalizer(lang)
+	return p.i18nService.T(localizer, messageID)
+}
+
+// tPlural translates a message ID with plural support
+func (p *PushoverService) tPlural(messageID string, count int, data map[string]interface{}) string {
+	if p.i18nService == nil {
+		return messageID
+	}
+	lang := p.settingsService.GetLanguage()
+	localizer := p.i18nService.NewLocalizer(lang)
+	return p.i18nService.TPluralCount(localizer, messageID, count, data)
 }
 
 // PushoverResponse represents the response from Pushover API
@@ -99,22 +125,21 @@ func (p *PushoverService) SendHighCostAlert(subscription *models.Subscription) e
 	currencySymbol := p.settingsService.GetCurrencySymbol()
 
 	// Build message
-	message := "⚠️ High Cost Alert\n\n"
-	message += fmt.Sprintf("Subscription: %s\n", subscription.Name)
-	message += fmt.Sprintf("Cost: %s%.2f %s\n", currencySymbol, subscription.Cost, subscription.Schedule)
-	message += fmt.Sprintf("Monthly Cost: %s%.2f\n", currencySymbol, subscription.MonthlyCost())
+	message := fmt.Sprintf("⚠️ %s\n\n", p.t("pushover_high_cost_alert"))
+	message += fmt.Sprintf("%s %s\n", p.t("email_name"), subscription.Name)
+	message += fmt.Sprintf("%s %s%.2f %s\n", p.t("pushover_cost"), currencySymbol, subscription.Cost, subscription.Schedule)
+	message += fmt.Sprintf("%s %s%.2f\n", p.t("pushover_monthly_cost"), currencySymbol, subscription.MonthlyCost())
 	if subscription.Category.Name != "" {
-		message += fmt.Sprintf("Category: %s\n", subscription.Category.Name)
+		message += fmt.Sprintf("%s %s\n", p.t("pushover_category"), subscription.Category.Name)
 	}
 	if subscription.RenewalDate != nil {
-		message += fmt.Sprintf("Next Renewal: %s\n", subscription.RenewalDate.Format("January 2, 2006"))
+		message += fmt.Sprintf("%s %s\n", p.t("pushover_next_renewal"), subscription.RenewalDate.Format("January 2, 2006"))
 	}
 	if subscription.URL != "" {
-		message += fmt.Sprintf("URL: %s", subscription.URL)
+		message += fmt.Sprintf("%s %s", p.t("pushover_url"), subscription.URL)
 	}
 
-	title := fmt.Sprintf("High Cost Alert: %s", subscription.Name)
-	// Priority 1 = high priority (with sound and vibration)
+	title := fmt.Sprintf("%s: %s", p.t("pushover_high_cost_alert"), subscription.Name)
 	return p.SendNotification(title, message, 1)
 }
 
@@ -129,28 +154,24 @@ func (p *PushoverService) SendRenewalReminder(subscription *models.Subscription,
 	// Get currency symbol
 	currencySymbol := p.settingsService.GetCurrencySymbol()
 
-	// Build message
-	daysText := "days"
-	if daysUntilRenewal == 1 {
-		daysText = "day"
-	}
-	message := "🔔 Renewal Reminder\n\n"
-	message += fmt.Sprintf("Your subscription %s will renew in %d %s.\n\n", subscription.Name, daysUntilRenewal, daysText)
-	message += "Subscription Details:\n"
-	message += fmt.Sprintf("Cost: %s%.2f %s\n", currencySymbol, subscription.Cost, subscription.Schedule)
-	message += fmt.Sprintf("Monthly Cost: %s%.2f\n", currencySymbol, subscription.MonthlyCost())
+	renewalText := p.tPlural("email_renewal_reminder", daysUntilRenewal, map[string]interface{}{"Name": subscription.Name})
+
+	message := fmt.Sprintf("🔔 %s\n\n", p.t("pushover_renewal_reminder"))
+	message += renewalText + "\n\n"
+	message += p.t("pushover_sub_details") + "\n"
+	message += fmt.Sprintf("%s %s%.2f %s\n", p.t("pushover_cost"), currencySymbol, subscription.Cost, subscription.Schedule)
+	message += fmt.Sprintf("%s %s%.2f\n", p.t("pushover_monthly_cost"), currencySymbol, subscription.MonthlyCost())
 	if subscription.Category.Name != "" {
-		message += fmt.Sprintf("Category: %s\n", subscription.Category.Name)
+		message += fmt.Sprintf("%s %s\n", p.t("pushover_category"), subscription.Category.Name)
 	}
 	if subscription.RenewalDate != nil {
-		message += fmt.Sprintf("Renewal Date: %s\n", subscription.RenewalDate.Format("January 2, 2006"))
+		message += fmt.Sprintf("%s %s\n", p.t("pushover_renewal_date"), subscription.RenewalDate.Format("January 2, 2006"))
 	}
 	if subscription.URL != "" {
-		message += fmt.Sprintf("URL: %s", subscription.URL)
+		message += fmt.Sprintf("%s %s", p.t("pushover_url"), subscription.URL)
 	}
 
-	title := fmt.Sprintf("Renewal Reminder: %s", subscription.Name)
-	// Priority 0 = normal priority
+	title := fmt.Sprintf("%s: %s", p.t("pushover_renewal_reminder"), subscription.Name)
 	return p.SendNotification(title, message, 0)
 }
 
@@ -165,28 +186,24 @@ func (p *PushoverService) SendCancellationReminder(subscription *models.Subscrip
 	// Get currency symbol
 	currencySymbol := p.settingsService.GetCurrencySymbol()
 
-	// Build message
-	daysText := "days"
-	if daysUntilCancellation == 1 {
-		daysText = "day"
-	}
-	message := "⚠️ Cancellation Reminder\n\n"
-	message += fmt.Sprintf("Your subscription %s will end in %d %s.\n\n", subscription.Name, daysUntilCancellation, daysText)
-	message += "Subscription Details:\n"
-	message += fmt.Sprintf("Cost: %s%.2f %s\n", currencySymbol, subscription.Cost, subscription.Schedule)
-	message += fmt.Sprintf("Monthly Cost: %s%.2f\n", currencySymbol, subscription.MonthlyCost())
+	cancellationText := p.tPlural("email_cancellation_reminder", daysUntilCancellation, map[string]interface{}{"Name": subscription.Name})
+
+	message := fmt.Sprintf("⚠️ %s\n\n", p.t("pushover_cancellation_reminder"))
+	message += cancellationText + "\n\n"
+	message += p.t("pushover_sub_details") + "\n"
+	message += fmt.Sprintf("%s %s%.2f %s\n", p.t("pushover_cost"), currencySymbol, subscription.Cost, subscription.Schedule)
+	message += fmt.Sprintf("%s %s%.2f\n", p.t("pushover_monthly_cost"), currencySymbol, subscription.MonthlyCost())
 	if subscription.Category.Name != "" {
-		message += fmt.Sprintf("Category: %s\n", subscription.Category.Name)
+		message += fmt.Sprintf("%s %s\n", p.t("pushover_category"), subscription.Category.Name)
 	}
 	if subscription.CancellationDate != nil {
-		message += fmt.Sprintf("Cancellation Date: %s\n", subscription.CancellationDate.Format("January 2, 2006"))
+		message += fmt.Sprintf("%s %s\n", p.t("pushover_cancellation_date"), subscription.CancellationDate.Format("January 2, 2006"))
 	}
 	if subscription.URL != "" {
-		message += fmt.Sprintf("URL: %s", subscription.URL)
+		message += fmt.Sprintf("%s %s", p.t("pushover_url"), subscription.URL)
 	}
 
-	title := fmt.Sprintf("Cancellation Reminder: %s", subscription.Name)
-	// Priority 0 = normal priority
+	title := fmt.Sprintf("%s: %s", p.t("pushover_cancellation_reminder"), subscription.Name)
 	return p.SendNotification(title, message, 0)
 }
 

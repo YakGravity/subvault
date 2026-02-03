@@ -415,12 +415,39 @@ func (s *SettingsService) GetPushoverConfig() (*models.PushoverConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var config models.PushoverConfig
 	err = json.Unmarshal([]byte(data), &config)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &config, nil
+}
+
+// SupportedLanguages defines the available UI languages
+var SupportedLanguages = []string{"en", "de"}
+
+// SetLanguage saves the language preference
+func (s *SettingsService) SetLanguage(lang string) error {
+	isValid := false
+	for _, l := range SupportedLanguages {
+		if lang == l {
+			isValid = true
+			break
+		}
+	}
+	if !isValid {
+		return fmt.Errorf("invalid language: %s", lang)
+	}
+	return s.repo.Set("language", lang)
+}
+
+// GetLanguage retrieves the language preference
+func (s *SettingsService) GetLanguage() string {
+	lang, err := s.repo.Get("language")
+	if err != nil || lang == "" {
+		return "en"
+	}
+	return lang
 }

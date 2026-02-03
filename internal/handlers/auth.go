@@ -53,10 +53,12 @@ func (h *AuthHandler) ShowLoginPage(c *gin.Context) {
 		redirect = "/"
 	}
 
-	c.HTML(http.StatusOK, "login.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Redirect": redirect,
 		"Error":    c.Query("error"),
 	})
+	c.HTML(http.StatusOK, "login.html", data)
 }
 
 // Login handles login form submission
@@ -74,7 +76,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	storedUsername, err := h.settingsService.GetAuthUsername()
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "login-error.html", gin.H{
-			"Error": "Authentication system error",
+			"Error": tr(c, "auth_error_system", "Authentication system error"),
 		})
 		return
 	}
@@ -90,7 +92,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	// Only fail after both checks to prevent username enumeration via timing
 	if !validUsername || !validPassword {
 		c.HTML(http.StatusUnauthorized, "login-error.html", gin.H{
-			"Error": "Invalid username or password",
+			"Error": tr(c, "auth_error_invalid_credentials", "Invalid username or password"),
 		})
 		return
 	}
@@ -98,7 +100,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	// Create session
 	if err := h.sessionService.CreateSession(c.Writer, c.Request, rememberMe); err != nil {
 		c.HTML(http.StatusInternalServerError, "login-error.html", gin.H{
-			"Error": "Failed to create session",
+			"Error": tr(c, "auth_error_session", "Failed to create session"),
 		})
 		return
 	}
@@ -120,7 +122,8 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 
 // ShowForgotPasswordPage displays the forgot password page
 func (h *AuthHandler) ShowForgotPasswordPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "forgot-password.html", gin.H{})
+	data := baseTemplateData(c)
+	c.HTML(http.StatusOK, "forgot-password.html", data)
 }
 
 // ForgotPassword handles forgot password request
@@ -128,18 +131,18 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 	// Generate reset token
 	token, err := h.settingsService.GenerateResetToken()
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", gin.H{
-			"Error": "Failed to generate reset token",
-		})
+		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
+			"Error": tr(c, "auth_error_generate_token", "Failed to generate reset token"),
+		}))
 		return
 	}
 
 	// Check if SMTP is configured
 	_, err = h.settingsService.GetSMTPConfig()
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", gin.H{
-			"Error": "Email is not configured. Please contact administrator.",
-		})
+		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
+			"Error": tr(c, "auth_error_email_not_configured", "Email is not configured. Please contact administrator."),
+		}))
 		return
 	}
 
@@ -163,15 +166,15 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 
 	err = h.emailService.SendEmail(subject, body)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": "Failed to send reset email: " + err.Error(),
-		})
+		}))
 		return
 	}
 
-	c.HTML(http.StatusOK, "forgot-password-success.html", gin.H{
-		"Message": "Password reset link has been sent to your email",
-	})
+	c.HTML(http.StatusOK, "forgot-password-success.html", mergeTemplateData(baseTemplateData(c), gin.H{
+		"Message": tr(c, "auth_success_reset_sent", "Password reset link has been sent to your email"),
+	}))
 }
 
 // ShowResetPasswordPage displays the reset password page
@@ -192,9 +195,11 @@ func (h *AuthHandler) ShowResetPasswordPage(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "reset-password.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Token": token,
 	})
+	c.HTML(http.StatusOK, "reset-password.html", data)
 }
 
 // ResetPassword handles password reset
@@ -205,40 +210,40 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 
 	// Validate password length FIRST (before checking if they match)
 	if len(newPassword) < 8 {
-		c.HTML(http.StatusBadRequest, "reset-password-error.html", gin.H{
-			"Error": "Password must be at least 8 characters long",
-		})
+		c.HTML(http.StatusBadRequest, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
+			"Error": tr(c, "auth_error_password_short", "Password must be at least 8 characters long"),
+		}))
 		return
 	}
 
 	// Then validate passwords match
 	if newPassword != confirmPassword {
-		c.HTML(http.StatusBadRequest, "reset-password-error.html", gin.H{
-			"Error": "Passwords do not match",
-		})
+		c.HTML(http.StatusBadRequest, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
+			"Error": tr(c, "auth_error_password_mismatch", "Passwords do not match"),
+		}))
 		return
 	}
 
 	// Validate token
 	if err := h.settingsService.ValidateResetToken(token); err != nil {
-		c.HTML(http.StatusBadRequest, "reset-password-error.html", gin.H{
-			"Error": "Invalid or expired reset token",
-		})
+		c.HTML(http.StatusBadRequest, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
+			"Error": tr(c, "auth_error_invalid_token", "Invalid or expired reset token"),
+		}))
 		return
 	}
 
 	// Update password
 	if err := h.settingsService.SetAuthPassword(newPassword); err != nil {
-		c.HTML(http.StatusInternalServerError, "reset-password-error.html", gin.H{
-			"Error": "Failed to update password",
-		})
+		c.HTML(http.StatusInternalServerError, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
+			"Error": tr(c, "auth_error_update_password", "Failed to update password"),
+		}))
 		return
 	}
 
 	// Clear reset token
 	h.settingsService.ClearResetToken()
 
-	c.HTML(http.StatusOK, "reset-password-success.html", gin.H{
-		"Message": "Password reset successfully. You can now login with your new password.",
-	})
+	c.HTML(http.StatusOK, "reset-password-success.html", mergeTemplateData(baseTemplateData(c), gin.H{
+		"Message": tr(c, "auth_success_password_reset", "Password reset successfully. You can now login with your new password."),
+	}))
 }

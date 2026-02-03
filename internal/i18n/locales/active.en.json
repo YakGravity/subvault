@@ -1,0 +1,922 @@
+{
+  "nav_dashboard": {
+    "other": "Dashboard"
+  },
+  "nav_subscriptions": {
+    "other": "Subscriptions"
+  },
+  "nav_analytics": {
+    "other": "Analytics"
+  },
+  "nav_calendar": {
+    "other": "Calendar"
+  },
+  "nav_add": {
+    "other": "Add"
+  },
+  "nav_add_subscription": {
+    "other": "Add Subscription"
+  },
+  "settings_title": {
+    "other": "Settings"
+  },
+  "settings_subtitle": {
+    "other": "Manage your SubTrackr preferences and data"
+  },
+  "settings_language": {
+    "other": "Language"
+  },
+  "settings_language_desc": {
+    "other": "Choose your preferred language"
+  },
+  "lang_en": {
+    "other": "English"
+  },
+  "lang_de": {
+    "other": "Deutsch"
+  },
+  "settings_appearance": {
+    "other": "Appearance"
+  },
+  "settings_appearance_desc": {
+    "other": "Personalize your SubTrackr experience with beautiful themes"
+  },
+  "theme_default": {
+    "other": "Default"
+  },
+  "theme_default_desc": {
+    "other": "Clean and professional"
+  },
+  "theme_dark": {
+    "other": "Dark"
+  },
+  "theme_dark_desc": {
+    "other": "Easy on the eyes"
+  },
+  "theme_dark_classic": {
+    "other": "Dark Classic"
+  },
+  "theme_dark_classic_desc": {
+    "other": "Original dark mode"
+  },
+  "theme_christmas": {
+    "other": "Christmas"
+  },
+  "theme_christmas_desc": {
+    "other": "Festive and jolly!"
+  },
+  "theme_midnight": {
+    "other": "Midnight"
+  },
+  "theme_midnight_desc": {
+    "other": "Deep and mysterious"
+  },
+  "theme_ocean": {
+    "other": "Ocean"
+  },
+  "theme_ocean_desc": {
+    "other": "Cool and refreshing"
+  },
+  "settings_export": {
+    "other": "Export Data"
+  },
+  "settings_export_desc": {
+    "other": "Download your subscription data in various formats"
+  },
+  "btn_export_csv": {
+    "other": "Export as CSV"
+  },
+  "btn_export_json": {
+    "other": "Export as JSON"
+  },
+  "settings_data_mgmt": {
+    "other": "Data Management"
+  },
+  "settings_backup": {
+    "other": "Backup Data"
+  },
+  "settings_backup_desc": {
+    "other": "Create a backup of all your subscription data"
+  },
+  "btn_create_backup": {
+    "other": "Create Backup"
+  },
+  "settings_clear_data": {
+    "other": "Clear All Data"
+  },
+  "settings_clear_data_desc": {
+    "other": "Permanently delete all subscription data"
+  },
+  "btn_clear_data": {
+    "other": "Clear Data"
+  },
+  "confirm_clear_data": {
+    "other": "Are you sure you want to delete all subscription data? This action cannot be undone."
+  },
+  "settings_email_notifications": {
+    "other": "Email Notifications"
+  },
+  "settings_smtp_config": {
+    "other": "SMTP Configuration"
+  },
+  "smtp_host": {
+    "other": "SMTP Host"
+  },
+  "smtp_port": {
+    "other": "SMTP Port"
+  },
+  "smtp_username": {
+    "other": "Username"
+  },
+  "smtp_password": {
+    "other": "Password"
+  },
+  "smtp_from_email": {
+    "other": "From Email"
+  },
+  "smtp_from_name": {
+    "other": "From Name"
+  },
+  "smtp_to_email": {
+    "other": "To Email (Notification Recipient)"
+  },
+  "smtp_to_email_hint": {
+    "other": "This is where notification emails will be sent"
+  },
+  "btn_test_connection": {
+    "other": "Test Connection"
+  },
+  "btn_save_smtp": {
+    "other": "Save SMTP Settings"
+  },
+  "settings_renewal_reminders": {
+    "other": "Renewal Reminders"
+  },
+  "settings_renewal_reminders_desc": {
+    "other": "Get notified before subscriptions renew"
+  },
+  "settings_high_cost_alerts": {
+    "other": "High Cost Alerts"
+  },
+  "settings_high_cost_alerts_desc": {
+    "other": "Alert when adding expensive subscriptions"
+  },
+  "settings_high_cost_threshold": {
+    "other": "High Cost Threshold"
+  },
+  "settings_high_cost_threshold_desc": {
+    "other": "Monthly cost threshold for high cost alerts (in {{.Symbol}})"
+  },
+  "settings_days_before_renewal": {
+    "other": "Days Before Renewal"
+  },
+  "settings_days_before_renewal_desc": {
+    "other": "How many days before renewal to send reminder"
+  },
+  "settings_cancellation_reminders": {
+    "other": "Cancellation Reminders"
+  },
+  "settings_cancellation_reminders_desc": {
+    "other": "Get notified before subscriptions end"
+  },
+  "settings_days_before_cancellation": {
+    "other": "Days Before Cancellation"
+  },
+  "settings_days_before_cancellation_desc": {
+    "other": "How many days before cancellation to send reminder"
+  },
+  "settings_pushover": {
+    "other": "Pushover Notifications"
+  },
+  "settings_pushover_desc": {
+    "other": "Receive push notifications on your mobile device via Pushover"
+  },
+  "settings_pushover_config": {
+    "other": "Pushover Configuration"
+  },
+  "pushover_user_key": {
+    "other": "User Key"
+  },
+  "pushover_user_key_hint": {
+    "other": "Get your User Key from"
+  },
+  "pushover_app_token": {
+    "other": "Application Token"
+  },
+  "pushover_app_token_hint": {
+    "other": "Create an application at"
+  },
+  "btn_save_pushover": {
+    "other": "Save Pushover Settings"
+  },
+  "settings_security": {
+    "other": "Security"
+  },
+  "settings_security_desc": {
+    "other": "Protect your SubTrackr instance with login authentication"
+  },
+  "settings_require_login": {
+    "other": "Require Login"
+  },
+  "settings_require_login_desc": {
+    "other": "Enable authentication to protect your data"
+  },
+  "auth_enabled_msg": {
+    "other": "Authentication is enabled"
+  },
+  "auth_username_label": {
+    "other": "Username"
+  },
+  "auth_password_label": {
+    "other": "Password"
+  },
+  "auth_confirm_password": {
+    "other": "Confirm Password"
+  },
+  "auth_min_chars": {
+    "other": "Minimum 8 characters"
+  },
+  "auth_email_required_hint": {
+    "other": "Email must be configured first for password recovery."
+  },
+  "auth_configure_email_first": {
+    "other": "Please configure email settings above before enabling login."
+  },
+  "btn_enable_auth": {
+    "other": "Enable Authentication"
+  },
+  "btn_disable_auth": {
+    "other": "Disable Authentication"
+  },
+  "settings_currency": {
+    "other": "Currency"
+  },
+  "settings_currency_desc": {
+    "other": "Choose your preferred currency for displaying subscription costs"
+  },
+  "settings_categories": {
+    "other": "Categories"
+  },
+  "settings_categories_desc": {
+    "other": "Manage your subscription categories"
+  },
+  "settings_add_category": {
+    "other": "Add New Category"
+  },
+  "category_name_label": {
+    "other": "Category Name"
+  },
+  "btn_add_category": {
+    "other": "Add Category"
+  },
+  "no_categories": {
+    "other": "No categories found."
+  },
+  "settings_api_keys": {
+    "other": "API Keys"
+  },
+  "settings_api_keys_desc": {
+    "other": "Create API keys to access SubTrackr from external applications"
+  },
+  "settings_create_api_key": {
+    "other": "Create New API Key"
+  },
+  "api_key_name_label": {
+    "other": "Key Name"
+  },
+  "btn_generate_api_key": {
+    "other": "Generate API Key"
+  },
+  "settings_about": {
+    "other": "About SubTrackr"
+  },
+  "about_version": {
+    "other": "Version"
+  },
+  "about_build": {
+    "other": "Build"
+  },
+  "about_database": {
+    "other": "Database"
+  },
+  "dashboard_monthly_spend": {
+    "other": "Monthly Spend"
+  },
+  "dashboard_annual_spend": {
+    "other": "Annual Spend"
+  },
+  "dashboard_active_subs": {
+    "other": "Active Subscriptions"
+  },
+  "dashboard_monthly_savings": {
+    "other": "Monthly Savings"
+  },
+  "dashboard_from_cancellations": {
+    "other": "From cancellations"
+  },
+  "dashboard_spending_by_category": {
+    "other": "Spending by Category"
+  },
+  "dashboard_no_category_data": {
+    "other": "No category spending data found."
+  },
+  "dashboard_add_subs_hint": {
+    "other": "Add some active subscriptions to see category breakdown."
+  },
+  "dashboard_all_subscriptions": {
+    "other": "All Subscriptions"
+  },
+  "subscriptions_title": {
+    "other": "Subscriptions"
+  },
+  "analytics_title": {
+    "other": "Analytics"
+  },
+  "calendar_title": {
+    "other": "Calendar"
+  },
+  "login_title": {
+    "other": "Login"
+  },
+  "login_sign_in": {
+    "other": "Sign in to SubTrackr"
+  },
+  "login_username": {
+    "other": "Username"
+  },
+  "login_password": {
+    "other": "Password"
+  },
+  "login_remember_me": {
+    "other": "Remember me"
+  },
+  "login_forgot_password": {
+    "other": "Forgot password?"
+  },
+  "btn_sign_in": {
+    "other": "Sign In"
+  },
+  "forgot_password_title": {
+    "other": "Forgot Password"
+  },
+  "forgot_password_desc": {
+    "other": "Enter your details and we'll send you a password reset link."
+  },
+  "btn_send_reset_link": {
+    "other": "Send Reset Link"
+  },
+  "forgot_password_back": {
+    "other": "Back to login"
+  },
+  "reset_password_title": {
+    "other": "Reset Password"
+  },
+  "reset_password_new": {
+    "other": "New Password"
+  },
+  "reset_password_confirm": {
+    "other": "Confirm Password"
+  },
+  "btn_reset_password": {
+    "other": "Reset Password"
+  },
+  "error_page_title": {
+    "other": "Error"
+  },
+  "error_something_wrong": {
+    "other": "Something went wrong"
+  },
+  "error_go_back": {
+    "other": "Go Back"
+  },
+  "error_go_dashboard": {
+    "other": "Go to Dashboard"
+  },
+  "sub_form_add_title": {
+    "other": "Add Subscription"
+  },
+  "sub_form_edit_title": {
+    "other": "Edit Subscription"
+  },
+  "sub_form_name": {
+    "other": "Subscription Name"
+  },
+  "sub_form_category": {
+    "other": "Category"
+  },
+  "sub_form_select_category": {
+    "other": "Select a category"
+  },
+  "sub_form_cost": {
+    "other": "Cost"
+  },
+  "sub_form_currency": {
+    "other": "Currency"
+  },
+  "sub_form_schedule": {
+    "other": "Billing Schedule"
+  },
+  "sub_form_status": {
+    "other": "Status"
+  },
+  "sub_form_start_date": {
+    "other": "Start Date"
+  },
+  "sub_form_renewal_date": {
+    "other": "Renewal Date"
+  },
+  "sub_form_cancellation_date": {
+    "other": "Cancellation Date"
+  },
+  "sub_form_payment_method": {
+    "other": "Payment Method"
+  },
+  "sub_form_account": {
+    "other": "Account"
+  },
+  "sub_form_website": {
+    "other": "Website URL"
+  },
+  "sub_form_icon_url": {
+    "other": "Icon URL"
+  },
+  "sub_form_notes": {
+    "other": "Notes"
+  },
+  "sub_form_usage": {
+    "other": "Usage Level"
+  },
+  "btn_save": {
+    "other": "Save"
+  },
+  "btn_cancel": {
+    "other": "Cancel"
+  },
+  "btn_delete": {
+    "other": "Delete"
+  },
+  "btn_edit": {
+    "other": "Edit"
+  },
+  "schedule_daily": {
+    "other": "Daily"
+  },
+  "schedule_weekly": {
+    "other": "Weekly"
+  },
+  "schedule_monthly": {
+    "other": "Monthly"
+  },
+  "schedule_quarterly": {
+    "other": "Quarterly"
+  },
+  "schedule_annual": {
+    "other": "Annual"
+  },
+  "status_active": {
+    "other": "Active"
+  },
+  "status_cancelled": {
+    "other": "Cancelled"
+  },
+  "status_paused": {
+    "other": "Paused"
+  },
+  "status_trial": {
+    "other": "Trial"
+  },
+  "usage_heavy": {
+    "other": "Heavy"
+  },
+  "usage_moderate": {
+    "other": "Moderate"
+  },
+  "usage_light": {
+    "other": "Light"
+  },
+  "usage_rarely": {
+    "other": "Rarely"
+  },
+  "sub_list_name": {
+    "other": "Name"
+  },
+  "sub_list_cost": {
+    "other": "Cost"
+  },
+  "sub_list_schedule": {
+    "other": "Schedule"
+  },
+  "sub_list_status": {
+    "other": "Status"
+  },
+  "sub_list_empty": {
+    "other": "No subscriptions found."
+  },
+  "sub_list_empty_hint": {
+    "other": "Add your first subscription to get started."
+  },
+  "analytics_spending_breakdown": {
+    "other": "Spending Breakdown"
+  },
+  "analytics_monthly_by_category": {
+    "other": "Monthly Spending by Category"
+  },
+  "analytics_cost_distribution": {
+    "other": "Cost Distribution"
+  },
+  "analytics_schedule_breakdown": {
+    "other": "Schedule Breakdown"
+  },
+  "analytics_total_monthly": {
+    "other": "Total Monthly"
+  },
+  "analytics_total_annual": {
+    "other": "Total Annual"
+  },
+  "analytics_avg_per_sub": {
+    "other": "Average Per Subscription"
+  },
+  "calendar_today": {
+    "other": "Today"
+  },
+  "calendar_renewal_events": {
+    "other": "Renewal Events"
+  },
+  "calendar_no_events": {
+    "other": "No renewal events this month."
+  },
+  "api_docs_title": {
+    "other": "API Documentation"
+  },
+  "api_docs_auth": {
+    "other": "Authentication"
+  },
+  "api_docs_auth_desc": {
+    "other": "All API requests require authentication using an API key. Include your API key in the request headers:"
+  },
+  "api_docs_endpoints": {
+    "other": "API Endpoints"
+  },
+  "api_docs_subscriptions": {
+    "other": "Subscriptions"
+  },
+  "api_docs_stats_export": {
+    "other": "Statistics & Export"
+  },
+  "api_docs_examples": {
+    "other": "Example Requests"
+  },
+  "api_docs_list_subs": {
+    "other": "List Subscriptions"
+  },
+  "api_docs_create_sub": {
+    "other": "Create Subscription"
+  },
+  "api_docs_get_stats": {
+    "other": "Get Statistics"
+  },
+  "api_docs_response": {
+    "other": "Response:"
+  },
+  "api_docs_resources": {
+    "other": "Additional Resources"
+  },
+  "api_docs_key_info": {
+    "other": "Include the API key in the"
+  },
+  "api_docs_key_header": {
+    "other": "header for all requests."
+  },
+  "api_docs_method": {
+    "other": "Method"
+  },
+  "api_docs_endpoint": {
+    "other": "Endpoint"
+  },
+  "api_docs_description": {
+    "other": "Description"
+  },
+  "api_list_all_subs": {
+    "other": "List all subscriptions"
+  },
+  "api_create_sub": {
+    "other": "Create a new subscription"
+  },
+  "api_get_sub_details": {
+    "other": "Get subscription details"
+  },
+  "api_update_sub": {
+    "other": "Update subscription"
+  },
+  "api_delete_sub": {
+    "other": "Delete subscription"
+  },
+  "api_get_stats": {
+    "other": "Get subscription statistics"
+  },
+  "api_export_csv": {
+    "other": "Export subscriptions as CSV"
+  },
+  "api_export_json": {
+    "other": "Export subscriptions as JSON"
+  },
+  "email_high_cost_title": {
+    "other": "High Cost Subscription Alert"
+  },
+  "email_high_cost_alert": {
+    "other": "A new high-cost subscription has been added to your SubTrackr account."
+  },
+  "email_sub_details": {
+    "other": "Subscription Details"
+  },
+  "email_name": {
+    "other": "Name:"
+  },
+  "email_cost": {
+    "other": "Cost:"
+  },
+  "email_monthly_cost": {
+    "other": "Monthly Cost:"
+  },
+  "email_category": {
+    "other": "Category:"
+  },
+  "email_next_renewal": {
+    "other": "Next Renewal:"
+  },
+  "email_url": {
+    "other": "URL:"
+  },
+  "email_footer_auto": {
+    "other": "This is an automated notification from SubTrackr."
+  },
+  "email_footer_manage": {
+    "other": "You can manage your notification preferences in the Settings page."
+  },
+  "email_renewal_title": {
+    "other": "Subscription Renewal Reminder"
+  },
+  "email_renewal_reminder": {
+    "one": "Your subscription {{.Name}} will renew in {{.Count}} day.",
+    "other": "Your subscription {{.Name}} will renew in {{.Count}} days."
+  },
+  "email_renewal_date": {
+    "other": "Renewal Date:"
+  },
+  "email_cancellation_title": {
+    "other": "Subscription Cancellation Reminder"
+  },
+  "email_cancellation_reminder": {
+    "one": "Your subscription {{.Name}} will end in {{.Count}} day.",
+    "other": "Your subscription {{.Name}} will end in {{.Count}} days."
+  },
+  "email_cancellation_date": {
+    "other": "Cancellation Date:"
+  },
+  "pushover_high_cost_alert": {
+    "other": "High Cost Alert"
+  },
+  "pushover_renewal_reminder": {
+    "other": "Renewal Reminder"
+  },
+  "pushover_cancellation_reminder": {
+    "other": "Cancellation Reminder"
+  },
+  "pushover_sub_details": {
+    "other": "Subscription Details:"
+  },
+  "pushover_cost": {
+    "other": "Cost:"
+  },
+  "pushover_monthly_cost": {
+    "other": "Monthly Cost:"
+  },
+  "pushover_category": {
+    "other": "Category:"
+  },
+  "pushover_next_renewal": {
+    "other": "Next Renewal:"
+  },
+  "pushover_renewal_date": {
+    "other": "Renewal Date:"
+  },
+  "pushover_cancellation_date": {
+    "other": "Cancellation Date:"
+  },
+  "pushover_url": {
+    "other": "URL:"
+  },
+  "month_january": {
+    "other": "January"
+  },
+  "month_february": {
+    "other": "February"
+  },
+  "month_march": {
+    "other": "March"
+  },
+  "month_april": {
+    "other": "April"
+  },
+  "month_may": {
+    "other": "May"
+  },
+  "month_june": {
+    "other": "June"
+  },
+  "month_july": {
+    "other": "July"
+  },
+  "month_august": {
+    "other": "August"
+  },
+  "month_september": {
+    "other": "September"
+  },
+  "month_october": {
+    "other": "October"
+  },
+  "month_november": {
+    "other": "November"
+  },
+  "month_december": {
+    "other": "December"
+  },
+  "weekday_monday": {
+    "other": "Mon"
+  },
+  "weekday_tuesday": {
+    "other": "Tue"
+  },
+  "weekday_wednesday": {
+    "other": "Wed"
+  },
+  "weekday_thursday": {
+    "other": "Thu"
+  },
+  "weekday_friday": {
+    "other": "Fri"
+  },
+  "weekday_saturday": {
+    "other": "Sat"
+  },
+  "weekday_sunday": {
+    "other": "Sun"
+  },
+  "loading_api_keys": {
+    "other": "Loading API keys..."
+  },
+  "confirm_delete_category": {
+    "other": "Delete this category?"
+  },
+  "analytics_subscription_status": {
+    "other": "Subscription Status"
+  },
+  "analytics_upcoming_renewals": {
+    "other": "Upcoming Renewals"
+  },
+  "analytics_cost_analysis": {
+    "other": "Cost Analysis"
+  },
+  "analytics_avg_daily_cost": {
+    "other": "Average Daily Cost"
+  },
+  "analytics_total_monthly_cost": {
+    "other": "Total Monthly Cost"
+  },
+  "sub_list_sort_name": {
+    "other": "Sort by Name"
+  },
+  "sub_list_sort_cost": {
+    "other": "Sort by Cost"
+  },
+  "sub_list_sort_date": {
+    "other": "Sort by Date"
+  },
+  "sub_list_sort_status": {
+    "other": "Sort by Status"
+  },
+  "sub_form_none": {
+    "other": "None"
+  },
+  "forgot_password_check_email": {
+    "other": "Please check your email for the password reset link"
+  },
+  "btn_back_to_login": {
+    "other": "Back to Login"
+  },
+  "btn_go_to_login": {
+    "other": "Go to Login"
+  },
+  "btn_request_new_reset": {
+    "other": "Request a new reset link"
+  },
+  "form_error_title": {
+    "other": "Error"
+  },
+  "btn_actions": {
+    "other": "Actions"
+  },
+  "confirm_delete_subscription": {
+    "other": "Are you sure you want to delete this subscription?"
+  },
+  "confirm_delete_api_key": {
+    "other": "Are you sure you want to delete this API key?"
+  },
+  "category_enter_name": {
+    "other": "Please enter a category name"
+  },
+  "btn_add": {
+    "other": "Add"
+  },
+  "sub_list_renewal_date": {
+    "other": "Renewal Date"
+  },
+  "sub_list_category": {
+    "other": "Category"
+  },
+  "sub_list_uncategorized": {
+    "other": "Uncategorized"
+  },
+  "sub_list_monthly": {
+    "other": "/mo"
+  },
+  "auth_error_system": {
+    "other": "Authentication system error"
+  },
+  "auth_error_invalid_credentials": {
+    "other": "Invalid username or password"
+  },
+  "auth_error_session": {
+    "other": "Failed to create session"
+  },
+  "auth_error_generate_token": {
+    "other": "Failed to generate reset token"
+  },
+  "auth_error_email_not_configured": {
+    "other": "Email is not configured. Please contact administrator."
+  },
+  "auth_success_reset_sent": {
+    "other": "Password reset link has been sent to your email"
+  },
+  "auth_error_password_short": {
+    "other": "Password must be at least 8 characters long"
+  },
+  "auth_error_password_mismatch": {
+    "other": "Passwords do not match"
+  },
+  "auth_error_invalid_token": {
+    "other": "Invalid or expired reset token"
+  },
+  "auth_error_update_password": {
+    "other": "Failed to update password"
+  },
+  "auth_success_password_reset": {
+    "other": "Password reset successfully. You can now login with your new password."
+  },
+  "settings_error_smtp_required": {
+    "other": "Required SMTP fields: Host, Port, Username, Password, From email, To email"
+  },
+  "settings_success_smtp_saved": {
+    "other": "SMTP settings saved successfully"
+  },
+  "settings_error_smtp_test_required": {
+    "other": "Host, Port, Username, and Password are required for testing"
+  },
+  "settings_success_smtp_test": {
+    "other": "SMTP connection test successful!"
+  },
+  "settings_error_auth_required": {
+    "other": "Username and password are required"
+  },
+  "settings_error_password_mismatch": {
+    "other": "Passwords do not match"
+  },
+  "settings_error_password_short": {
+    "other": "Password must be at least 8 characters long"
+  },
+  "settings_error_email_first": {
+    "other": "Please configure email settings first (required for password recovery)"
+  },
+  "settings_success_auth_enabled": {
+    "other": "Authentication enabled successfully. You will need to login on next page load."
+  },
+  "settings_success_auth_disabled": {
+    "other": "Authentication disabled successfully"
+  },
+  "settings_error_pushover_required": {
+    "other": "User Key and App Token are required"
+  },
+  "settings_success_pushover_saved": {
+    "other": "Pushover settings saved successfully"
+  },
+  "settings_error_pushover_test_required": {
+    "other": "User Key and App Token are required for testing"
+  },
+  "settings_success_pushover_test": {
+    "other": "Pushover connection test successful! Check your device for the test notification."
+  },
+  "no_api_keys_yet": {
+    "other": "No API keys created yet"
+  }
+}

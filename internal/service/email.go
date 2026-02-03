@@ -6,20 +6,57 @@ import (
 	"fmt"
 	"html/template"
 	"net/smtp"
+	"subtrackr/internal/i18n"
 	"subtrackr/internal/models"
 )
 
 // EmailService handles sending emails via SMTP
 type EmailService struct {
 	settingsService *SettingsService
+	i18nService     *i18n.I18nService
 }
 
 // NewEmailService creates a new email service
-func NewEmailService(settingsService *SettingsService) *EmailService {
-	return &EmailService{
+func NewEmailService(settingsService *SettingsService, i18nService ...*i18n.I18nService) *EmailService {
+	svc := &EmailService{
 		settingsService: settingsService,
 	}
+	if len(i18nService) > 0 {
+		svc.i18nService = i18nService[0]
+	}
+	return svc
 }
+
+// t translates a message ID using the user's language setting
+func (e *EmailService) t(messageID string) string {
+	if e.i18nService == nil {
+		return messageID
+	}
+	lang := e.settingsService.GetLanguage()
+	localizer := e.i18nService.NewLocalizer(lang)
+	return e.i18nService.T(localizer, messageID)
+}
+
+// tData translates a message ID with template data
+func (e *EmailService) tData(messageID string, data map[string]interface{}) string {
+	if e.i18nService == nil {
+		return messageID
+	}
+	lang := e.settingsService.GetLanguage()
+	localizer := e.i18nService.NewLocalizer(lang)
+	return e.i18nService.TData(localizer, messageID, data)
+}
+
+// tPlural translates a message ID with plural support
+func (e *EmailService) tPlural(messageID string, count int, data map[string]interface{}) string {
+	if e.i18nService == nil {
+		return messageID
+	}
+	lang := e.settingsService.GetLanguage()
+	localizer := e.i18nService.NewLocalizer(lang)
+	return e.i18nService.TPluralCount(localizer, messageID, count, data)
+}
+
 
 // SendEmail sends an email using the configured SMTP settings
 func (e *EmailService) SendEmail(subject, body string) error {
@@ -190,22 +227,22 @@ func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) erro
 </head>
 <body>
 	<div class="container">
-		<h2>High Cost Subscription Alert</h2>
+		<h2>{{.Title}}</h2>
 		<div class="alert">
-			<strong>⚠️ Alert:</strong> A new high-cost subscription has been added to your SubTrackr account.
+			<strong>⚠️ {{.AlertLabel}}</strong> {{.AlertText}}
 		</div>
 		<div class="subscription-details">
-			<h3>Subscription Details</h3>
-			<div class="detail-row"><span class="label">Name:</span> {{.Subscription.Name}}</div>
-			<div class="detail-row"><span class="label">Cost:</span> {{.CurrencySymbol}}{{printf "%.2f" .Subscription.Cost}} {{.Subscription.Schedule}}</div>
-			<div class="detail-row"><span class="label">Monthly Cost:</span> {{.CurrencySymbol}}{{printf "%.2f" (.Subscription.MonthlyCost)}}</div>
-			{{if and .Subscription.Category .Subscription.Category.Name}}<div class="detail-row"><span class="label">Category:</span> {{.Subscription.Category.Name}}</div>{{end}}
-			{{if .Subscription.RenewalDate}}<div class="detail-row"><span class="label">Next Renewal:</span> {{.Subscription.RenewalDate.Format "January 2, 2006"}}</div>{{end}}
-			{{if .Subscription.URL}}<div class="detail-row"><span class="label">URL:</span> <a href="{{.Subscription.URL}}">{{.Subscription.URL}}</a></div>{{end}}
+			<h3>{{.DetailsTitle}}</h3>
+			<div class="detail-row"><span class="label">{{.LabelName}}</span> {{.Subscription.Name}}</div>
+			<div class="detail-row"><span class="label">{{.LabelCost}}</span> {{.CurrencySymbol}}{{printf "%.2f" .Subscription.Cost}} {{.Subscription.Schedule}}</div>
+			<div class="detail-row"><span class="label">{{.LabelMonthlyCost}}</span> {{.CurrencySymbol}}{{printf "%.2f" (.Subscription.MonthlyCost)}}</div>
+			{{if and .Subscription.Category .Subscription.Category.Name}}<div class="detail-row"><span class="label">{{.LabelCategory}}</span> {{.Subscription.Category.Name}}</div>{{end}}
+			{{if .Subscription.RenewalDate}}<div class="detail-row"><span class="label">{{.LabelNextRenewal}}</span> {{.Subscription.RenewalDate.Format "January 2, 2006"}}</div>{{end}}
+			{{if .Subscription.URL}}<div class="detail-row"><span class="label">{{.LabelURL}}</span> <a href="{{.Subscription.URL}}">{{.Subscription.URL}}</a></div>{{end}}
 		</div>
 		<div class="footer">
-			<p>This is an automated notification from SubTrackr.</p>
-			<p>You can manage your notification preferences in the Settings page.</p>
+			<p>{{.FooterAuto}}</p>
+			<p>{{.FooterManage}}</p>
 		</div>
 	</div>
 </body>
@@ -215,24 +252,48 @@ func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) erro
 	type AlertData struct {
 		Subscription   *models.Subscription
 		CurrencySymbol string
+		Title          string
+		AlertLabel     string
+		AlertText      string
+		DetailsTitle   string
+		LabelName      string
+		LabelCost      string
+		LabelMonthlyCost string
+		LabelCategory  string
+		LabelNextRenewal string
+		LabelURL       string
+		FooterAuto     string
+		FooterManage   string
 	}
 
 	data := AlertData{
-		Subscription:   subscription,
-		CurrencySymbol: currencySymbol,
+		Subscription:     subscription,
+		CurrencySymbol:   currencySymbol,
+		Title:            e.t("email_high_cost_title"),
+		AlertLabel:       "Alert:",
+		AlertText:        e.t("email_high_cost_alert"),
+		DetailsTitle:     e.t("email_sub_details"),
+		LabelName:        e.t("email_name"),
+		LabelCost:        e.t("email_cost"),
+		LabelMonthlyCost: e.t("email_monthly_cost"),
+		LabelCategory:    e.t("email_category"),
+		LabelNextRenewal: e.t("email_next_renewal"),
+		LabelURL:         e.t("email_url"),
+		FooterAuto:       e.t("email_footer_auto"),
+		FooterManage:     e.t("email_footer_manage"),
 	}
 
-	t, err := template.New("highCostAlert").Parse(tmpl)
+	tpl, err := template.New("highCostAlert").Parse(tmpl)
 	if err != nil {
 		return fmt.Errorf("failed to parse email template: %w", err)
 	}
 
 	var buf bytes.Buffer
-	if err := t.Execute(&buf, data); err != nil {
+	if err := tpl.Execute(&buf, data); err != nil {
 		return fmt.Errorf("failed to execute email template: %w", err)
 	}
 
-	subject := fmt.Sprintf("High Cost Alert: %s - %s%.2f/month", subscription.Name, currencySymbol, subscription.MonthlyCost())
+	subject := fmt.Sprintf("%s: %s - %s%.2f/month", e.t("pushover_high_cost_alert"), subscription.Name, currencySymbol, subscription.MonthlyCost())
 	return e.SendEmail(subject, buf.String())
 }
 
@@ -265,55 +326,77 @@ func (e *EmailService) SendRenewalReminder(subscription *models.Subscription, da
 </head>
 <body>
 	<div class="container">
-		<h2>Subscription Renewal Reminder</h2>
+		<h2>{{.Title}}</h2>
 		<div class="reminder">
-			<strong>🔔 Reminder:</strong> Your subscription <strong>{{.Subscription.Name}}</strong> will renew in {{.DaysUntilRenewal}} {{if eq .DaysUntilRenewal 1}}day{{else}}days{{end}}.
+			<strong>🔔 {{.ReminderLabel}}</strong> {{.ReminderText}}
 		</div>
 		<div class="subscription-details">
-			<h3>Subscription Details</h3>
-			<div class="detail-row"><span class="label">Name:</span> {{.Subscription.Name}}</div>
-			<div class="detail-row"><span class="label">Cost:</span> {{.CurrencySymbol}}{{printf "%.2f" .Subscription.Cost}} {{.Subscription.Schedule}}</div>
-			<div class="detail-row"><span class="label">Monthly Cost:</span> {{.CurrencySymbol}}{{printf "%.2f" (.Subscription.MonthlyCost)}}</div>
-			{{if and .Subscription.Category .Subscription.Category.Name}}<div class="detail-row"><span class="label">Category:</span> {{.Subscription.Category.Name}}</div>{{end}}
-			{{if .Subscription.RenewalDate}}<div class="detail-row"><span class="label">Renewal Date:</span> {{.Subscription.RenewalDate.Format "January 2, 2006"}}</div>{{end}}
-			{{if .Subscription.URL}}<div class="detail-row"><span class="label">URL:</span> <a href="{{.Subscription.URL}}">{{.Subscription.URL}}</a></div>{{end}}
+			<h3>{{.DetailsTitle}}</h3>
+			<div class="detail-row"><span class="label">{{.LabelName}}</span> {{.Subscription.Name}}</div>
+			<div class="detail-row"><span class="label">{{.LabelCost}}</span> {{.CurrencySymbol}}{{printf "%.2f" .Subscription.Cost}} {{.Subscription.Schedule}}</div>
+			<div class="detail-row"><span class="label">{{.LabelMonthlyCost}}</span> {{.CurrencySymbol}}{{printf "%.2f" (.Subscription.MonthlyCost)}}</div>
+			{{if and .Subscription.Category .Subscription.Category.Name}}<div class="detail-row"><span class="label">{{.LabelCategory}}</span> {{.Subscription.Category.Name}}</div>{{end}}
+			{{if .Subscription.RenewalDate}}<div class="detail-row"><span class="label">{{.LabelRenewalDate}}</span> {{.Subscription.RenewalDate.Format "January 2, 2006"}}</div>{{end}}
+			{{if .Subscription.URL}}<div class="detail-row"><span class="label">{{.LabelURL}}</span> <a href="{{.Subscription.URL}}">{{.Subscription.URL}}</a></div>{{end}}
 		</div>
 		<div class="footer">
-			<p>This is an automated reminder from SubTrackr.</p>
-			<p>You can manage your notification preferences in the Settings page.</p>
+			<p>{{.FooterAuto}}</p>
+			<p>{{.FooterManage}}</p>
 		</div>
 	</div>
 </body>
 </html>
 `
 
+	reminderText := e.tPlural("email_renewal_reminder", daysUntilRenewal, map[string]interface{}{"Name": subscription.Name})
+
 	type ReminderData struct {
 		Subscription     *models.Subscription
 		DaysUntilRenewal int
 		CurrencySymbol   string
+		Title            string
+		ReminderLabel    string
+		ReminderText     string
+		DetailsTitle     string
+		LabelName        string
+		LabelCost        string
+		LabelMonthlyCost string
+		LabelCategory    string
+		LabelRenewalDate string
+		LabelURL         string
+		FooterAuto       string
+		FooterManage     string
 	}
 
 	data := ReminderData{
 		Subscription:     subscription,
 		DaysUntilRenewal: daysUntilRenewal,
 		CurrencySymbol:   currencySymbol,
+		Title:            e.t("email_renewal_title"),
+		ReminderLabel:    "Reminder:",
+		ReminderText:     reminderText,
+		DetailsTitle:     e.t("email_sub_details"),
+		LabelName:        e.t("email_name"),
+		LabelCost:        e.t("email_cost"),
+		LabelMonthlyCost: e.t("email_monthly_cost"),
+		LabelCategory:    e.t("email_category"),
+		LabelRenewalDate: e.t("email_renewal_date"),
+		LabelURL:         e.t("email_url"),
+		FooterAuto:       e.t("email_footer_auto"),
+		FooterManage:     e.t("email_footer_manage"),
 	}
 
-	t, err := template.New("renewalReminder").Parse(tmpl)
+	tpl, err := template.New("renewalReminder").Parse(tmpl)
 	if err != nil {
 		return fmt.Errorf("failed to parse email template: %w", err)
 	}
 
 	var buf bytes.Buffer
-	if err := t.Execute(&buf, data); err != nil {
+	if err := tpl.Execute(&buf, data); err != nil {
 		return fmt.Errorf("failed to execute email template: %w", err)
 	}
 
-	daysText := "days"
-	if daysUntilRenewal == 1 {
-		daysText = "day"
-	}
-	subject := fmt.Sprintf("Renewal Reminder: %s renews in %d %s", subscription.Name, daysUntilRenewal, daysText)
+	subject := fmt.Sprintf("%s: %s", e.t("pushover_renewal_reminder"), reminderText)
 	return e.SendEmail(subject, buf.String())
 }
 
@@ -346,54 +429,76 @@ func (e *EmailService) SendCancellationReminder(subscription *models.Subscriptio
 </head>
 <body>
 	<div class="container">
-		<h2>Subscription Cancellation Reminder</h2>
+		<h2>{{.Title}}</h2>
 		<div class="reminder">
-			<strong>⚠️ Reminder:</strong> Your subscription <strong>{{.Subscription.Name}}</strong> will end in {{.DaysUntilCancellation}} {{if eq .DaysUntilCancellation 1}}day{{else}}days{{end}}.
+			<strong>⚠️ {{.ReminderLabel}}</strong> {{.ReminderText}}
 		</div>
 		<div class="subscription-details">
-			<h3>Subscription Details</h3>
-			<div class="detail-row"><span class="label">Name:</span> {{.Subscription.Name}}</div>
-			<div class="detail-row"><span class="label">Cost:</span> {{.CurrencySymbol}}{{printf "%.2f" .Subscription.Cost}} {{.Subscription.Schedule}}</div>
-			<div class="detail-row"><span class="label">Monthly Cost:</span> {{.CurrencySymbol}}{{printf "%.2f" (.Subscription.MonthlyCost)}}</div>
-			{{if and .Subscription.Category .Subscription.Category.Name}}<div class="detail-row"><span class="label">Category:</span> {{.Subscription.Category.Name}}</div>{{end}}
-			{{if .Subscription.CancellationDate}}<div class="detail-row"><span class="label">Cancellation Date:</span> {{.Subscription.CancellationDate.Format "January 2, 2006"}}</div>{{end}}
-			{{if .Subscription.URL}}<div class="detail-row"><span class="label">URL:</span> <a href="{{.Subscription.URL}}">{{.Subscription.URL}}</a></div>{{end}}
+			<h3>{{.DetailsTitle}}</h3>
+			<div class="detail-row"><span class="label">{{.LabelName}}</span> {{.Subscription.Name}}</div>
+			<div class="detail-row"><span class="label">{{.LabelCost}}</span> {{.CurrencySymbol}}{{printf "%.2f" .Subscription.Cost}} {{.Subscription.Schedule}}</div>
+			<div class="detail-row"><span class="label">{{.LabelMonthlyCost}}</span> {{.CurrencySymbol}}{{printf "%.2f" (.Subscription.MonthlyCost)}}</div>
+			{{if and .Subscription.Category .Subscription.Category.Name}}<div class="detail-row"><span class="label">{{.LabelCategory}}</span> {{.Subscription.Category.Name}}</div>{{end}}
+			{{if .Subscription.CancellationDate}}<div class="detail-row"><span class="label">{{.LabelCancellationDate}}</span> {{.Subscription.CancellationDate.Format "January 2, 2006"}}</div>{{end}}
+			{{if .Subscription.URL}}<div class="detail-row"><span class="label">{{.LabelURL}}</span> <a href="{{.Subscription.URL}}">{{.Subscription.URL}}</a></div>{{end}}
 		</div>
 		<div class="footer">
-			<p>This is an automated reminder from SubTrackr.</p>
-			<p>You can manage your notification preferences in the Settings page.</p>
+			<p>{{.FooterAuto}}</p>
+			<p>{{.FooterManage}}</p>
 		</div>
 	</div>
 </body>
 </html>
 `
 
+	reminderText := e.tPlural("email_cancellation_reminder", daysUntilCancellation, map[string]interface{}{"Name": subscription.Name})
+
 	type CancellationReminderData struct {
-		Subscription           *models.Subscription
-		DaysUntilCancellation  int
-		CurrencySymbol         string
+		Subscription          *models.Subscription
+		DaysUntilCancellation int
+		CurrencySymbol        string
+		Title                 string
+		ReminderLabel         string
+		ReminderText          string
+		DetailsTitle          string
+		LabelName             string
+		LabelCost             string
+		LabelMonthlyCost      string
+		LabelCategory         string
+		LabelCancellationDate string
+		LabelURL              string
+		FooterAuto            string
+		FooterManage          string
 	}
 
 	data := CancellationReminderData{
 		Subscription:          subscription,
 		DaysUntilCancellation: daysUntilCancellation,
 		CurrencySymbol:        currencySymbol,
+		Title:                 e.t("email_cancellation_title"),
+		ReminderLabel:         "Reminder:",
+		ReminderText:          reminderText,
+		DetailsTitle:          e.t("email_sub_details"),
+		LabelName:             e.t("email_name"),
+		LabelCost:             e.t("email_cost"),
+		LabelMonthlyCost:      e.t("email_monthly_cost"),
+		LabelCategory:         e.t("email_category"),
+		LabelCancellationDate: e.t("email_cancellation_date"),
+		LabelURL:              e.t("email_url"),
+		FooterAuto:            e.t("email_footer_auto"),
+		FooterManage:          e.t("email_footer_manage"),
 	}
 
-	t, err := template.New("cancellationReminder").Parse(tmpl)
+	tpl, err := template.New("cancellationReminder").Parse(tmpl)
 	if err != nil {
 		return fmt.Errorf("failed to parse email template: %w", err)
 	}
 
 	var buf bytes.Buffer
-	if err := t.Execute(&buf, data); err != nil {
+	if err := tpl.Execute(&buf, data); err != nil {
 		return fmt.Errorf("failed to execute email template: %w", err)
 	}
 
-	daysText := "days"
-	if daysUntilCancellation == 1 {
-		daysText = "day"
-	}
-	subject := fmt.Sprintf("Cancellation Reminder: %s ends in %d %s", subscription.Name, daysUntilCancellation, daysText)
+	subject := fmt.Sprintf("%s: %s", e.t("pushover_cancellation_reminder"), reminderText)
 	return e.SendEmail(subject, buf.String())
 }

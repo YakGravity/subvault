@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{.Lang}}">
 <head>
     <script src="/static/js/theme-init.js"></script>
     <meta charset="UTF-8">
@@ -45,25 +45,25 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"></path>
                             </svg>
-                            Dashboard
+                            {{.T.Tr "nav_dashboard"}}
                         </a>
                         <a href="/subscriptions" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            Subscriptions
+                            {{.T.Tr "nav_subscriptions"}}
                         </a>
                         <a href="/analytics" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
-                            Analytics
+                            {{.T.Tr "nav_analytics"}}
                         </a>
                         <a href="/calendar" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            Calendar
+                            {{.T.Tr "nav_calendar"}}
                         </a>
                     </nav>
                     <!-- Mobile Hamburger Button -->
@@ -84,7 +84,7 @@
                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                         </svg>
-                        Add
+                        {{.T.Tr "nav_add"}}
                     </button>
                     <a href="/settings" class="text-primary dark:text-primary-light">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,25 +128,25 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"></path>
                             </svg>
-                            Dashboard
+                            {{.T.Tr "nav_dashboard"}}
                         </a>
                         <a href="/subscriptions" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            Subscriptions
+                            {{.T.Tr "nav_subscriptions"}}
                         </a>
                         <a href="/analytics" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                             </svg>
-                            Analytics
+                            {{.T.Tr "nav_analytics"}}
                         </a>
                         <a href="/calendar" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
                             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            Calendar
+                            {{.T.Tr "nav_calendar"}}
                         </a>
                         <div class="pt-4 border-t border-gray-200 dark:border-gray-700 mt-4">
                             <button 
@@ -158,7 +158,7 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>
-                                Add Subscription
+                                {{.T.Tr "nav_add_subscription"}}
                             </button>
                         </div>
                     </nav>
@@ -173,20 +173,20 @@
 <div class="max-w-4xl mx-auto">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Settings</h2>
-            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Manage your SubTrackr preferences and data</p>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{.T.Tr "settings_title"}}</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">{{.T.Tr "settings_subtitle"}}</p>
         </div>
         
         <div class="p-6 space-y-8">
             <!-- Appearance -->
             <div>
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Appearance</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Personalize your SubTrackr experience with beautiful themes</p>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_appearance"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_appearance_desc"}}</p>
 
                 <div class="theme-selector" id="theme-selector">
                     <div class="theme-option" data-theme="default" onclick="selectTheme('default')">
-                        <div class="theme-name">Default</div>
-                        <div class="theme-description">Clean and professional</div>
+                        <div class="theme-name">{{.T.Tr "theme_default"}}</div>
+                        <div class="theme-description">{{.T.Tr "theme_default_desc"}}</div>
                         <div class="theme-preview">
                             <div class="theme-preview-color" style="background: #3b82f6;"></div>
                             <div class="theme-preview-color" style="background: #64748b;"></div>
@@ -195,8 +195,8 @@
                     </div>
 
                     <div class="theme-option" data-theme="dark" onclick="selectTheme('dark')">
-                        <div class="theme-name">Dark</div>
-                        <div class="theme-description">Easy on the eyes</div>
+                        <div class="theme-name">{{.T.Tr "theme_dark"}}</div>
+                        <div class="theme-description">{{.T.Tr "theme_dark_desc"}}</div>
                         <div class="theme-preview">
                             <div class="theme-preview-color" style="background: #1f2937;"></div>
                             <div class="theme-preview-color" style="background: #3b82f6;"></div>
@@ -205,8 +205,8 @@
                     </div>
 
                     <div class="theme-option" data-theme="dark-classic" onclick="selectTheme('dark-classic')">
-                        <div class="theme-name">Dark Classic</div>
-                        <div class="theme-description">Original dark mode</div>
+                        <div class="theme-name">{{.T.Tr "theme_dark_classic"}}</div>
+                        <div class="theme-description">{{.T.Tr "theme_dark_classic_desc"}}</div>
                         <div class="theme-preview">
                             <div class="theme-preview-color" style="background: #1f2937;"></div>
                             <div class="theme-preview-color" style="background: #3b82f6;"></div>
@@ -215,8 +215,8 @@
                     </div>
 
                     <div class="theme-option" data-theme="christmas" onclick="selectTheme('christmas')">
-                        <div class="theme-name">Christmas 🎄</div>
-                        <div class="theme-description">Festive and jolly!</div>
+                        <div class="theme-name">{{.T.Tr "theme_christmas"}} 🎄</div>
+                        <div class="theme-description">{{.T.Tr "theme_christmas_desc"}}</div>
                         <div class="theme-preview">
                             <div class="theme-preview-color" style="background: #c41e3a;"></div>
                             <div class="theme-preview-color" style="background: #165b33;"></div>
@@ -225,8 +225,8 @@
                     </div>
 
                     <div class="theme-option" data-theme="midnight" onclick="selectTheme('midnight')">
-                        <div class="theme-name">Midnight</div>
-                        <div class="theme-description">Deep and mysterious</div>
+                        <div class="theme-name">{{.T.Tr "theme_midnight"}}</div>
+                        <div class="theme-description">{{.T.Tr "theme_midnight_desc"}}</div>
                         <div class="theme-preview">
                             <div class="theme-preview-color" style="background: #0f172a;"></div>
                             <div class="theme-preview-color" style="background: #8b5cf6;"></div>
@@ -235,8 +235,8 @@
                     </div>
 
                     <div class="theme-option" data-theme="ocean" onclick="selectTheme('ocean')">
-                        <div class="theme-name">Ocean</div>
-                        <div class="theme-description">Cool and refreshing</div>
+                        <div class="theme-name">{{.T.Tr "theme_ocean"}}</div>
+                        <div class="theme-description">{{.T.Tr "theme_ocean_desc"}}</div>
                         <div class="theme-preview">
                             <div class="theme-preview-color" style="background: #0891b2;"></div>
                             <div class="theme-preview-color" style="background: #f0f9ff;"></div>
@@ -272,46 +272,76 @@
                 </script>
             </div>
 
+            <!-- Language -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_language"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_language_desc"}}</p>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="language"
+                               value="en"
+                               {{if eq .Language "en"}}checked{{end}}
+                               hx-post="/api/settings/language"
+                               hx-trigger="change"
+                               hx-vals='{"language": "en"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "lang_en"}}</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="language"
+                               value="de"
+                               {{if eq .Language "de"}}checked{{end}}
+                               hx-post="/api/settings/language"
+                               hx-trigger="change"
+                               hx-vals='{"language": "de"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "lang_de"}}</span>
+                    </label>
+                </div>
+            </div>
+
             <!-- Export Data -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Export Data</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Download your subscription data in various formats</p>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_export"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_export_desc"}}</p>
                 <div class="flex space-x-3">
                     <a href="/api/export/csv" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 inline-block transition-colors duration-150">
-                        Export as CSV
+                        {{.T.Tr "btn_export_csv"}}
                     </a>
                     <a href="/api/export/json" class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 inline-block transition-colors duration-150">
-                        Export as JSON
+                        {{.T.Tr "btn_export_json"}}
                     </a>
                 </div>
             </div>
             
             <!-- Data Management -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Data Management</h3>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_data_mgmt"}}</h3>
                 <div class="space-y-4">
                     <div class="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <div>
-                            <h4 class="text-sm font-medium text-yellow-900">Backup Data</h4>
-                            <p class="text-sm text-yellow-800">Create a backup of all your subscription data</p>
+                            <h4 class="text-sm font-medium text-yellow-900">{{.T.Tr "settings_backup"}}</h4>
+                            <p class="text-sm text-yellow-800">{{.T.Tr "settings_backup_desc"}}</p>
                         </div>
                         <a href="/api/backup" class="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 inline-block">
-                            Create Backup
+                            {{.T.Tr "btn_create_backup"}}
                         </a>
                     </div>
                     
                     <div class="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg">
                         <div>
-                            <h4 class="text-sm font-medium text-red-800">Clear All Data</h4>
-                            <p class="text-sm text-red-700">Permanently delete all subscription data</p>
+                            <h4 class="text-sm font-medium text-red-800">{{.T.Tr "settings_clear_data"}}</h4>
+                            <p class="text-sm text-red-700">{{.T.Tr "settings_clear_data_desc"}}</p>
                         </div>
                         <button 
                             hx-delete="/api/clear-all"
-                            hx-confirm="Are you sure you want to delete all subscription data? This action cannot be undone."
+                            hx-confirm="{{.T.Tr "confirm_clear_data"}}"
                             hx-target="body"
                             hx-swap="none"
                             class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700">
-                            Clear Data
+                            {{.T.Tr "btn_clear_data"}}
                         </button>
                     </div>
                 </div>
@@ -319,48 +349,48 @@
             
             <!-- Email Notifications -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Email Notifications</h3>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_email_notifications"}}</h3>
                 
                 <!-- SMTP Settings -->
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4 transition-colors duration-200">
-                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-4">SMTP Configuration</h4>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_smtp_config"}}</h4>
                     <form id="smtp-form" hx-post="/api/settings/smtp" hx-trigger="submit" hx-target="#smtp-message" hx-swap="innerHTML">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="smtp_host" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">SMTP Host</label>
+                                <label for="smtp_host" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "smtp_host"}}</label>
                                 <input type="text" id="smtp_host" name="smtp_host" placeholder="smtp.gmail.com" value="{{if .SMTPConfig}}{{.SMTPConfig.Host}}{{end}}"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
                             </div>
                             <div>
-                                <label for="smtp_port" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">SMTP Port</label>
+                                <label for="smtp_port" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "smtp_port"}}</label>
                                 <input type="number" id="smtp_port" name="smtp_port" placeholder="587" value="{{if .SMTPConfig}}{{.SMTPConfig.Port}}{{end}}"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
                             </div>
                             <div>
-                                <label for="smtp_username" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Username</label>
+                                <label for="smtp_username" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "smtp_username"}}</label>
                                 <input type="text" id="smtp_username" name="smtp_username" placeholder="username or email" value="{{if .SMTPConfig}}{{.SMTPConfig.Username}}{{end}}"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
                             </div>
                             <div>
-                                <label for="smtp_password" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Password</label>
+                                <label for="smtp_password" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "smtp_password"}}</label>
                                 <input type="password" id="smtp_password" name="smtp_password" placeholder="••••••••"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
                             </div>
                             <div>
-                                <label for="smtp_from" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">From Email</label>
+                                <label for="smtp_from" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "smtp_from_email"}}</label>
                                 <input type="email" id="smtp_from" name="smtp_from" placeholder="noreply@example.com" value="{{if .SMTPConfig}}{{.SMTPConfig.From}}{{end}}"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
                             </div>
                             <div>
-                                <label for="smtp_from_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">From Name</label>
+                                <label for="smtp_from_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "smtp_from_name"}}</label>
                                 <input type="text" id="smtp_from_name" name="smtp_from_name" placeholder="SubTrackr" value="{{if .SMTPConfig}}{{.SMTPConfig.FromName}}{{end}}"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
                             </div>
                             <div class="md:col-span-2">
-                                <label for="smtp_to" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">To Email (Notification Recipient)</label>
+                                <label for="smtp_to" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "smtp_to_email"}}</label>
                                 <input type="email" id="smtp_to" name="smtp_to" placeholder="your-email@example.com" value="{{if .SMTPConfig}}{{.SMTPConfig.To}}{{end}}"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">This is where notification emails will be sent</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{.T.Tr "smtp_to_email_hint"}}</p>
                             </div>
                         </div>
                         <div class="mb-4">
@@ -379,10 +409,10 @@
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Test Connection
+                                    {{.T.Tr "btn_test_connection"}}
                                 </button>
                                 <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">
-                                    Save SMTP Settings
+                                    {{.T.Tr "btn_save_smtp"}}
                                 </button>
                             </div>
                         </div>
@@ -393,8 +423,8 @@
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Renewal Reminders</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Get notified before subscriptions renew</p>
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">{{.T.Tr "settings_renewal_reminders"}}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "settings_renewal_reminders_desc"}}</p>
                         </div>
                         <button hx-post="/api/settings/notifications/renewal" 
                                 hx-trigger="click"
@@ -407,8 +437,8 @@
                     
                     <div class="flex items-center justify-between">
                         <div>
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">High Cost Alerts</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Alert when adding expensive subscriptions</p>
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">{{.T.Tr "settings_high_cost_alerts"}}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "settings_high_cost_alerts_desc"}}</p>
                         </div>
                         <button hx-post="/api/settings/notifications/highcost"
                                 hx-trigger="click"
@@ -421,8 +451,8 @@
                     
                     <div class="flex items-center justify-between">
                         <div>
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">High Cost Threshold</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Monthly cost threshold for high cost alerts (in {{.CurrencySymbol}})</p>
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">{{.T.Tr "settings_high_cost_threshold"}}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">{{.T.TrData "settings_high_cost_threshold_desc" (dict "Symbol" .CurrencySymbol)}}</p>
                         </div>
                         <div class="flex items-center space-x-2">
                             <span class="text-sm text-gray-600 dark:text-gray-400">{{.CurrencySymbol}}</span>
@@ -441,8 +471,8 @@
                     
                     <div class="flex items-center justify-between">
                         <div>
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Days Before Renewal</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">How many days before renewal to send reminder</p>
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">{{.T.Tr "settings_days_before_renewal"}}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "settings_days_before_renewal_desc"}}</p>
                         </div>
                         <input type="number"
                                name="reminder_days"
@@ -457,8 +487,8 @@
 
                     <div class="flex items-center justify-between">
                         <div>
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Cancellation Reminders</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Get notified before subscriptions end</p>
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">{{.T.Tr "settings_cancellation_reminders"}}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "settings_cancellation_reminders_desc"}}</p>
                         </div>
                         <button hx-post="/api/settings/notifications/cancellation"
                                 hx-trigger="click"
@@ -471,8 +501,8 @@
 
                     <div class="flex items-center justify-between">
                         <div>
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Days Before Cancellation</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">How many days before cancellation to send reminder</p>
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">{{.T.Tr "settings_days_before_cancellation"}}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "settings_days_before_cancellation_desc"}}</p>
                         </div>
                         <input type="number"
                                name="cancellation_reminder_days"
@@ -489,25 +519,25 @@
 
             <!-- Pushover Notifications -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Pushover Notifications</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Receive push notifications on your mobile device via Pushover</p>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_pushover"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_pushover_desc"}}</p>
                 
                 <!-- Pushover Settings -->
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4 transition-colors duration-200">
-                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-4">Pushover Configuration</h4>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_pushover_config"}}</h4>
                     <form id="pushover-form" hx-post="/api/settings/pushover" hx-trigger="submit" hx-target="#pushover-message" hx-swap="innerHTML">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
-                                <label for="pushover_user_key" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">User Key</label>
+                                <label for="pushover_user_key" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "pushover_user_key"}}</label>
                                 <input type="text" id="pushover_user_key" name="pushover_user_key" placeholder="Your Pushover User Key" value="{{if .PushoverConfig}}{{.PushoverConfig.UserKey}}{{end}}"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Get your User Key from <a href="https://pushover.net/" target="_blank" class="text-primary hover:underline">pushover.net</a></p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{.T.Tr "pushover_user_key_hint"}} <a href="https://pushover.net/" target="_blank" class="text-primary hover:underline">pushover.net</a></p>
                             </div>
                             <div>
-                                <label for="pushover_app_token" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Application Token</label>
+                                <label for="pushover_app_token" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "pushover_app_token"}}</label>
                                 <input type="text" id="pushover_app_token" name="pushover_app_token" placeholder="Your Application Token" value="{{if .PushoverConfig}}{{.PushoverConfig.AppToken}}{{end}}"
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Create an application at <a href="https://pushover.net/apps/build" target="_blank" class="text-primary hover:underline">pushover.net/apps</a></p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{.T.Tr "pushover_app_token_hint"}} <a href="https://pushover.net/apps/build" target="_blank" class="text-primary hover:underline">pushover.net/apps</a></p>
                             </div>
                         </div>
                         <div class="mb-4">
@@ -526,10 +556,10 @@
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Test Connection
+                                    {{.T.Tr "btn_test_connection"}}
                                 </button>
                                 <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">
-                                    Save Pushover Settings
+                                    {{.T.Tr "btn_save_pushover"}}
                                 </button>
                             </div>
                         </div>
@@ -539,14 +569,14 @@
 
             <!-- Security Settings -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Security</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Protect your SubTrackr instance with login authentication</p>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_security"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_security_desc"}}</p>
 
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 transition-colors duration-200">
                     <div class="flex items-center justify-between mb-4">
                         <div>
-                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">Require Login</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Enable authentication to protect your data</p>
+                            <h4 class="text-sm font-medium text-gray-900 dark:text-white">{{.T.Tr "settings_require_login"}}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "settings_require_login_desc"}}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox"
@@ -564,7 +594,7 @@
                         {{if .AuthEnabled}}
                         <!-- Already configured - show disable option -->
                         <div class="space-y-3">
-                            <p class="text-sm text-green-600 dark:text-green-400">✓ Authentication is enabled</p>
+                            <p class="text-sm text-green-600 dark:text-green-400">✓ {{.T.Tr "auth_enabled_msg"}}</p>
                             <p class="text-sm text-gray-600 dark:text-gray-300">Username: <span class="font-medium">{{.AuthUsername}}</span></p>
                             <button
                                 hx-post="/api/settings/auth/disable"
@@ -572,7 +602,7 @@
                                 hx-swap="innerHTML"
                                 onclick="document.getElementById('auth-toggle').checked = false; toggleAuthForm();"
                                 class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700">
-                                Disable Authentication
+                                {{.T.Tr "btn_disable_auth"}}
                             </button>
                         </div>
                         {{else}}
@@ -581,27 +611,27 @@
                             <div class="space-y-4">
                                 <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
                                     <p class="text-sm text-blue-800 dark:text-blue-200">
-                                        ⓘ Email must be configured first for password recovery. {{if not .SMTPConfigured}}<span class="font-medium text-red-600 dark:text-red-400">Please configure email settings above before enabling login.</span>{{end}}
+                                        ⓘ {{.T.Tr "auth_email_required_hint"}} {{if not .SMTPConfigured}}<span class="font-medium text-red-600 dark:text-red-400">{{.T.Tr "auth_configure_email_first"}}</span>{{end}}
                                     </p>
                                 </div>
 
                                 <div>
-                                    <label for="auth_username" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Username</label>
+                                    <label for="auth_username" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "auth_username_label"}}</label>
                                     <input type="text" id="auth_username" name="username" placeholder="admin" required
                                            {{if not .SMTPConfigured}}disabled{{end}}
                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150 disabled:opacity-50">
                                 </div>
 
                                 <div>
-                                    <label for="auth_password" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Password</label>
+                                    <label for="auth_password" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "auth_password_label"}}</label>
                                     <input type="password" id="auth_password" name="password" placeholder="••••••••" required minlength="8"
                                            {{if not .SMTPConfigured}}disabled{{end}}
                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150 disabled:opacity-50">
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Minimum 8 characters</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{.T.Tr "auth_min_chars"}}</p>
                                 </div>
 
                                 <div>
-                                    <label for="auth_confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Confirm Password</label>
+                                    <label for="auth_confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "auth_confirm_password"}}</label>
                                     <input type="password" id="auth_confirm_password" name="confirm_password" placeholder="••••••••" required minlength="8"
                                            {{if not .SMTPConfigured}}disabled{{end}}
                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150 disabled:opacity-50">
@@ -611,7 +641,7 @@
                                     type="submit"
                                     {{if not .SMTPConfigured}}disabled{{end}}
                                     class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    Enable Authentication
+                                    {{.T.Tr "btn_enable_auth"}}
                                 </button>
                             </div>
                         </form>
@@ -625,8 +655,8 @@
             
             <!-- Currency Settings -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Currency</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Choose your preferred currency for displaying subscription costs</p>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_currency"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_currency_desc"}}</p>
                 
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                     <label class="flex items-center">
@@ -779,18 +809,18 @@
 
             <!-- Category Management -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">Categories</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Manage your subscription categories</p>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_categories"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_categories_desc"}}</p>
                 <div id="categories-list" class="space-y-2 mb-4"></div>
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 transition-colors duration-200">
-                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Add New Category</h4>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">{{.T.Tr "settings_add_category"}}</h4>
                     <form id="add-category-form">
                         <div class="flex items-end space-x-3">
                             <div class="flex-1">
-                                <label for="category_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category Name</label>
+                                <label for="category_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{.T.Tr "category_name_label"}}</label>
                                 <input type="text" id="category_name" name="name" required placeholder="e.g., Streaming" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
                             </div>
-                            <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">Add Category</button>
+                            <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">{{.T.Tr "btn_add_category"}}</button>
                         </div>
                     </form>
                 </div>
@@ -798,25 +828,25 @@
             
             <!-- API Keys -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">API Keys</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">Create API keys to access SubTrackr from external applications</p>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_api_keys"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_api_keys_desc"}}</p>
                 
                 <!-- API Key List -->
                 <div id="api-keys-list" class="space-y-2 mb-4">
                     <div hx-get="/api/settings/apikeys" hx-trigger="load" hx-swap="innerHTML">
                         <div class="text-center py-4 text-gray-500">
-                            Loading API keys...
+                            {{.T.Tr "loading_api_keys"}}
                         </div>
                     </div>
                 </div>
                 
                 <!-- Create New API Key -->
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 transition-colors duration-200">
-                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Create New API Key</h4>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-3">{{.T.Tr "settings_create_api_key"}}</h4>
                     <form hx-post="/api/settings/apikeys" hx-target="#api-keys-list" hx-swap="innerHTML">
                         <div class="flex items-end space-x-3">
                             <div class="flex-1">
-                                <label for="api_key_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Key Name</label>
+                                <label for="api_key_name" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "api_key_name_label"}}</label>
                                 <input type="text" 
                                        id="api_key_name" 
                                        name="name" 
@@ -825,7 +855,7 @@
                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
                             </div>
                             <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">
-                                Generate API Key
+                                {{.T.Tr "btn_generate_api_key"}}
                             </button>
                         </div>
                     </form>
@@ -834,7 +864,7 @@
                 <!-- API Documentation Link -->
                 <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg transition-colors duration-200">
                     <p class="text-sm text-blue-800 dark:text-blue-200">
-                        <strong>API Documentation:</strong> Include the API key in the <code class="bg-blue-100 dark:bg-blue-800 px-1 py-0.5 rounded text-blue-800 dark:text-blue-200">X-API-Key</code> header for all requests.
+                        <strong>{{.T.Tr "api_docs_title"}}:</strong> {{.T.Tr "api_docs_key_info"}} <code class="bg-blue-100 dark:bg-blue-800 px-1 py-0.5 rounded text-blue-800 dark:text-blue-200">X-API-Key</code> {{.T.Tr "api_docs_key_header"}}
                         <a href="#api-docs" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline ml-1">View full API documentation</a>
                     </p>
                 </div>
@@ -842,18 +872,18 @@
             
             <!-- About -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">About SubTrackr</h3>
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_about"}}</h3>
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 transition-colors duration-200">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Version</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "about_version"}}</span>
                         <span class="text-sm text-gray-600 dark:text-gray-300">{{.Version}}</span>
                     </div>
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Build</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "about_build"}}</span>
                         <span class="text-sm text-gray-600 dark:text-gray-300">Go + HTMX</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Database</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "about_database"}}</span>
                         <span class="text-sm text-gray-600 dark:text-gray-300">SQLite</span>
                     </div>
                 </div>
@@ -866,13 +896,13 @@
 <div id="api-docs" class="mt-6">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors duration-200">
         <div class="p-6">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">API Documentation</h2>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">{{.T.Tr "api_docs_title"}}</h2>
             
             <div class="space-y-6">
                 <!-- Authentication -->
                 <div>
-                    <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Authentication</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">All API requests require authentication using an API key. Include your API key in the request headers:</p>
+                    <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">{{.T.Tr "api_docs_auth"}}</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">{{.T.Tr "api_docs_auth_desc"}}</p>
                     <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 font-mono text-sm transition-colors duration-200">
                         <div class="mb-2">
                             <span class="text-gray-500 dark:text-gray-400"># Authorization header (recommended)</span><br>
@@ -887,45 +917,45 @@
 
                 <!-- Endpoints -->
                 <div>
-                    <h3 class="text-md font-medium text-gray-900 dark:text-white mb-3">API Endpoints</h3>
+                    <h3 class="text-md font-medium text-gray-900 dark:text-white mb-3">{{.T.Tr "api_docs_endpoints"}}</h3>
                     
                     <!-- Subscriptions -->
                     <div class="mb-4">
-                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Subscriptions</h4>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{.T.Tr "api_docs_subscriptions"}}</h4>
                         <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg overflow-hidden transition-colors duration-200">
                             <table class="min-w-full">
                                 <thead class="bg-gray-100 dark:bg-gray-600">
                                     <tr>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">Method</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">Endpoint</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">Description</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "api_docs_method"}}</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "api_docs_endpoint"}}</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "api_docs_description"}}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
                                     <tr>
                                         <td class="px-4 py-2 text-sm"><span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded text-xs font-medium">GET</span></td>
                                         <td class="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">/api/v1/subscriptions</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">List all subscriptions</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "api_list_all_subs"}}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-4 py-2 text-sm"><span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded text-xs font-medium">POST</span></td>
                                         <td class="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">/api/v1/subscriptions</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">Create a new subscription</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "api_create_sub"}}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-4 py-2 text-sm"><span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded text-xs font-medium">GET</span></td>
                                         <td class="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">/api/v1/subscriptions/:id</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">Get subscription details</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "api_get_sub_details"}}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-4 py-2 text-sm"><span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300 rounded text-xs font-medium">PUT</span></td>
                                         <td class="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">/api/v1/subscriptions/:id</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">Update subscription</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "api_update_sub"}}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-4 py-2 text-sm"><span class="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded text-xs font-medium">DELETE</span></td>
                                         <td class="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">/api/v1/subscriptions/:id</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">Delete subscription</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "api_delete_sub"}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -934,31 +964,31 @@
 
                     <!-- Statistics & Export -->
                     <div>
-                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Statistics & Export</h4>
+                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{.T.Tr "api_docs_stats_export"}}</h4>
                         <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg overflow-hidden transition-colors duration-200">
                             <table class="min-w-full">
                                 <thead class="bg-gray-100 dark:bg-gray-600">
                                     <tr>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">Method</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">Endpoint</th>
-                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">Description</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "api_docs_method"}}</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "api_docs_endpoint"}}</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "api_docs_description"}}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
                                     <tr>
                                         <td class="px-4 py-2 text-sm"><span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded text-xs font-medium">GET</span></td>
                                         <td class="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">/api/v1/stats</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">Get subscription statistics</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "api_get_stats"}}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-4 py-2 text-sm"><span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded text-xs font-medium">GET</span></td>
                                         <td class="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">/api/v1/export/csv</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">Export subscriptions as CSV</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "api_export_csv"}}</td>
                                     </tr>
                                     <tr>
                                         <td class="px-4 py-2 text-sm"><span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded text-xs font-medium">GET</span></td>
                                         <td class="px-4 py-2 text-sm font-mono text-gray-900 dark:text-gray-100">/api/v1/export/json</td>
-                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">Export subscriptions as JSON</td>
+                                        <td class="px-4 py-2 text-sm text-gray-600 dark:text-gray-300">{{.T.Tr "api_export_json"}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -968,12 +998,12 @@
 
                 <!-- Example Requests -->
                 <div>
-                    <h3 class="text-md font-medium text-gray-900 dark:text-white mb-3">Example Requests</h3>
+                    <h3 class="text-md font-medium text-gray-900 dark:text-white mb-3">{{.T.Tr "api_docs_examples"}}</h3>
                     
                     <div class="space-y-4">
                         <!-- List Subscriptions -->
                         <div>
-                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">List Subscriptions</h4>
+                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{.T.Tr "api_docs_list_subs"}}</h4>
                             <div class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-sm overflow-x-auto">
                                 <div class="text-green-400">curl -H "Authorization: Bearer sk_your_api_key_here" \</div>
                                 <div class="ml-4">http://localhost:8080/api/v1/subscriptions</div>
@@ -982,7 +1012,7 @@
 
                         <!-- Create Subscription -->
                         <div>
-                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Create Subscription</h4>
+                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{.T.Tr "api_docs_create_sub"}}</h4>
                             <div class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-sm overflow-x-auto">
                                 <div class="text-green-400">curl -X POST \</div>
                                 <div class="ml-4">-H "Authorization: Bearer sk_your_api_key_here" \</div>
@@ -1000,13 +1030,13 @@
 
                         <!-- Get Statistics -->
                         <div>
-                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Get Statistics</h4>
+                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{.T.Tr "api_docs_get_stats"}}</h4>
                             <div class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-sm overflow-x-auto">
                                 <div class="text-green-400">curl -H "Authorization: Bearer sk_your_api_key_here" \</div>
                                 <div class="ml-4">http://localhost:8080/api/v1/stats</div>
                             </div>
                             <div class="mt-2">
-                                <h5 class="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">Response:</h5>
+                                <h5 class="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">{{.T.Tr "api_docs_response"}}</h5>
                                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 font-mono text-xs transition-colors duration-200">
 <pre>{
   "total_count": 15,
@@ -1026,7 +1056,7 @@
 
                 <!-- Additional Resources -->
                 <div>
-                    <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">Additional Resources</h3>
+                    <h3 class="text-md font-medium text-gray-900 dark:text-white mb-2">{{.T.Tr "api_docs_resources"}}</h3>
                     <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 transition-colors duration-200">
                         <div class="flex items-start">
                             <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -1111,7 +1141,7 @@
 function renderCategories(categories) {
     const list = document.getElementById('categories-list');
     if (!categories.length) {
-        list.innerHTML = '<div class="text-center py-4 text-gray-500">No categories found.</div>';
+        list.innerHTML = '<div class="text-center py-4 text-gray-500">{{.T.Tr "no_categories"}}</div>';
         return;
     }
     list.innerHTML = categories.map(cat => `
@@ -1120,13 +1150,13 @@ function renderCategories(categories) {
                 <span class="category-name text-sm font-medium text-gray-900" id="category-name-${cat.id}">${cat.name}</span>
                 <form id="edit-category-form-${cat.id}" class="hidden inline">
                     <input type="text" name="name" value="${cat.name}" class="px-2 py-1 border border-gray-300 rounded text-sm">
-                    <button type="submit" class="text-primary text-sm font-medium ml-2">Save</button>
-                    <button type="button" onclick="cancelEdit(${cat.id})" class="text-gray-500 text-sm ml-1">Cancel</button>
+                    <button type="submit" class="text-primary text-sm font-medium ml-2">{{.T.Tr "btn_save"}}</button>
+                    <button type="button" onclick="cancelEdit(${cat.id})" class="text-gray-500 text-sm ml-1">{{.T.Tr "btn_cancel"}}</button>
                 </form>
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="startEdit(${cat.id})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Edit</button>
-                <button onclick="deleteCategory(${cat.id})" class="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
+                <button onclick="startEdit(${cat.id})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">{{.T.Tr "btn_edit"}}</button>
+                <button onclick="deleteCategory(${cat.id})" class="text-red-600 hover:text-red-800 text-sm font-medium">{{.T.Tr "btn_delete"}}</button>
             </div>
         </div>
     `).join('');
@@ -1162,7 +1192,7 @@ function addCategory(e) {
     });
 }
 function deleteCategory(id) {
-    if (!confirm('Delete this category?')) return;
+    if (!confirm('{{.T.Tr "confirm_delete_category"}}')) return;
     fetch(`/api/categories/${id}`, { method: 'DELETE' })
         .then(async response => {
             if (!response.ok) {

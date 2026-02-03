@@ -44,7 +44,7 @@ func (h *SettingsHandler) SaveSMTPSettings(c *gin.Context) {
 	// Validate required fields
 	if config.Host == "" || config.Port == 0 || config.Username == "" || config.Password == "" || config.From == "" || config.To == "" {
 		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
-			"Error": "Required SMTP fields: Host, Port, Username, Password, From email, To email",
+			"Error": tr(c, "settings_error_smtp_required", "Required SMTP fields: Host, Port, Username, Password, From email, To email"),
 			"Type":  "error",
 		})
 		return
@@ -61,7 +61,7 @@ func (h *SettingsHandler) SaveSMTPSettings(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "smtp-message.html", gin.H{
-		"Message": "SMTP settings saved successfully",
+		"Message": tr(c, "settings_success_smtp_saved", "SMTP settings saved successfully"),
 		"Type":    "success",
 	})
 }
@@ -88,7 +88,7 @@ func (h *SettingsHandler) TestSMTPConnection(c *gin.Context) {
 	// Validate required fields for testing (connection test doesn't need From/To, but we validate for consistency)
 	if config.Host == "" || config.Port == 0 || config.Username == "" || config.Password == "" {
 		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
-			"Error": "Host, Port, Username, and Password are required for testing",
+			"Error": tr(c, "settings_error_smtp_test_required", "Host, Port, Username, and Password are required for testing"),
 			"Type":  "error",
 		})
 		return
@@ -166,7 +166,7 @@ func (h *SettingsHandler) TestSMTPConnection(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "smtp-message.html", gin.H{
-		"Message": "SMTP connection test successful!",
+		"Message": tr(c, "settings_success_smtp_test", "SMTP connection test successful!"),
 		"Type":    "success",
 	})
 }
@@ -281,9 +281,9 @@ func (h *SettingsHandler) GetSMTPConfig(c *gin.Context) {
 func (h *SettingsHandler) ListAPIKeys(c *gin.Context) {
 	keys, err := h.service.GetAllAPIKeys()
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "api-keys-list.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": err.Error(),
-		})
+		}))
 		return
 	}
 
@@ -294,27 +294,27 @@ func (h *SettingsHandler) ListAPIKeys(c *gin.Context) {
 		}
 	}
 
-	c.HTML(http.StatusOK, "api-keys-list.html", gin.H{
+	c.HTML(http.StatusOK, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 		"Keys": keys,
-	})
+	}))
 }
 
 // CreateAPIKey generates a new API key
 func (h *SettingsHandler) CreateAPIKey(c *gin.Context) {
 	name := c.PostForm("name")
 	if name == "" {
-		c.HTML(http.StatusBadRequest, "api-keys-list.html", gin.H{
+		c.HTML(http.StatusBadRequest, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": "API key name is required",
-		})
+		}))
 		return
 	}
 
 	// Generate a secure random API key
 	keyBytes := make([]byte, 32)
 	if _, err := rand.Read(keyBytes); err != nil {
-		c.HTML(http.StatusInternalServerError, "api-keys-list.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": "Failed to generate API key",
-		})
+		}))
 		return
 	}
 
@@ -323,18 +323,18 @@ func (h *SettingsHandler) CreateAPIKey(c *gin.Context) {
 	// Save the API key
 	newKey, err := h.service.CreateAPIKey(name, apiKey)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "api-keys-list.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": err.Error(),
-		})
+		}))
 		return
 	}
 
 	// Get all keys including the new one
 	keys, err := h.service.GetAllAPIKeys()
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "api-keys-list.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": err.Error(),
-		})
+		}))
 		return
 	}
 
@@ -348,9 +348,9 @@ func (h *SettingsHandler) CreateAPIKey(c *gin.Context) {
 		}
 	}
 
-	c.HTML(http.StatusOK, "api-keys-list.html", gin.H{
+	c.HTML(http.StatusOK, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 		"Keys": keys,
-	})
+	}))
 }
 
 // DeleteAPIKey removes an API key
@@ -358,17 +358,17 @@ func (h *SettingsHandler) DeleteAPIKey(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 32)
 	if err != nil {
-		c.HTML(http.StatusBadRequest, "api-keys-list.html", gin.H{
+		c.HTML(http.StatusBadRequest, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": "Invalid API key ID",
-		})
+		}))
 		return
 	}
 
 	err = h.service.DeleteAPIKey(uint(id))
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "api-keys-list.html", gin.H{
+		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": err.Error(),
-		})
+		}))
 		return
 	}
 
@@ -416,7 +416,7 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 	// Validate inputs
 	if username == "" || password == "" {
 		c.HTML(http.StatusBadRequest, "auth-message.html", gin.H{
-			"Error": "Username and password are required",
+			"Error": tr(c, "settings_error_auth_required", "Username and password are required"),
 			"Type":  "error",
 		})
 		return
@@ -424,7 +424,7 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 
 	if password != confirmPassword {
 		c.HTML(http.StatusBadRequest, "auth-message.html", gin.H{
-			"Error": "Passwords do not match",
+			"Error": tr(c, "settings_error_password_mismatch", "Passwords do not match"),
 			"Type":  "error",
 		})
 		return
@@ -432,7 +432,7 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 
 	if len(password) < 8 {
 		c.HTML(http.StatusBadRequest, "auth-message.html", gin.H{
-			"Error": "Password must be at least 8 characters long",
+			"Error": tr(c, "settings_error_password_short", "Password must be at least 8 characters long"),
 			"Type":  "error",
 		})
 		return
@@ -442,7 +442,7 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 	_, err := h.service.GetSMTPConfig()
 	if err != nil {
 		c.HTML(http.StatusBadRequest, "auth-message.html", gin.H{
-			"Error": "Please configure email settings first (required for password recovery)",
+			"Error": tr(c, "settings_error_email_first", "Please configure email settings first (required for password recovery)"),
 			"Type":  "error",
 		})
 		return
@@ -459,7 +459,7 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "auth-message.html", gin.H{
-		"Message": "Authentication enabled successfully. You will need to login on next page load.",
+		"Message": tr(c, "settings_success_auth_enabled", "Authentication enabled successfully. You will need to login on next page load."),
 		"Type":    "success",
 	})
 }
@@ -476,7 +476,7 @@ func (h *SettingsHandler) DisableAuth(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "auth-message.html", gin.H{
-		"Message": "Authentication disabled successfully",
+		"Message": tr(c, "settings_success_auth_disabled", "Authentication disabled successfully"),
 		"Type":    "success",
 	})
 }
@@ -516,7 +516,7 @@ func (h *SettingsHandler) SavePushoverSettings(c *gin.Context) {
 	// Validate required fields
 	if config.UserKey == "" || config.AppToken == "" {
 		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
-			"Error": "User Key and App Token are required",
+			"Error": tr(c, "settings_error_pushover_required", "User Key and App Token are required"),
 			"Type":  "error",
 		})
 		return
@@ -533,7 +533,7 @@ func (h *SettingsHandler) SavePushoverSettings(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "smtp-message.html", gin.H{
-		"Message": "Pushover settings saved successfully",
+		"Message": tr(c, "settings_success_pushover_saved", "Pushover settings saved successfully"),
 		"Type":    "success",
 	})
 }
@@ -549,7 +549,7 @@ func (h *SettingsHandler) TestPushoverConnection(c *gin.Context) {
 	// Validate required fields
 	if config.UserKey == "" || config.AppToken == "" {
 		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
-			"Error": "User Key and App Token are required for testing",
+			"Error": tr(c, "settings_error_pushover_test_required", "User Key and App Token are required for testing"),
 			"Type":  "error",
 		})
 		return
@@ -592,7 +592,7 @@ func (h *SettingsHandler) TestPushoverConnection(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "smtp-message.html", gin.H{
-		"Message": "Pushover connection test successful! Check your device for the test notification.",
+		"Message": tr(c, "settings_success_pushover_test", "Pushover connection test successful! Check your device for the test notification."),
 		"Type":    "success",
 	})
 }
@@ -611,6 +611,20 @@ func (h *SettingsHandler) GetPushoverConfig(c *gin.Context) {
 		"has_user_key":  config.UserKey != "",
 		"has_app_token": config.AppToken != "",
 	})
+}
+
+// UpdateLanguage updates the language preference
+func (h *SettingsHandler) UpdateLanguage(c *gin.Context) {
+	lang := c.PostForm("language")
+
+	err := h.service.SetLanguage(lang)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Header("HX-Refresh", "true")
+	c.JSON(http.StatusOK, gin.H{"language": lang})
 }
 
 // SetTheme saves the theme preference

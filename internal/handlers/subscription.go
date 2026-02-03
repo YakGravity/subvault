@@ -180,7 +180,8 @@ func (h *SubscriptionHandler) Dashboard(c *gin.Context) {
 	// Enrich with currency conversion
 	enrichedSubs := h.enrichWithCurrencyConversion(subscriptions)
 
-	c.HTML(http.StatusOK, "dashboard.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Title":          "Dashboard",
 		"CurrentPage":    "dashboard",
 		"Stats":          stats,
@@ -188,6 +189,7 @@ func (h *SubscriptionHandler) Dashboard(c *gin.Context) {
 		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
 		"DarkMode":       h.settingsService.IsDarkModeEnabled(),
 	})
+	c.HTML(http.StatusOK, "dashboard.html", data)
 }
 
 // SubscriptionsList renders the subscriptions list page
@@ -206,7 +208,8 @@ func (h *SubscriptionHandler) SubscriptionsList(c *gin.Context) {
 	// Enrich with currency conversion
 	enrichedSubs := h.enrichWithCurrencyConversion(subscriptions)
 
-	c.HTML(http.StatusOK, "subscriptions.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Title":          "Subscriptions",
 		"CurrentPage":    "subscriptions",
 		"Subscriptions":  enrichedSubs,
@@ -215,6 +218,7 @@ func (h *SubscriptionHandler) SubscriptionsList(c *gin.Context) {
 		"SortBy":         sortBy,
 		"Order":          order,
 	})
+	c.HTML(http.StatusOK, "subscriptions.html", data)
 }
 
 // Analytics renders the analytics page
@@ -225,13 +229,15 @@ func (h *SubscriptionHandler) Analytics(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "analytics.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Title":          "Analytics",
 		"CurrentPage":    "analytics",
 		"Stats":          stats,
 		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
 		"DarkMode":       h.settingsService.IsDarkModeEnabled(),
 	})
+	c.HTML(http.StatusOK, "analytics.html", data)
 }
 
 // Calendar renders the calendar page with subscription renewal dates
@@ -301,7 +307,8 @@ func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 	c.Header("Pragma", "no-cache")
 	c.Header("Expires", "0")
 
-	c.HTML(http.StatusOK, "calendar.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Title":          "Calendar",
 		"CurrentPage":    "calendar",
 		"Year":           year,
@@ -314,6 +321,7 @@ func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
 		"DarkMode":       h.settingsService.IsDarkModeEnabled(),
 	})
+	c.HTML(http.StatusOK, "calendar.html", data)
 }
 
 // ExportICal generates and downloads an iCal file with all subscription renewal dates
@@ -409,11 +417,14 @@ func (h *SubscriptionHandler) Settings(c *gin.Context) {
 	authEnabled := h.settingsService.IsAuthEnabled()
 	authUsername, _ := h.settingsService.GetAuthUsername()
 
-	c.HTML(http.StatusOK, "settings.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Title":                     "Settings",
 		"CurrentPage":               "settings",
 		"Currency":                  h.settingsService.GetCurrency(),
 		"CurrencySymbol":            h.settingsService.GetCurrencySymbol(),
+		"Language":                  h.settingsService.GetLanguage(),
+		"SupportedLanguages":        service.SupportedLanguages,
 		"RenewalReminders":          h.settingsService.GetBoolSettingWithDefault("renewal_reminders", false),
 		"HighCostAlerts":            h.settingsService.GetBoolSettingWithDefault("high_cost_alerts", true),
 		"PushoverConfig":            pushoverConfig,
@@ -429,6 +440,7 @@ func (h *SubscriptionHandler) Settings(c *gin.Context) {
 		"AuthEnabled":               authEnabled,
 		"AuthUsername":              authUsername,
 	})
+	c.HTML(http.StatusOK, "settings.html", data)
 }
 
 // API endpoints for HTMX
@@ -449,12 +461,14 @@ func (h *SubscriptionHandler) GetSubscriptions(c *gin.Context) {
 	// Enrich with currency conversion
 	enrichedSubs := h.enrichWithCurrencyConversion(subscriptions)
 
-	c.HTML(http.StatusOK, "subscription-list.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Subscriptions":  enrichedSubs,
 		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
 		"SortBy":         sortBy,
 		"Order":          order,
 	})
+	c.HTML(http.StatusOK, "subscription-list.html", data)
 }
 
 // GetSubscriptionsAPI returns subscriptions as JSON for API calls
@@ -714,12 +728,14 @@ func (h *SubscriptionHandler) GetSubscriptionForm(c *gin.Context) {
 		categories = []models.Category{}
 	}
 
-	c.HTML(http.StatusOK, "subscription-form.html", gin.H{
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
 		"Subscription":   subscription,
 		"IsEdit":         isEdit,
 		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
 		"Categories":     categories,
 	})
+	c.HTML(http.StatusOK, "subscription-form.html", data)
 }
 
 // ExportCSV exports all subscriptions as CSV

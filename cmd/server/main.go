@@ -12,6 +12,7 @@ import (
 	"subtrackr/internal/config"
 	"subtrackr/internal/database"
 	"subtrackr/internal/handlers"
+	"subtrackr/internal/i18n"
 	"subtrackr/internal/middleware"
 	"subtrackr/internal/repository"
 	"subtrackr/internal/service"
@@ -50,13 +51,16 @@ func main() {
 	categoryRepo := repository.NewCategoryRepository(db)
 	exchangeRateRepo := repository.NewExchangeRateRepository(db)
 
+	// Initialize i18n service
+	i18nService := i18n.NewI18nService()
+
 	// Initialize services
 	categoryService := service.NewCategoryService(categoryRepo)
 	currencyService := service.NewCurrencyService(exchangeRateRepo)
 	subscriptionService := service.NewSubscriptionService(subscriptionRepo, categoryService)
 	settingsService := service.NewSettingsService(settingsRepo)
-	emailService := service.NewEmailService(settingsService)
-	pushoverService := service.NewPushoverService(settingsService)
+	emailService := service.NewEmailService(settingsService, i18nService)
+	pushoverService := service.NewPushoverService(settingsService, i18nService)
 	logoService := service.NewLogoService()
 
 	// Handle CLI commands (run before starting HTTP server)
@@ -92,6 +96,20 @@ func main() {
 
 	// Create template functions
 	router.SetFuncMap(template.FuncMap{
+		"dict": func(values ...interface{}) map[string]interface{} {
+			if len(values)%2 != 0 {
+				return nil
+			}
+			m := make(map[string]interface{}, len(values)/2)
+			for i := 0; i < len(values); i += 2 {
+				key, ok := values[i].(string)
+				if !ok {
+					continue
+				}
+				m[key] = values[i+1]
+			}
+			return m
+		},
 		"add": func(a, b float64) float64 { return a + b },
 		"sub": func(a, b float64) float64 { return a - b },
 		"mul": func(a, b float64) float64 { return a * b },
@@ -161,6 +179,9 @@ func main() {
 	// Apply auth middleware
 	router.Use(middleware.AuthMiddleware(settingsService, sessionService))
 
+	// Apply i18n middleware
+	router.Use(middleware.I18nMiddleware(i18nService, settingsService))
+
 	// Routes
 	setupRoutes(router, subscriptionHandler, settingsHandler, settingsService, categoryHandler, authHandler)
 
@@ -192,6 +213,20 @@ func loadTemplates() *template.Template {
 
 	// Add template functions
 	tmpl.Funcs(template.FuncMap{
+		"dict": func(values ...interface{}) map[string]interface{} {
+			if len(values)%2 != 0 {
+				return nil
+			}
+			m := make(map[string]interface{}, len(values)/2)
+			for i := 0; i < len(values); i += 2 {
+				key, ok := values[i].(string)
+				if !ok {
+					continue
+				}
+				m[key] = values[i+1]
+			}
+			return m
+		},
 		"add": func(a, b float64) float64 { return a + b },
 		"sub": func(a, b float64) float64 { return a - b },
 		"mul": func(a, b float64) float64 { return a * b },
@@ -352,6 +387,9 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 
 		// Currency setting
 		api.POST("/settings/currency", settingsHandler.UpdateCurrency)
+
+		// Language setting
+		api.POST("/settings/language", settingsHandler.UpdateLanguage)
 
 		// Dark mode setting
 		api.POST("/settings/dark-mode", settingsHandler.ToggleDarkMode)
