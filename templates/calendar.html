@@ -21,6 +21,7 @@
                         'success': '#10b981',
                         'warning': '#f59e0b',
                         'danger': '#ef4444',
+                        'info': '#3b82f6',
                     }
                 }
             }
@@ -177,7 +178,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                             </svg>
                         </a>
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{.MonthName}}</h1>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white min-w-[14rem] text-center">{{.MonthName}}</h1>
                         <a href="/calendar?year={{.NextMonth.Year}}&month={{printf "%d" (int .NextMonth.Month)}}" 
                            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -193,7 +194,7 @@
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
-                        Export to iCal
+                        {{.T.Tr "calendar_export_ical"}}
                     </a>
                 </div>
 
@@ -201,13 +202,13 @@
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <!-- Day Headers -->
                     <div class="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700">
-                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">Sun</div>
-                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">Mon</div>
-                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">Tue</div>
-                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">Wed</div>
-                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">Thu</div>
-                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">Fri</div>
-                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">Sat</div>
+                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">{{.T.Tr "calendar_day_sun"}}</div>
+                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">{{.T.Tr "calendar_day_mon"}}</div>
+                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">{{.T.Tr "calendar_day_tue"}}</div>
+                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">{{.T.Tr "calendar_day_wed"}}</div>
+                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">{{.T.Tr "calendar_day_thu"}}</div>
+                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">{{.T.Tr "calendar_day_fri"}}</div>
+                        <div class="px-4 py-3 text-center text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900">{{.T.Tr "calendar_day_sat"}}</div>
                     </div>
 
                     <!-- Calendar Days -->

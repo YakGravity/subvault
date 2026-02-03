@@ -918,5 +918,82 @@
   },
   "no_api_keys_yet": {
     "other": "No API keys created yet"
+  },
+  "placeholder_payment_method": {
+    "other": "e.g., Visa ****1234"
+  },
+  "placeholder_account": {
+    "other": "Account email or username"
+  },
+  "placeholder_notes": {
+    "other": "Additional notes about this subscription"
+  },
+  "placeholder_new_category": {
+    "other": "New category name"
+  },
+  "tooltip_renewal_date": {
+    "other": "Renewal date will automatically update after you click Update"
+  },
+  "calendar_day_sun": {
+    "other": "Sun"
+  },
+  "calendar_day_mon": {
+    "other": "Mon"
+  },
+  "calendar_day_tue": {
+    "other": "Tue"
+  },
+  "calendar_day_wed": {
+    "other": "Wed"
+  },
+  "calendar_day_thu": {
+    "other": "Thu"
+  },
+  "calendar_day_fri": {
+    "other": "Fri"
+  },
+  "calendar_day_sat": {
+    "other": "Sat"
+  },
+  "calendar_export_ical": {
+    "other": "Export to iCal"
+  },
+  "analytics_across_active": {
+    "one": "Across {{.Count}} active subscription",
+    "other": "Across {{.Count}} active subscriptions"
+  },
+  "analytics_from_cancelled": {
+    "one": "From {{.Count}} cancelled subscription",
+    "other": "From {{.Count}} cancelled subscriptions"
+  },
+  "api_key_created": {
+    "other": "Created"
+  },
+  "api_key_last_used": {
+    "other": "Last used"
+  },
+  "api_key_never_used": {
+    "other": "Never used"
+  },
+  "api_key_usage": {
+    "other": "Usage"
+  },
+  "api_key_requests": {
+    "other": "requests"
+  },
+  "category_no_categories": {
+    "other": "No categories found."
+  },
+  "analytics_projected_yearly": {
+    "other": "Projected yearly cost"
+  },
+  "api_key_new_badge": {
+    "other": "New"
+  },
+  "api_key_important": {
+    "other": "Important:"
+  },
+  "api_key_copy_warning": {
+    "other": "Copy this API key now. You won't be able to see it again!"
   }
 }

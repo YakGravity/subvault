@@ -57,7 +57,6 @@ func (e *EmailService) tPlural(messageID string, count int, data map[string]inte
 	return e.i18nService.TPluralCount(localizer, messageID, count, data)
 }
 
-
 // SendEmail sends an email using the configured SMTP settings
 func (e *EmailService) SendEmail(subject, body string) error {
 	config, err := e.settingsService.GetSMTPConfig()
@@ -250,20 +249,20 @@ func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) erro
 `
 
 	type AlertData struct {
-		Subscription   *models.Subscription
-		CurrencySymbol string
-		Title          string
-		AlertLabel     string
-		AlertText      string
-		DetailsTitle   string
-		LabelName      string
-		LabelCost      string
+		Subscription     *models.Subscription
+		CurrencySymbol   string
+		Title            string
+		AlertLabel       string
+		AlertText        string
+		DetailsTitle     string
+		LabelName        string
+		LabelCost        string
 		LabelMonthlyCost string
-		LabelCategory  string
+		LabelCategory    string
 		LabelNextRenewal string
-		LabelURL       string
-		FooterAuto     string
-		FooterManage   string
+		LabelURL         string
+		FooterAuto       string
+		FooterManage     string
 	}
 
 	data := AlertData{

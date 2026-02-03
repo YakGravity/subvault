@@ -21,6 +21,7 @@
                         'success': '#10b981',
                         'warning': '#f59e0b',
                         'danger': '#ef4444',
+                        'info': '#3b82f6',
                     }
                 }
             }
@@ -313,9 +314,9 @@
                         <div class="flex items-center">
                             {{if .IconURL}}
                             <img src="{{.IconURL}}" alt="{{.Name}}" class="w-8 h-8 rounded mr-3 flex-shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="object-fit: contain;">
-                            <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else}}bg-warning{{end}} rounded-full mr-3" style="display:none;"></div>
+                            <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else if eq .Status "Trial"}}bg-info{{else}}bg-warning{{end}} rounded-full mr-3" style="display:none;"></div>
                             {{else}}
-                            <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else}}bg-warning{{end}} rounded-full mr-3"></div>
+                            <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else if eq .Status "Trial"}}bg-info{{else}}bg-warning{{end}} rounded-full mr-3"></div>
                             {{end}}
                             <div>
                                 <div class="text-sm font-medium text-gray-900 dark:text-white">{{.Name}}</div>
@@ -340,20 +341,20 @@
                             </svg>
                         </a>
                         {{else}}
-                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{$.CurrencySymbol}}{{printf "%.2f" .Cost}}</div>
+                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}</div>
                         {{end}}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-900 dark:text-white">{{.Schedule}}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{if eq .Status "Active"}}bg-success/20 text-success{{else if eq .Status "Cancelled"}}bg-danger/20 text-danger{{else}}bg-warning/20 text-warning{{end}}">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{if eq .Status "Active"}}bg-success/20 text-success{{else if eq .Status "Cancelled"}}bg-danger/20 text-danger{{else if eq .Status "Trial"}}bg-info/20 text-info{{else}}bg-warning/20 text-warning{{end}}">
                             {{.Status}}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         {{if .RenewalDate}}
-                        {{.RenewalDate.Format "Jan 2, 2006"}}
+                        {{$.T.FormatDate .RenewalDate}}
                         {{else}}
                         <span class="text-gray-400 dark:text-gray-500">—</span>
                         {{end}}

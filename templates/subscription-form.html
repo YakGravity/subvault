@@ -49,7 +49,7 @@
                 <!-- Inline new category input (hidden by default) -->
                 <div id="new-category-container" class="hidden mt-2">
                     <div class="flex gap-2">
-                        <input type="text" id="new-category-name" placeholder="New category name"
+                        <input type="text" id="new-category-name" placeholder="{{.T.Tr "placeholder_new_category"}}"
                                class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-150">
                         <button type="button" onclick="createNewCategory()"
                                 class="px-3 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors duration-150">
@@ -68,7 +68,7 @@
             <div>
                 <label for="cost" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{.T.Tr "sub_form_cost"}} *</label>
                 <div class="relative">
-                    <span class="absolute left-3 top-2 text-gray-500 dark:text-gray-400">{{.CurrencySymbol}}</span>
+                    <span id="cost-currency-symbol" class="absolute left-3 top-2 text-gray-500 dark:text-gray-400">{{.CurrencySymbol}}</span>
                     <input type="number" id="cost" name="cost" step="0.01" min="0" required
                            value="{{if .Subscription}}{{.Subscription.Cost}}{{end}}"
                            class="w-full pl-8 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-150">
@@ -127,7 +127,7 @@
                 <label for="payment_method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{.T.Tr "sub_form_payment_method"}}</label>
                 <input type="text" id="payment_method" name="payment_method"
                        value="{{if .Subscription}}{{.Subscription.PaymentMethod}}{{end}}"
-                       placeholder="e.g., Visa ****1234"
+                       placeholder="{{.T.Tr "placeholder_payment_method"}}"
                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-150">
             </div>
 
@@ -136,7 +136,7 @@
                 <label for="account" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{.T.Tr "sub_form_account"}}</label>
                 <input type="text" id="account" name="account"
                        value="{{if .Subscription}}{{.Subscription.Account}}{{end}}"
-                       placeholder="Account email or username"
+                       placeholder="{{.T.Tr "placeholder_account"}}"
                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-150">
             </div>
 
@@ -168,7 +168,7 @@
                             </svg>
                             <div class="absolute left-0 bottom-full mb-2 hidden group-hover:block z-10 w-56">
                                 <div class="bg-gray-900 dark:bg-gray-800 text-white text-xs rounded-lg py-2 px-3 shadow-lg">
-                                    Renewal date will automatically update after you click Update
+                                    {{.T.Tr "tooltip_renewal_date"}}
                                     <div class="absolute left-2 top-full -mt-1">
                                         <div class="border-4 border-transparent border-t-gray-900 dark:border-t-gray-800"></div>
                                     </div>
@@ -207,7 +207,7 @@
             <div class="md:col-span-2">
                 <label for="notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{.T.Tr "sub_form_notes"}}</label>
                 <textarea id="notes" name="notes" rows="3"
-                          placeholder="Additional notes about this subscription"
+                          placeholder="{{.T.Tr "placeholder_notes"}}"
                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-150">{{if .Subscription}}{{.Subscription.Notes}}{{end}}</textarea>
             </div>
         </div>
@@ -374,6 +374,27 @@ function initRenewalCalculator() {
     }
     // Note: Status changes should NOT trigger renewal date recalculation (fixes #68)
 }
+
+// Update cost field currency symbol when currency dropdown changes
+function initCurrencySymbolSync() {
+    const currencySelect = document.getElementById('original_currency');
+    const symbolSpan = document.getElementById('cost-currency-symbol');
+    if (!currencySelect || !symbolSpan) return;
+
+    const symbols = {
+        'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 'RUB': '₽',
+        'SEK': 'kr', 'PLN': 'zł', 'INR': '₹', 'CHF': 'Fr.', 'BRL': 'R$',
+        'COP': '$', 'BDT': '৳'
+    };
+
+    function updateSymbol() {
+        symbolSpan.textContent = symbols[currencySelect.value] || '$';
+    }
+
+    currencySelect.addEventListener('change', updateSymbol);
+    updateSymbol();
+}
+initCurrencySymbolSync();
 
 // Initialize immediately since this script loads with the form
 initRenewalCalculator();

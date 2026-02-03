@@ -16,11 +16,11 @@ import (
 
 func main() {
 	var (
-		dbPath    = flag.String("db", "subtrackr.db", "Path to SQLite database")
-		dryRun    = flag.Bool("dry-run", false, "Show what would be changed without making changes")
-		action    = flag.String("action", "compare", "Action to perform: compare, migrate, rollback, stats")
-		subID     = flag.Uint("subscription-id", 0, "Subscription ID for single operations")
-		reason    = flag.String("reason", "Manual migration", "Reason for migration")
+		dbPath = flag.String("db", "subtrackr.db", "Path to SQLite database")
+		dryRun = flag.Bool("dry-run", false, "Show what would be changed without making changes")
+		action = flag.String("action", "compare", "Action to perform: compare, migrate, rollback, stats")
+		subID  = flag.Uint("subscription-id", 0, "Subscription ID for single operations")
+		reason = flag.String("reason", "Manual migration", "Reason for migration")
 	)
 	flag.Parse()
 

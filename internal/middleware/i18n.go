@@ -12,7 +12,7 @@ func I18nMiddleware(i18nService *i18n.I18nService, settingsService *service.Sett
 	return func(c *gin.Context) {
 		lang := settingsService.GetLanguage()
 		localizer := i18nService.NewLocalizer(lang)
-		helper := i18n.NewTranslationHelper(i18nService, localizer)
+		helper := i18n.NewTranslationHelper(i18nService, localizer, lang)
 
 		c.Set("lang", lang)
 		c.Set("localizer", localizer)

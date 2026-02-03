@@ -29,7 +29,7 @@ func (s *SettingsService) SaveSMTPConfig(config *models.SMTPConfig) error {
 	if err != nil {
 		return err
 	}
-	
+
 	return s.repo.Set("smtp_config", string(data))
 }
 
@@ -39,13 +39,13 @@ func (s *SettingsService) GetSMTPConfig() (*models.SMTPConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var config models.SMTPConfig
 	err = json.Unmarshal([]byte(data), &config)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &config, nil
 }
 
@@ -60,7 +60,7 @@ func (s *SettingsService) GetBoolSetting(key string, defaultValue bool) (bool, e
 	if err != nil {
 		return defaultValue, err
 	}
-	
+
 	return value == "true", nil
 }
 
@@ -84,12 +84,12 @@ func (s *SettingsService) GetIntSetting(key string, defaultValue int) (int, erro
 	if err != nil {
 		return defaultValue, err
 	}
-	
+
 	intValue, err := strconv.Atoi(value)
 	if err != nil {
 		return defaultValue, err
 	}
-	
+
 	return intValue, nil
 }
 
@@ -170,13 +170,13 @@ func (s *SettingsService) ValidateAPIKey(key string) (*models.APIKey, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Update usage stats
 	err = s.repo.UpdateAPIKeyUsage(apiKey.ID)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return apiKey, nil
 }
 
@@ -205,10 +205,9 @@ func (s *SettingsService) GetCurrency() string {
 	return currency
 }
 
-// GetCurrencySymbol returns the symbol for the current currency
-func (s *SettingsService) GetCurrencySymbol() string {
-	currency := s.GetCurrency()
-	switch currency {
+// CurrencySymbolForCode returns the symbol for a given currency code
+func CurrencySymbolForCode(code string) string {
+	switch code {
 	case "EUR":
 		return "€"
 	case "PLN":
@@ -232,6 +231,11 @@ func (s *SettingsService) GetCurrencySymbol() string {
 	default:
 		return "$"
 	}
+}
+
+// GetCurrencySymbol returns the symbol for the current currency
+func (s *SettingsService) GetCurrencySymbol() string {
+	return CurrencySymbolForCode(s.GetCurrency())
 }
 
 // SetDarkMode saves the dark mode preference
@@ -405,7 +409,7 @@ func (s *SettingsService) SavePushoverConfig(config *models.PushoverConfig) erro
 	if err != nil {
 		return err
 	}
-	
+
 	return s.repo.Set("pushover_config", string(data))
 }
 

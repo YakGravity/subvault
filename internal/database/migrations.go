@@ -43,7 +43,7 @@ func migrateCategoriesToDynamic(db *gorm.DB) error {
 	// Check if migration is needed by looking for the old category column
 	var count int64
 	db.Raw("SELECT COUNT(*) FROM pragma_table_info('subscriptions') WHERE name='category'").Scan(&count)
-	
+
 	if count == 0 {
 		// Migration already completed
 		return nil
@@ -55,7 +55,7 @@ func migrateCategoriesToDynamic(db *gorm.DB) error {
 	defaultCategories := []string{"Entertainment", "Productivity", "Storage", "Software", "Fitness", "Education", "Food", "Travel", "Business", "Other"}
 	var categories []models.Category
 	db.Find(&categories)
-	
+
 	if len(categories) == 0 {
 		for _, name := range defaultCategories {
 			db.Create(&models.Category{Name: name})
@@ -74,7 +74,7 @@ func migrateCategoriesToDynamic(db *gorm.DB) error {
 		ID       uint
 		Category string
 	}
-	
+
 	var oldSubs []OldSubscription
 	db.Table("subscriptions").Select("id, category").Scan(&oldSubs)
 
@@ -95,7 +95,7 @@ func migrateCategoriesToDynamic(db *gorm.DB) error {
 	// SQLite limitation: we can't drop the old category column
 	// The repository layer now handles both old and new schemas transparently
 	// This ensures backward compatibility without data loss
-	
+
 	log.Println("Migration completed: Categories converted to dynamic system")
 	return nil
 }

@@ -18,7 +18,7 @@ func NewSettingsRepository(db *gorm.DB) *SettingsRepository {
 // Set stores or updates a setting
 func (r *SettingsRepository) Set(key, value string) error {
 	var setting models.Settings
-	
+
 	// Try to find existing setting
 	err := r.db.Where("key = ?", key).First(&setting).Error
 	if err == gorm.ErrRecordNotFound {
@@ -31,7 +31,7 @@ func (r *SettingsRepository) Set(key, value string) error {
 	} else if err != nil {
 		return err
 	}
-	
+
 	// Update existing setting
 	setting.Value = value
 	return r.db.Save(&setting).Error
@@ -93,7 +93,7 @@ func (r *SettingsRepository) DeleteAPIKey(id uint) error {
 func (r *SettingsRepository) UpdateAPIKeyUsage(id uint) error {
 	now := time.Now()
 	return r.db.Model(&models.APIKey{}).Where("id = ?", id).Updates(map[string]interface{}{
-		"last_used": now,
+		"last_used":   now,
 		"usage_count": gorm.Expr("usage_count + ?", 1),
 	}).Error
 }

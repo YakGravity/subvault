@@ -155,7 +155,7 @@ func TestTranslationHelper_Tr(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			localizer := svc.NewLocalizer(tt.lang)
-			helper := NewTranslationHelper(svc, localizer)
+			helper := NewTranslationHelper(svc, localizer, tt.lang)
 			result := helper.Tr(tt.messageID)
 			assert.Equal(t, tt.expected, result)
 		})
@@ -194,7 +194,7 @@ func TestTranslationHelper_TrCount(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			localizer := svc.NewLocalizer("en")
-			helper := NewTranslationHelper(svc, localizer)
+			helper := NewTranslationHelper(svc, localizer, "en")
 			result := helper.TrCountData(tt.messageID, tt.count, map[string]interface{}{"Name": "Netflix"})
 			assert.Equal(t, tt.expected, result)
 		})
