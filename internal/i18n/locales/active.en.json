@@ -248,6 +248,42 @@
   "settings_currency_desc": {
     "other": "Choose your preferred currency for displaying subscription costs"
   },
+  "currency_usd": {
+    "other": "US Dollar"
+  },
+  "currency_eur": {
+    "other": "Euro"
+  },
+  "currency_gbp": {
+    "other": "British Pound"
+  },
+  "currency_jpy": {
+    "other": "Japanese Yen"
+  },
+  "currency_rub": {
+    "other": "Russian Ruble"
+  },
+  "currency_sek": {
+    "other": "Swedish Krona"
+  },
+  "currency_pln": {
+    "other": "Polish Zloty"
+  },
+  "currency_inr": {
+    "other": "Indian Rupee"
+  },
+  "currency_chf": {
+    "other": "Swiss Franc"
+  },
+  "currency_brl": {
+    "other": "Brazilian Real"
+  },
+  "currency_cop": {
+    "other": "Colombian Peso"
+  },
+  "currency_bdt": {
+    "other": "Bangladeshi Taka"
+  },
   "settings_categories": {
     "other": "Categories"
   },

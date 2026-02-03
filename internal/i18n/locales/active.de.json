@@ -246,7 +246,43 @@
     "other": "Währung"
   },
   "settings_currency_desc": {
-    "other": "Wählen Sie Ihre bevorzugte Währung für die Anzeige der Abonnementkosten"
+    "other": "Bevorzugte Währung für die Anzeige der Abo-Kosten"
+  },
+  "currency_usd": {
+    "other": "US-Dollar"
+  },
+  "currency_eur": {
+    "other": "Euro"
+  },
+  "currency_gbp": {
+    "other": "Britisches Pfund"
+  },
+  "currency_jpy": {
+    "other": "Japanischer Yen"
+  },
+  "currency_rub": {
+    "other": "Russischer Rubel"
+  },
+  "currency_sek": {
+    "other": "Schwedische Krone"
+  },
+  "currency_pln": {
+    "other": "Polnischer Zloty"
+  },
+  "currency_inr": {
+    "other": "Indische Rupie"
+  },
+  "currency_chf": {
+    "other": "Schweizer Franken"
+  },
+  "currency_brl": {
+    "other": "Brasilianischer Real"
+  },
+  "currency_cop": {
+    "other": "Kolumbianischer Peso"
+  },
+  "currency_bdt": {
+    "other": "Bangladeschischer Taka"
   },
   "settings_categories": {
     "other": "Kategorien"
