@@ -918,5 +918,20 @@
   },
   "no_api_keys_yet": {
     "other": "No API keys created yet"
+  },
+  "placeholder_payment_method": {
+    "other": "e.g., Visa ****1234"
+  },
+  "placeholder_account": {
+    "other": "Account email or username"
+  },
+  "placeholder_notes": {
+    "other": "Additional notes about this subscription"
+  },
+  "placeholder_new_category": {
+    "other": "New category name"
+  },
+  "tooltip_renewal_date": {
+    "other": "Renewal date will automatically update after you click Update"
   }
 }

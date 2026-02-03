@@ -918,5 +918,20 @@
   },
   "no_api_keys_yet": {
     "other": "Noch keine API-Schlüssel erstellt"
+  },
+  "placeholder_payment_method": {
+    "other": "z.B. Visa ****1234"
+  },
+  "placeholder_account": {
+    "other": "E-Mail-Adresse oder Benutzername"
+  },
+  "placeholder_notes": {
+    "other": "Zusätzliche Notizen zu diesem Abonnement"
+  },
+  "placeholder_new_category": {
+    "other": "Neuer Kategoriename"
+  },
+  "tooltip_renewal_date": {
+    "other": "Das Verlängerungsdatum wird nach dem Klick auf Aktualisieren automatisch berechnet"
   }
 }
