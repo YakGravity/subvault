@@ -575,6 +575,15 @@
   "api_docs_resources": {
     "other": "Additional Resources"
   },
+  "api_docs_resources_desc": {
+    "other": "For more detailed API documentation and examples, check the README file in the project repository."
+  },
+  "api_docs_update_sub": {
+    "other": "Update Subscription (Partial)"
+  },
+  "api_docs_delete_sub": {
+    "other": "Delete Subscription"
+  },
   "api_docs_key_info": {
     "other": "Include the API key in the"
   },

@@ -1021,6 +1021,28 @@
                             </div>
                         </div>
 
+                        <!-- Update Subscription (Partial) -->
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{.T.Tr "api_docs_update_sub"}}</h4>
+                            <div class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+                                <div class="text-green-400">curl -X PUT \</div>
+                                <div class="ml-4">-H "Authorization: Bearer sk_your_api_key_here" \</div>
+                                <div class="ml-4">-H "Content-Type: application/json" \</div>
+                                <div class="ml-4">-d '{"cost": 19.99, "notes": "Premium Plan"}' \</div>
+                                <div class="ml-4">http://localhost:8080/api/v1/subscriptions/1</div>
+                            </div>
+                        </div>
+
+                        <!-- Delete Subscription -->
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{.T.Tr "api_docs_delete_sub"}}</h4>
+                            <div class="bg-gray-900 text-gray-100 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+                                <div class="text-green-400">curl -X DELETE \</div>
+                                <div class="ml-4">-H "Authorization: Bearer sk_your_api_key_here" \</div>
+                                <div class="ml-4">http://localhost:8080/api/v1/subscriptions/1</div>
+                            </div>
+                        </div>
+
                         <!-- Get Statistics -->
                         <div>
                             <h4 class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{{.T.Tr "api_docs_get_stats"}}</h4>
@@ -1032,10 +1054,14 @@
                                 <h5 class="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1">{{.T.Tr "api_docs_response"}}</h5>
                                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 font-mono text-xs transition-colors duration-200">
 <pre>{
-  "total_count": 15,
-  "active_count": 12,
-  "total_cost": 245.67,
-  "categories": {
+  "total_monthly_spend": 245.67,
+  "total_annual_spend": 2948.04,
+  "active_subscriptions": 15,
+  "cancelled_subscriptions": 2,
+  "total_saved": 290.88,
+  "monthly_saved": 24.24,
+  "upcoming_renewals": 3,
+  "category_spending": {
     "Entertainment": 45.99,
     "Productivity": 89.00,
     "Storage": 29.99
@@ -1056,8 +1082,7 @@
                                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                             </svg>
                             <div class="text-sm text-blue-800 dark:text-blue-200">
-                                <p>For more detailed API documentation and examples, check the README file in the project repository.</p>
-                                <p class="mt-1">The test script <code class="bg-blue-100 dark:bg-blue-800 px-1 py-0.5 rounded text-blue-800 dark:text-blue-200">test-api.sh</code> provides interactive examples of API usage.</p>
+                                <p>{{.T.Tr "api_docs_resources_desc"}}</p>
                             </div>
                         </div>
                     </div>

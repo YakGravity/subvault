@@ -150,40 +150,40 @@
     "other": "SMTP-Einstellungen speichern"
   },
   "settings_renewal_reminders": {
-    "other": "Verlängerungserinnerungen"
+    "other": "Erinnerung Abo-Verlängerung"
   },
   "settings_renewal_reminders_desc": {
-    "other": "Lassen Sie sich vor Abonnementverlängerungen benachrichtigen"
+    "other": "Vor Abo-Verlängerung erinnern"
   },
   "settings_high_cost_alerts": {
-    "other": "Hochkosten-Warnungen"
+    "other": "Kostenwarnung"
   },
   "settings_high_cost_alerts_desc": {
-    "other": "Warnung beim Hinzufügen teurer Abonnements"
+    "other": "Bei teuren Abos warnen"
   },
   "settings_high_cost_threshold": {
-    "other": "Hochkosten-Schwellenwert"
+    "other": "Kostenschwelle"
   },
   "settings_high_cost_threshold_desc": {
-    "other": "Monatlicher Kostenschwellenwert für Hochkosten-Warnungen (in {{.Symbol}})"
+    "other": "Monatlicher Schwellenwert für Kostenwarnungen (in {{.Symbol}})"
   },
   "settings_days_before_renewal": {
-    "other": "Tage vor Verlängerung"
+    "other": "Vorlauf Verlängerung"
   },
   "settings_days_before_renewal_desc": {
-    "other": "Wie viele Tage vor der Verlängerung soll die Erinnerung gesendet werden"
+    "other": "Tage vor Verlängerung"
   },
   "settings_cancellation_reminders": {
-    "other": "Kündigungserinnerungen"
+    "other": "Kündigungserinnerung"
   },
   "settings_cancellation_reminders_desc": {
-    "other": "Lassen Sie sich vor Abonnementende benachrichtigen"
+    "other": "Vor Ablauf der Kündigungsfrist erinnern"
   },
   "settings_days_before_cancellation": {
-    "other": "Tage vor Kündigung"
+    "other": "Vorlauf Kündigung"
   },
   "settings_days_before_cancellation_desc": {
-    "other": "Wie viele Tage vor der Kündigung soll die Erinnerung gesendet werden"
+    "other": "Tage vor Kündigung"
   },
   "settings_shoutrrr": {
     "other": "Push-Benachrichtigungen (Shoutrrr)"
@@ -574,6 +574,15 @@
   },
   "api_docs_resources": {
     "other": "Weitere Ressourcen"
+  },
+  "api_docs_resources_desc": {
+    "other": "Weitere Informationen und Beispiele zur API finden Sie in der README-Datei des Projekts."
+  },
+  "api_docs_update_sub": {
+    "other": "Abonnement aktualisieren (partiell)"
+  },
+  "api_docs_delete_sub": {
+    "other": "Abonnement löschen"
   },
   "api_docs_key_info": {
     "other": "Fügen Sie den API-Schlüssel im"
