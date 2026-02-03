@@ -29,7 +29,7 @@ func (s *SettingsService) SaveSMTPConfig(config *models.SMTPConfig) error {
 	if err != nil {
 		return err
 	}
-	
+
 	return s.repo.Set("smtp_config", string(data))
 }
 
@@ -39,13 +39,13 @@ func (s *SettingsService) GetSMTPConfig() (*models.SMTPConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	var config models.SMTPConfig
 	err = json.Unmarshal([]byte(data), &config)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &config, nil
 }
 
@@ -60,7 +60,7 @@ func (s *SettingsService) GetBoolSetting(key string, defaultValue bool) (bool, e
 	if err != nil {
 		return defaultValue, err
 	}
-	
+
 	return value == "true", nil
 }
 
@@ -84,12 +84,12 @@ func (s *SettingsService) GetIntSetting(key string, defaultValue int) (int, erro
 	if err != nil {
 		return defaultValue, err
 	}
-	
+
 	intValue, err := strconv.Atoi(value)
 	if err != nil {
 		return defaultValue, err
 	}
-	
+
 	return intValue, nil
 }
 
@@ -170,13 +170,13 @@ func (s *SettingsService) ValidateAPIKey(key string) (*models.APIKey, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// Update usage stats
 	err = s.repo.UpdateAPIKeyUsage(apiKey.ID)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return apiKey, nil
 }
 
@@ -409,7 +409,7 @@ func (s *SettingsService) SavePushoverConfig(config *models.PushoverConfig) erro
 	if err != nil {
 		return err
 	}
-	
+
 	return s.repo.Set("pushover_config", string(data))
 }
 

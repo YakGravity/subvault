@@ -15,8 +15,8 @@ var localeFS embed.FS
 
 // I18nService manages translation bundles and localizer creation
 type I18nService struct {
-	bundle       *i18n.Bundle
-	defaultLang  string
+	bundle         *i18n.Bundle
+	defaultLang    string
 	supportedLangs []string
 }
 
@@ -43,8 +43,8 @@ func NewI18nService() *I18nService {
 	}
 
 	return &I18nService{
-		bundle:       bundle,
-		defaultLang:  "en",
+		bundle:         bundle,
+		defaultLang:    "en",
 		supportedLangs: []string{"en", "de"},
 	}
 }

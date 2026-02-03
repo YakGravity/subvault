@@ -94,15 +94,15 @@ func (h *SubscriptionHandler) enrichWithCurrencyConversion(subscriptions []model
 func (h *SubscriptionHandler) isHighCostWithCurrency(subscription *models.Subscription) bool {
 	threshold := h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0)
 	displayCurrency := h.settingsService.GetCurrency()
-	
+
 	// Get monthly cost in subscription's original currency
 	monthlyCost := subscription.MonthlyCost()
-	
+
 	// If currencies match or conversion is disabled, compare directly
 	if subscription.OriginalCurrency == displayCurrency || !h.currencyService.IsEnabled() {
 		return monthlyCost > threshold
 	}
-	
+
 	// Convert monthly cost to display currency
 	convertedMonthlyCost, err := h.currencyService.ConvertAmount(monthlyCost, subscription.OriginalCurrency, displayCurrency)
 	if err != nil {
@@ -112,7 +112,7 @@ func (h *SubscriptionHandler) isHighCostWithCurrency(subscription *models.Subscr
 		log.Printf("Warning: Failed to convert currency for high-cost check (%s to %s): %v. Using direct comparison.", subscription.OriginalCurrency, displayCurrency, err)
 		return monthlyCost > threshold
 	}
-	
+
 	// Compare converted monthly cost against threshold
 	return convertedMonthlyCost > threshold
 }
@@ -422,26 +422,26 @@ func (h *SubscriptionHandler) Settings(c *gin.Context) {
 
 	data := baseTemplateData(c)
 	mergeTemplateData(data, gin.H{
-		"Title":                     "Settings",
-		"CurrentPage":               "settings",
-		"Currency":                  h.settingsService.GetCurrency(),
-		"CurrencySymbol":            h.settingsService.GetCurrencySymbol(),
-		"Language":                  h.settingsService.GetLanguage(),
-		"SupportedLanguages":        service.SupportedLanguages,
-		"RenewalReminders":          h.settingsService.GetBoolSettingWithDefault("renewal_reminders", false),
-		"HighCostAlerts":            h.settingsService.GetBoolSettingWithDefault("high_cost_alerts", true),
-		"PushoverConfig":            pushoverConfig,
-		"PushoverConfigured":        pushoverConfigured,
-		"HighCostThreshold":         h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
-		"ReminderDays":              h.settingsService.GetIntSettingWithDefault("reminder_days", 7),
-		"CancellationReminders":     h.settingsService.GetBoolSettingWithDefault("cancellation_reminders", false),
-		"CancellationReminderDays":  h.settingsService.GetIntSettingWithDefault("cancellation_reminder_days", 7),
-		"DarkMode":                  h.settingsService.IsDarkModeEnabled(),
-		"Version":                   version.GetVersion(),
-		"SMTPConfig":                smtpConfig,
-		"SMTPConfigured":            smtpConfigured,
-		"AuthEnabled":               authEnabled,
-		"AuthUsername":              authUsername,
+		"Title":                    "Settings",
+		"CurrentPage":              "settings",
+		"Currency":                 h.settingsService.GetCurrency(),
+		"CurrencySymbol":           h.settingsService.GetCurrencySymbol(),
+		"Language":                 h.settingsService.GetLanguage(),
+		"SupportedLanguages":       service.SupportedLanguages,
+		"RenewalReminders":         h.settingsService.GetBoolSettingWithDefault("renewal_reminders", false),
+		"HighCostAlerts":           h.settingsService.GetBoolSettingWithDefault("high_cost_alerts", true),
+		"PushoverConfig":           pushoverConfig,
+		"PushoverConfigured":       pushoverConfigured,
+		"HighCostThreshold":        h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
+		"ReminderDays":             h.settingsService.GetIntSettingWithDefault("reminder_days", 7),
+		"CancellationReminders":    h.settingsService.GetBoolSettingWithDefault("cancellation_reminders", false),
+		"CancellationReminderDays": h.settingsService.GetIntSettingWithDefault("cancellation_reminder_days", 7),
+		"DarkMode":                 h.settingsService.IsDarkModeEnabled(),
+		"Version":                  version.GetVersion(),
+		"SMTPConfig":               smtpConfig,
+		"SMTPConfigured":           smtpConfigured,
+		"AuthEnabled":              authEnabled,
+		"AuthUsername":             authUsername,
 	})
 	c.HTML(http.StatusOK, "settings.html", data)
 }
@@ -530,9 +530,9 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 	if err != nil {
 		// Log the error for debugging
 		log.Printf("Failed to create subscription: %v", err)
-		log.Printf("Subscription data: Name=%s, CategoryID=%d, Status=%s, Schedule=%s", 
+		log.Printf("Subscription data: Name=%s, CategoryID=%d, Status=%s, Schedule=%s",
 			subscription.Name, subscription.CategoryID, subscription.Status, subscription.Schedule)
-		
+
 		if c.GetHeader("HX-Request") != "" {
 			c.Header("HX-Retarget", "#form-errors")
 			c.HTML(http.StatusBadRequest, "form-errors.html", gin.H{

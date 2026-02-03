@@ -40,8 +40,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders(t *testing.T) {
 	now := time.Now()
 
 	tests := []struct {
-		name         string
-		reminderDays int
+		name          string
+		reminderDays  int
 		subscriptions []models.Subscription
 		expectedCount int
 		description   string
@@ -406,17 +406,17 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DuplicatePreventio
 	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService)
 
 	now := time.Now()
-	renewalDate := now.AddDate(0, 0, 5) // 5 days from now
+	renewalDate := now.AddDate(0, 0, 5)       // 5 days from now
 	lastReminderDate := now.AddDate(0, 0, -1) // 1 day ago
 
 	// Create subscription with reminder already sent for this renewal date
 	sub := &models.Subscription{
-		Name:                   "Test Subscription",
-		Cost:                   10.00,
-		Schedule:               "Monthly",
-		Status:                 "Active",
-		RenewalDate:            &renewalDate,
-		LastReminderSent:       &lastReminderDate,
+		Name:                    "Test Subscription",
+		Cost:                    10.00,
+		Schedule:                "Monthly",
+		Status:                  "Active",
+		RenewalDate:             &renewalDate,
+		LastReminderSent:        &lastReminderDate,
 		LastReminderRenewalDate: &renewalDate, // Same as current renewal date
 	}
 	err := db.Create(sub).Error
@@ -454,4 +454,3 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DuplicatePreventio
 func timePtr(t time.Time) *time.Time {
 	return &t
 }
-

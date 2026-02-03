@@ -206,4 +206,3 @@ func (p *PushoverService) SendCancellationReminder(subscription *models.Subscrip
 	title := fmt.Sprintf("%s: %s", p.t("pushover_cancellation_reminder"), subscription.Name)
 	return p.SendNotification(title, message, 0)
 }
-
