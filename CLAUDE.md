@@ -1,5 +1,19 @@
 # SubTrackr - Claude Code Instructions
 
+## Git Remotes
+
+- **origin** → Lokales Gitea (http://localhost:3001/user/subtrackr-v2) - push & fetch
+- **upstream** → GitHub (https://github.com/bscott/subtrackr) - nur fetch, push blockiert
+
+```bash
+# Updates von GitHub holen (nur lesen)
+git fetch upstream
+git merge upstream/main
+
+# Eigene Änderungen pushen (nur zu Gitea)
+git push origin
+```
+
 ## Release Workflow
 
 This project uses versioned branches for releases. Follow this workflow when working on new features or bug fixes.
@@ -8,7 +22,7 @@ This project uses versioned branches for releases. Follow this workflow when wor
 
 ```bash
 # Check current version
-gh release list --limit 1
+tea releases ls --login local --limit 1
 
 # Create and checkout versioned branch
 git checkout -b v0.X.Y
@@ -18,7 +32,7 @@ git checkout -b v0.X.Y
 
 ```bash
 # Create beads issues for work items
-bd create --title="Feature description (#GitHub-issue)" --type=feature --priority=2
+bd create --title="Feature description (#issue)" --type=feature --priority=2
 
 # Update status when starting work
 bd update <issue-id> --status=in_progress
@@ -31,7 +45,9 @@ bd close <issue-id> --reason="Implemented in vX.Y.Z"
 
 ```bash
 # Create draft release with release notes
-gh release create vX.Y.Z --draft --title "vX.Y.Z - Release Title" --notes "$(cat <<'EOF'
+tea releases create vX.Y.Z --login local --draft \
+  --title "vX.Y.Z - Release Title" \
+  --note "$(cat <<'EOF'
 ## What's New
 
 ### Feature Name (#issue)
@@ -62,14 +78,17 @@ git commit -m "vX.Y.Z - Release Title
 - Change 1
 - Change 2"
 
-# Push branch
+# Push branch to Gitea
 git push -u origin vX.Y.Z
 ```
 
 ### 6. Create Pull Request
 
 ```bash
-gh pr create --title "vX.Y.Z - Release Title" --body "$(cat <<'EOF'
+tea pr create --login local \
+  --head v0.X.Y \
+  --title "vX.Y.Z - Release Title" \
+  --description "$(cat <<'EOF'
 ## Summary
 - Change summary
 
@@ -83,21 +102,18 @@ EOF
 )"
 ```
 
-### 7. Comment on GitHub Issues
+### 7. Comment on Issues
 
 ```bash
 # Notify issue reporters
-gh issue comment <issue-number> --body "Fixed in PR #XX. Description of fix."
+tea comment --login local <issue-number> "Fixed in PR #XX. Description of fix."
 ```
 
-### 8. Monitor CI and Merge
+### 8. Merge
 
 ```bash
-# Watch GitHub Actions
-gh run watch <run-id> --exit-status
-
-# Merge when CI passes
-gh pr merge <pr-number> --merge --delete-branch
+# Merge when ready
+tea pr merge <pr-number> --login local --style merge
 
 # Switch to main
 git checkout main && git pull
@@ -107,10 +123,10 @@ git checkout main && git pull
 
 ```bash
 # Publish the draft release
-gh release edit vX.Y.Z --draft=false
+tea releases edit vX.Y.Z --login local --draft false
 
 # Verify
-gh release view vX.Y.Z
+tea releases ls --login local --limit 1
 ```
 
 ## Beads Integration
