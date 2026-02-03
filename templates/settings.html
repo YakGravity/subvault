@@ -795,6 +795,258 @@
                                class="mr-2 text-primary focus:ring-primary">
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-200">৳ BDT ({{.T.Tr "currency_bdt"}})</span>
                     </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="AUD"
+                               {{if eq .Currency "AUD"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "AUD"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">A$ AUD ({{.T.Tr "currency_aud"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="CAD"
+                               {{if eq .Currency "CAD"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "CAD"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">C$ CAD ({{.T.Tr "currency_cad"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="CNY"
+                               {{if eq .Currency "CNY"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "CNY"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">¥ CNY ({{.T.Tr "currency_cny"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="CZK"
+                               {{if eq .Currency "CZK"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "CZK"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Kč CZK ({{.T.Tr "currency_czk"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="DKK"
+                               {{if eq .Currency "DKK"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "DKK"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">kr DKK ({{.T.Tr "currency_dkk"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="HKD"
+                               {{if eq .Currency "HKD"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "HKD"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">HK$ HKD ({{.T.Tr "currency_hkd"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="HUF"
+                               {{if eq .Currency "HUF"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "HUF"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Ft HUF ({{.T.Tr "currency_huf"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="IDR"
+                               {{if eq .Currency "IDR"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "IDR"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">Rp IDR ({{.T.Tr "currency_idr"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="ILS"
+                               {{if eq .Currency "ILS"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "ILS"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">₪ ILS ({{.T.Tr "currency_ils"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="ISK"
+                               {{if eq .Currency "ISK"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "ISK"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">kr ISK ({{.T.Tr "currency_isk"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="KRW"
+                               {{if eq .Currency "KRW"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "KRW"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">₩ KRW ({{.T.Tr "currency_krw"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="MXN"
+                               {{if eq .Currency "MXN"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "MXN"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">MX$ MXN ({{.T.Tr "currency_mxn"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="MYR"
+                               {{if eq .Currency "MYR"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "MYR"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">RM MYR ({{.T.Tr "currency_myr"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="NOK"
+                               {{if eq .Currency "NOK"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "NOK"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">kr NOK ({{.T.Tr "currency_nok"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="NZD"
+                               {{if eq .Currency "NZD"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "NZD"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">NZ$ NZD ({{.T.Tr "currency_nzd"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="PHP"
+                               {{if eq .Currency "PHP"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "PHP"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">₱ PHP ({{.T.Tr "currency_php"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="RON"
+                               {{if eq .Currency "RON"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "RON"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">lei RON ({{.T.Tr "currency_ron"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="SGD"
+                               {{if eq .Currency "SGD"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "SGD"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">S$ SGD ({{.T.Tr "currency_sgd"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="THB"
+                               {{if eq .Currency "THB"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "THB"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">฿ THB ({{.T.Tr "currency_thb"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="TRY"
+                               {{if eq .Currency "TRY"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "TRY"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">₺ TRY ({{.T.Tr "currency_try"}})</span>
+                    </label>
+
+                    <label class="flex items-center">
+                        <input type="radio"
+                               name="currency"
+                               value="ZAR"
+                               {{if eq .Currency "ZAR"}}checked{{end}}
+                               hx-post="/api/settings/currency"
+                               hx-trigger="change"
+                               hx-vals='{"currency": "ZAR"}'
+                               class="mr-2 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200">R ZAR ({{.T.Tr "currency_zar"}})</span>
+                    </label>
                 </div>
 
                 <div id="currency-message" class="mt-2"></div>

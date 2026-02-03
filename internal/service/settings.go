@@ -229,6 +229,50 @@ func CurrencySymbolForCode(code string) string {
 		return "R$"
 	case "BDT":
 		return "৳"
+	case "AUD":
+		return "A$"
+	case "CAD":
+		return "C$"
+	case "CNY":
+		return "¥"
+	case "CZK":
+		return "Kč"
+	case "DKK":
+		return "kr"
+	case "HKD":
+		return "HK$"
+	case "HUF":
+		return "Ft"
+	case "IDR":
+		return "Rp"
+	case "ILS":
+		return "₪"
+	case "ISK":
+		return "kr"
+	case "KRW":
+		return "₩"
+	case "MXN":
+		return "MX$"
+	case "MYR":
+		return "RM"
+	case "NOK":
+		return "kr"
+	case "NZD":
+		return "NZ$"
+	case "PHP":
+		return "₱"
+	case "RON":
+		return "lei"
+	case "SGD":
+		return "S$"
+	case "THB":
+		return "฿"
+	case "TRY":
+		return "₺"
+	case "ZAR":
+		return "R"
+	case "COP":
+		return "COL$"
 	default:
 		return "$"
 	}

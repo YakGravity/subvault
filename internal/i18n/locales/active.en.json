@@ -284,6 +284,69 @@
   "currency_bdt": {
     "other": "Bangladeshi Taka"
   },
+  "currency_aud": {
+    "other": "Australian Dollar"
+  },
+  "currency_cad": {
+    "other": "Canadian Dollar"
+  },
+  "currency_cny": {
+    "other": "Chinese Yuan"
+  },
+  "currency_czk": {
+    "other": "Czech Koruna"
+  },
+  "currency_dkk": {
+    "other": "Danish Krone"
+  },
+  "currency_hkd": {
+    "other": "Hong Kong Dollar"
+  },
+  "currency_huf": {
+    "other": "Hungarian Forint"
+  },
+  "currency_idr": {
+    "other": "Indonesian Rupiah"
+  },
+  "currency_ils": {
+    "other": "Israeli Shekel"
+  },
+  "currency_isk": {
+    "other": "Icelandic Krona"
+  },
+  "currency_krw": {
+    "other": "South Korean Won"
+  },
+  "currency_mxn": {
+    "other": "Mexican Peso"
+  },
+  "currency_myr": {
+    "other": "Malaysian Ringgit"
+  },
+  "currency_nok": {
+    "other": "Norwegian Krone"
+  },
+  "currency_nzd": {
+    "other": "New Zealand Dollar"
+  },
+  "currency_php": {
+    "other": "Philippine Peso"
+  },
+  "currency_ron": {
+    "other": "Romanian Leu"
+  },
+  "currency_sgd": {
+    "other": "Singapore Dollar"
+  },
+  "currency_thb": {
+    "other": "Thai Baht"
+  },
+  "currency_try": {
+    "other": "Turkish Lira"
+  },
+  "currency_zar": {
+    "other": "South African Rand"
+  },
   "settings_categories": {
     "other": "Categories"
   },

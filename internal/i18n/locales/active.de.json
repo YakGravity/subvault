@@ -284,6 +284,69 @@
   "currency_bdt": {
     "other": "Bangladeschischer Taka"
   },
+  "currency_aud": {
+    "other": "Australischer Dollar"
+  },
+  "currency_cad": {
+    "other": "Kanadischer Dollar"
+  },
+  "currency_cny": {
+    "other": "Chinesischer Yuan"
+  },
+  "currency_czk": {
+    "other": "Tschechische Krone"
+  },
+  "currency_dkk": {
+    "other": "Dänische Krone"
+  },
+  "currency_hkd": {
+    "other": "Hongkong-Dollar"
+  },
+  "currency_huf": {
+    "other": "Ungarischer Forint"
+  },
+  "currency_idr": {
+    "other": "Indonesische Rupiah"
+  },
+  "currency_ils": {
+    "other": "Israelischer Schekel"
+  },
+  "currency_isk": {
+    "other": "Isländische Krone"
+  },
+  "currency_krw": {
+    "other": "Südkoreanischer Won"
+  },
+  "currency_mxn": {
+    "other": "Mexikanischer Peso"
+  },
+  "currency_myr": {
+    "other": "Malaysischer Ringgit"
+  },
+  "currency_nok": {
+    "other": "Norwegische Krone"
+  },
+  "currency_nzd": {
+    "other": "Neuseeland-Dollar"
+  },
+  "currency_php": {
+    "other": "Philippinischer Peso"
+  },
+  "currency_ron": {
+    "other": "Rumänischer Leu"
+  },
+  "currency_sgd": {
+    "other": "Singapur-Dollar"
+  },
+  "currency_thb": {
+    "other": "Thailändischer Baht"
+  },
+  "currency_try": {
+    "other": "Türkische Lira"
+  },
+  "currency_zar": {
+    "other": "Südafrikanischer Rand"
+  },
   "settings_categories": {
     "other": "Kategorien"
   },

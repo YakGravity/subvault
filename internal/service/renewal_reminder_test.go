@@ -22,6 +22,7 @@ func setupRenewalReminderTestDB(t *testing.T) *gorm.DB {
 		&models.Subscription{},
 		&models.Category{},
 		&models.Settings{},
+		&models.ExchangeRate{},
 	)
 	if err != nil {
 		t.Fatalf("Failed to migrate test database: %v", err)
@@ -35,7 +36,11 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders(t *testing.T) {
 	subscriptionRepo := repository.NewSubscriptionRepository(db)
 	categoryRepo := repository.NewCategoryRepository(db)
 	categoryService := NewCategoryService(categoryRepo)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService)
+	exchangeRateRepo := repository.NewExchangeRateRepository(db)
+	currencyService := NewCurrencyService(exchangeRateRepo)
+	settingsRepo := repository.NewSettingsRepository(db)
+	settingsService := NewSettingsService(settingsRepo)
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
 
 	now := time.Now()
 
@@ -296,7 +301,11 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DaysCalculation(t 
 	subscriptionRepo := repository.NewSubscriptionRepository(db)
 	categoryRepo := repository.NewCategoryRepository(db)
 	categoryService := NewCategoryService(categoryRepo)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService)
+	exchangeRateRepo := repository.NewExchangeRateRepository(db)
+	currencyService := NewCurrencyService(exchangeRateRepo)
+	settingsRepo := repository.NewSettingsRepository(db)
+	settingsService := NewSettingsService(settingsRepo)
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
 
 	now := time.Now()
 
@@ -330,7 +339,11 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_BoundaryCases(t *t
 	subscriptionRepo := repository.NewSubscriptionRepository(db)
 	categoryRepo := repository.NewCategoryRepository(db)
 	categoryService := NewCategoryService(categoryRepo)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService)
+	exchangeRateRepo := repository.NewExchangeRateRepository(db)
+	currencyService := NewCurrencyService(exchangeRateRepo)
+	settingsRepo := repository.NewSettingsRepository(db)
+	settingsService := NewSettingsService(settingsRepo)
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
 
 	now := time.Now()
 
@@ -403,7 +416,11 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DuplicatePreventio
 	subscriptionRepo := repository.NewSubscriptionRepository(db)
 	categoryRepo := repository.NewCategoryRepository(db)
 	categoryService := NewCategoryService(categoryRepo)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService)
+	exchangeRateRepo := repository.NewExchangeRateRepository(db)
+	currencyService := NewCurrencyService(exchangeRateRepo)
+	settingsRepo := repository.NewSettingsRepository(db)
+	settingsService := NewSettingsService(settingsRepo)
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
 
 	now := time.Now()
 	renewalDate := now.AddDate(0, 0, 5)       // 5 days from now
