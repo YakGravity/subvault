@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
 	"time"
@@ -9,10 +10,17 @@ import (
 type SubscriptionService struct {
 	repo            *repository.SubscriptionRepository
 	categoryService *CategoryService
+	currencyService *CurrencyService
+	settingsService *SettingsService
 }
 
-func NewSubscriptionService(repo *repository.SubscriptionRepository, categoryService *CategoryService) *SubscriptionService {
-	return &SubscriptionService{repo: repo, categoryService: categoryService}
+func NewSubscriptionService(repo *repository.SubscriptionRepository, categoryService *CategoryService, currencyService *CurrencyService, settingsService *SettingsService) *SubscriptionService {
+	return &SubscriptionService{
+		repo:            repo,
+		categoryService: categoryService,
+		currencyService: currencyService,
+		settingsService: settingsService,
+	}
 }
 
 func (s *SubscriptionService) Create(subscription *models.Subscription) (*models.Subscription, error) {
@@ -43,7 +51,23 @@ func (s *SubscriptionService) Count() int64 {
 	return s.repo.Count()
 }
 
+// convertAmount converts an amount from one currency to the display currency.
+// Returns the original amount as fallback if conversion fails (e.g. no ECB rate for RUB/COP/BDT).
+func (s *SubscriptionService) convertAmount(amount float64, fromCurrency, toCurrency string) float64 {
+	if fromCurrency == toCurrency {
+		return amount
+	}
+	converted, err := s.currencyService.ConvertAmount(amount, fromCurrency, toCurrency)
+	if err != nil {
+		// Fallback: use original amount (1:1) if conversion is not available
+		return amount
+	}
+	return converted
+}
+
 func (s *SubscriptionService) GetStats() (*models.Stats, error) {
+	displayCurrency := s.settingsService.GetCurrency()
+
 	activeSubscriptions, err := s.repo.GetActiveSubscriptions()
 	if err != nil {
 		return nil, err
@@ -59,11 +83,6 @@ func (s *SubscriptionService) GetStats() (*models.Stats, error) {
 		return nil, err
 	}
 
-	categoryStats, err := s.repo.GetCategoryStats()
-	if err != nil {
-		return nil, err
-	}
-
 	stats := &models.Stats{
 		ActiveSubscriptions:    len(activeSubscriptions),
 		CancelledSubscriptions: len(cancelledSubscriptions),
@@ -71,21 +90,32 @@ func (s *SubscriptionService) GetStats() (*models.Stats, error) {
 		CategorySpending:       make(map[string]float64),
 	}
 
-	// Calculate totals
+	// Calculate totals with currency conversion
 	for _, sub := range activeSubscriptions {
-		stats.TotalMonthlySpend += sub.MonthlyCost()
-		stats.TotalAnnualSpend += sub.AnnualCost()
+		monthly := s.convertAmount(sub.MonthlyCost(), sub.OriginalCurrency, displayCurrency)
+		annual := s.convertAmount(sub.AnnualCost(), sub.OriginalCurrency, displayCurrency)
+		stats.TotalMonthlySpend += monthly
+		stats.TotalAnnualSpend += annual
+
+		// Build category spending from active subscriptions (replaces SQL aggregation)
+		categoryName := "Uncategorized"
+		if sub.Category.Name != "" {
+			categoryName = sub.Category.Name
+		}
+		stats.CategorySpending[categoryName] += monthly
 	}
 
 	// Calculate savings from cancelled subscriptions
 	for _, sub := range cancelledSubscriptions {
-		stats.TotalSaved += sub.AnnualCost()
-		stats.MonthlySaved += sub.MonthlyCost()
+		stats.TotalSaved += s.convertAmount(sub.AnnualCost(), sub.OriginalCurrency, displayCurrency)
+		stats.MonthlySaved += s.convertAmount(sub.MonthlyCost(), sub.OriginalCurrency, displayCurrency)
 	}
 
-	// Build category spending map
-	for _, cat := range categoryStats {
-		stats.CategorySpending[cat.Category] = cat.Amount
+	// Log if any subscriptions couldn't be converted
+	for _, sub := range activeSubscriptions {
+		if sub.OriginalCurrency != displayCurrency && !HasECBRate(sub.OriginalCurrency) {
+			log.Printf("Warning: No ECB exchange rate for %s, using 1:1 fallback for subscription %q", sub.OriginalCurrency, sub.Name)
+		}
 	}
 
 	return stats, nil

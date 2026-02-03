@@ -248,6 +248,105 @@
   "settings_currency_desc": {
     "other": "Choose your preferred currency for displaying subscription costs"
   },
+  "currency_usd": {
+    "other": "US Dollar"
+  },
+  "currency_eur": {
+    "other": "Euro"
+  },
+  "currency_gbp": {
+    "other": "British Pound"
+  },
+  "currency_jpy": {
+    "other": "Japanese Yen"
+  },
+  "currency_rub": {
+    "other": "Russian Ruble"
+  },
+  "currency_sek": {
+    "other": "Swedish Krona"
+  },
+  "currency_pln": {
+    "other": "Polish Zloty"
+  },
+  "currency_inr": {
+    "other": "Indian Rupee"
+  },
+  "currency_chf": {
+    "other": "Swiss Franc"
+  },
+  "currency_brl": {
+    "other": "Brazilian Real"
+  },
+  "currency_cop": {
+    "other": "Colombian Peso"
+  },
+  "currency_bdt": {
+    "other": "Bangladeshi Taka"
+  },
+  "currency_aud": {
+    "other": "Australian Dollar"
+  },
+  "currency_cad": {
+    "other": "Canadian Dollar"
+  },
+  "currency_cny": {
+    "other": "Chinese Yuan"
+  },
+  "currency_czk": {
+    "other": "Czech Koruna"
+  },
+  "currency_dkk": {
+    "other": "Danish Krone"
+  },
+  "currency_hkd": {
+    "other": "Hong Kong Dollar"
+  },
+  "currency_huf": {
+    "other": "Hungarian Forint"
+  },
+  "currency_idr": {
+    "other": "Indonesian Rupiah"
+  },
+  "currency_ils": {
+    "other": "Israeli Shekel"
+  },
+  "currency_isk": {
+    "other": "Icelandic Krona"
+  },
+  "currency_krw": {
+    "other": "South Korean Won"
+  },
+  "currency_mxn": {
+    "other": "Mexican Peso"
+  },
+  "currency_myr": {
+    "other": "Malaysian Ringgit"
+  },
+  "currency_nok": {
+    "other": "Norwegian Krone"
+  },
+  "currency_nzd": {
+    "other": "New Zealand Dollar"
+  },
+  "currency_php": {
+    "other": "Philippine Peso"
+  },
+  "currency_ron": {
+    "other": "Romanian Leu"
+  },
+  "currency_sgd": {
+    "other": "Singapore Dollar"
+  },
+  "currency_thb": {
+    "other": "Thai Baht"
+  },
+  "currency_try": {
+    "other": "Turkish Lira"
+  },
+  "currency_zar": {
+    "other": "South African Rand"
+  },
   "settings_categories": {
     "other": "Categories"
   },
@@ -574,6 +673,15 @@
   },
   "api_docs_resources": {
     "other": "Additional Resources"
+  },
+  "api_docs_resources_desc": {
+    "other": "For more detailed API documentation and examples, check the README file in the project repository."
+  },
+  "api_docs_update_sub": {
+    "other": "Update Subscription (Partial)"
+  },
+  "api_docs_delete_sub": {
+    "other": "Delete Subscription"
   },
   "api_docs_key_info": {
     "other": "Include the API key in the"

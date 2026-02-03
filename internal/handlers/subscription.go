@@ -67,8 +67,8 @@ func (h *SubscriptionHandler) enrichWithCurrencyConversion(subscriptions []model
 			ShowConversion:         false,
 		}
 
-		// Only show conversion if currency service is enabled and currencies differ
-		if h.currencyService.IsEnabled() && sub.OriginalCurrency != "" && sub.OriginalCurrency != displayCurrency {
+		// Only show conversion if currencies differ
+		if sub.OriginalCurrency != "" && sub.OriginalCurrency != displayCurrency {
 			if convertedCost, err := h.currencyService.ConvertAmount(sub.Cost, sub.OriginalCurrency, displayCurrency); err == nil {
 				enriched.ConvertedCost = convertedCost
 				enriched.ConvertedAnnualCost = convertedCost * h.getScheduleMultiplier(sub.Schedule)
@@ -98,8 +98,8 @@ func (h *SubscriptionHandler) isHighCostWithCurrency(subscription *models.Subscr
 	// Get monthly cost in subscription's original currency
 	monthlyCost := subscription.MonthlyCost()
 
-	// If currencies match or conversion is disabled, compare directly
-	if subscription.OriginalCurrency == displayCurrency || !h.currencyService.IsEnabled() {
+	// If currencies match, compare directly
+	if subscription.OriginalCurrency == displayCurrency {
 		return monthlyCost > threshold
 	}
 

@@ -2,55 +2,68 @@ package service
 
 import (
 	"crypto/tls"
-	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
-	"os"
 	"strings"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
 	"time"
 )
 
-// SupportedCurrencies defines the list of currencies supported for exchange rates and settings
-var SupportedCurrencies = []string{"USD", "EUR", "GBP", "JPY", "RUB", "SEK", "PLN", "INR", "CHF", "BRL", "COP", "BDT"}
+const ecbDailyURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
 
-// supportedCurrencySymbols returns the currencies as a comma-separated string for API calls
+// SupportedCurrencies defines the list of currencies supported for exchange rates and settings.
+// Currencies with ECB rates are listed first, followed by currencies without ECB data.
+var SupportedCurrencies = []string{
+	"EUR", "USD", "GBP", "JPY", "CHF", "SEK", "PLN", "INR", "BRL",
+	"AUD", "CAD", "CNY", "CZK", "DKK", "HKD", "HUF", "IDR", "ILS",
+	"ISK", "KRW", "MXN", "MYR", "NOK", "NZD", "PHP", "RON", "SGD",
+	"THB", "TRY", "ZAR",
+	"RUB", "COP", "BDT", // No ECB rates available for these
+}
+
+// ecbCurrencies contains currencies provided by the ECB (EUR is implicit as base)
+var ecbCurrencies = map[string]bool{
+	"USD": true, "JPY": true, "GBP": true, "CHF": true, "SEK": true,
+	"PLN": true, "INR": true, "BRL": true, "AUD": true, "CAD": true,
+	"CNY": true, "CZK": true, "DKK": true, "HKD": true, "HUF": true,
+	"IDR": true, "ILS": true, "ISK": true, "KRW": true, "MXN": true,
+	"MYR": true, "NOK": true, "NZD": true, "PHP": true, "RON": true,
+	"SGD": true, "THB": true, "TRY": true, "ZAR": true,
+}
+
+// HasECBRate returns whether the ECB provides exchange rates for this currency
+func HasECBRate(currency string) bool {
+	if currency == "EUR" {
+		return true
+	}
+	return ecbCurrencies[currency]
+}
+
+// supportedCurrencySymbols returns the currencies as a comma-separated string
 func supportedCurrencySymbols() string {
 	return strings.Join(SupportedCurrencies, ",")
 }
 
+// ECB XML response structs
+type ecbEnvelope struct {
+	XMLName xml.Name  `xml:"Envelope"`
+	Rates   []ecbRate `xml:"Cube>Cube>Cube"`
+}
+
+type ecbRate struct {
+	Currency string  `xml:"currency,attr"`
+	Rate     float64 `xml:"rate,attr"`
+}
+
 type CurrencyService struct {
-	repo   *repository.ExchangeRateRepository
-	apiKey string
-}
-
-type FixerResponse struct {
-	Success   bool               `json:"success"`
-	Timestamp int64              `json:"timestamp"`
-	Base      string             `json:"base"`
-	Date      string             `json:"date"`
-	Rates     map[string]float64 `json:"rates"`
-	Error     *FixerError        `json:"error,omitempty"`
-}
-
-type FixerError struct {
-	Code int    `json:"code"`
-	Info string `json:"info"`
+	repo *repository.ExchangeRateRepository
 }
 
 func NewCurrencyService(repo *repository.ExchangeRateRepository) *CurrencyService {
-	return &CurrencyService{
-		repo:   repo,
-		apiKey: os.Getenv("FIXER_API_KEY"),
-	}
-}
-
-// IsEnabled returns true if currency conversion is enabled (API key is set)
-func (s *CurrencyService) IsEnabled() bool {
-	return s.apiKey != ""
+	return &CurrencyService{repo: repo}
 }
 
 // GetExchangeRate retrieves exchange rate between two currencies
@@ -65,12 +78,12 @@ func (s *CurrencyService) GetExchangeRate(fromCurrency, toCurrency string) (floa
 		return rate.Rate, nil
 	}
 
-	// If no API key, return error
-	if !s.IsEnabled() {
-		return 0, fmt.Errorf("currency conversion not available - no Fixer API key configured")
+	// Check if both currencies have ECB support
+	if !HasECBRate(fromCurrency) || !HasECBRate(toCurrency) {
+		return 0, fmt.Errorf("no exchange rate available for %s to %s (not provided by ECB)", fromCurrency, toCurrency)
 	}
 
-	// Fetch from Fixer.io API
+	// Fetch from ECB
 	return s.fetchAndCacheRates(fromCurrency, toCurrency)
 }
 
@@ -83,61 +96,46 @@ func (s *CurrencyService) ConvertAmount(amount float64, fromCurrency, toCurrency
 	return amount * rate, nil
 }
 
-// fetchAndCacheRates fetches rates from Fixer.io and caches them.
-// Note: Free Fixer.io plan only supports EUR base, so baseCurrency parameter
-// is used for cross-rate calculations but API always fetches with EUR base.
+// fetchAndCacheRates fetches rates from the ECB and caches them.
+// ECB provides rates with EUR as base, so cross-rate calculations are used for other pairs.
 func (s *CurrencyService) fetchAndCacheRates(baseCurrency, targetCurrency string) (float64, error) {
-	// Use supported currencies as comma-separated string
-	symbols := supportedCurrencySymbols()
-
-	// Free Fixer.io plan only supports EUR as base currency
-	// Always fetch with EUR as base and calculate cross-rates if needed
-	apiURL := fmt.Sprintf("https://data.fixer.io/api/latest?access_key=%s&base=EUR&symbols=%s",
-		s.apiKey, symbols)
-
-	// Validate URL to ensure we're calling the expected API
-	parsedURL, err := url.Parse(apiURL)
-	if err != nil {
-		return 0, fmt.Errorf("invalid API URL: %w", err)
-	}
-	if parsedURL.Host != "data.fixer.io" {
-		return 0, fmt.Errorf("unauthorized API host: %s", parsedURL.Host)
-	}
-
-	// Configure HTTP client with security and timeout settings
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
-				MinVersion: tls.VersionTLS12, // Require TLS 1.2 or higher
+				MinVersion: tls.VersionTLS12,
 			},
 		},
 	}
-	resp, err := client.Get(apiURL)
+	resp, err := client.Get(ecbDailyURL)
 	if err != nil {
-		return 0, fmt.Errorf("failed to fetch exchange rates: %w", err)
+		return 0, fmt.Errorf("failed to fetch ECB exchange rates: %w", err)
 	}
 	defer resp.Body.Close()
 
-	var fixerResp FixerResponse
-	if err := json.NewDecoder(resp.Body).Decode(&fixerResp); err != nil {
-		return 0, fmt.Errorf("failed to decode response: %w", err)
+	if resp.StatusCode != http.StatusOK {
+		return 0, fmt.Errorf("ECB API returned status %d", resp.StatusCode)
 	}
 
-	if !fixerResp.Success {
-		if fixerResp.Error != nil {
-			return 0, fmt.Errorf("Fixer API error: %s", fixerResp.Error.Info)
-		}
-		return 0, fmt.Errorf("Fixer API request failed")
+	var envelope ecbEnvelope
+	if err := xml.NewDecoder(resp.Body).Decode(&envelope); err != nil {
+		return 0, fmt.Errorf("failed to decode ECB response: %w", err)
 	}
 
-	// Parse date
-	rateDate := time.Unix(fixerResp.Timestamp, 0)
+	if len(envelope.Rates) == 0 {
+		return 0, fmt.Errorf("ECB response contained no rates")
+	}
 
-	// Cache all rates (always with EUR as base from Fixer.io)
+	// Build rates map
+	ratesMap := make(map[string]float64)
+	for _, r := range envelope.Rates {
+		ratesMap[r.Currency] = r.Rate
+	}
+
+	// Cache all rates with EUR as base
+	rateDate := time.Now()
 	var ratesToSave []models.ExchangeRate
 
-	// Add EUR to EUR rate (1.0)
 	ratesToSave = append(ratesToSave, models.ExchangeRate{
 		BaseCurrency: "EUR",
 		Currency:     "EUR",
@@ -145,8 +143,7 @@ func (s *CurrencyService) fetchAndCacheRates(baseCurrency, targetCurrency string
 		Date:         rateDate,
 	})
 
-	// Add all other rates from API
-	for currency, rate := range fixerResp.Rates {
+	for currency, rate := range ratesMap {
 		ratesToSave = append(ratesToSave, models.ExchangeRate{
 			BaseCurrency: "EUR",
 			Currency:     currency,
@@ -157,29 +154,23 @@ func (s *CurrencyService) fetchAndCacheRates(baseCurrency, targetCurrency string
 
 	if len(ratesToSave) > 0 {
 		if err := s.repo.SaveRates(ratesToSave); err != nil {
-			// Log error but don't fail the request
 			log.Printf("Warning: failed to cache exchange rates: %v", err)
 		}
 	}
 
-	// Calculate the cross-rate if needed
+	// Calculate cross-rate
 	if baseCurrency == "EUR" {
-		// Direct rate from EUR
-		if rate, exists := fixerResp.Rates[targetCurrency]; exists {
+		if rate, exists := ratesMap[targetCurrency]; exists {
 			return rate, nil
 		}
 	} else if targetCurrency == "EUR" {
-		// Inverse rate to EUR
-		if rate, exists := fixerResp.Rates[baseCurrency]; exists && rate != 0 {
+		if rate, exists := ratesMap[baseCurrency]; exists && rate != 0 {
 			return 1.0 / rate, nil
 		}
 	} else {
-		// Cross-rate: base->EUR->target
-		baseToEur, exists1 := fixerResp.Rates[baseCurrency]
-		eurToTarget, exists2 := fixerResp.Rates[targetCurrency]
-
+		baseToEur, exists1 := ratesMap[baseCurrency]
+		eurToTarget, exists2 := ratesMap[targetCurrency]
 		if exists1 && exists2 && baseToEur != 0 {
-			// Convert: (1/baseToEur) * eurToTarget = cross rate
 			return eurToTarget / baseToEur, nil
 		}
 	}
@@ -187,22 +178,11 @@ func (s *CurrencyService) fetchAndCacheRates(baseCurrency, targetCurrency string
 	return 0, fmt.Errorf("exchange rate for %s to %s not available", baseCurrency, targetCurrency)
 }
 
-// RefreshRates updates all exchange rates from the API
+// RefreshRates updates all exchange rates from the ECB
 func (s *CurrencyService) RefreshRates() error {
-	if !s.IsEnabled() {
-		return fmt.Errorf("currency service not enabled")
+	_, err := s.fetchAndCacheRates("EUR", "USD")
+	if err != nil {
+		return fmt.Errorf("failed to refresh rates: %w", err)
 	}
-
-	// Fetch rates for major base currencies
-	baseCurrencies := []string{"USD", "EUR"}
-
-	for _, base := range baseCurrencies {
-		_, err := s.fetchAndCacheRates(base, "USD") // Fetch all supported currencies (EUR base only due to free plan)
-		if err != nil {
-			return fmt.Errorf("failed to refresh rates for %s: %w", base, err)
-		}
-	}
-
-	// Clean up old rates (keep last 7 days)
 	return s.repo.DeleteStaleRates(7 * 24 * time.Hour)
 }

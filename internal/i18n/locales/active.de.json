@@ -150,40 +150,40 @@
     "other": "SMTP-Einstellungen speichern"
   },
   "settings_renewal_reminders": {
-    "other": "Verlängerungserinnerungen"
+    "other": "Erinnerung Abo-Verlängerung"
   },
   "settings_renewal_reminders_desc": {
-    "other": "Lassen Sie sich vor Abonnementverlängerungen benachrichtigen"
+    "other": "Vor Abo-Verlängerung erinnern"
   },
   "settings_high_cost_alerts": {
-    "other": "Hochkosten-Warnungen"
+    "other": "Kostenwarnung"
   },
   "settings_high_cost_alerts_desc": {
-    "other": "Warnung beim Hinzufügen teurer Abonnements"
+    "other": "Bei teuren Abos warnen"
   },
   "settings_high_cost_threshold": {
-    "other": "Hochkosten-Schwellenwert"
+    "other": "Kostenschwelle"
   },
   "settings_high_cost_threshold_desc": {
-    "other": "Monatlicher Kostenschwellenwert für Hochkosten-Warnungen (in {{.Symbol}})"
+    "other": "Monatlicher Schwellenwert für Kostenwarnungen (in {{.Symbol}})"
   },
   "settings_days_before_renewal": {
-    "other": "Tage vor Verlängerung"
+    "other": "Vorlauf Verlängerung"
   },
   "settings_days_before_renewal_desc": {
-    "other": "Wie viele Tage vor der Verlängerung soll die Erinnerung gesendet werden"
+    "other": "Tage vor Verlängerung"
   },
   "settings_cancellation_reminders": {
-    "other": "Kündigungserinnerungen"
+    "other": "Kündigungserinnerung"
   },
   "settings_cancellation_reminders_desc": {
-    "other": "Lassen Sie sich vor Abonnementende benachrichtigen"
+    "other": "Vor Ablauf der Kündigungsfrist erinnern"
   },
   "settings_days_before_cancellation": {
-    "other": "Tage vor Kündigung"
+    "other": "Vorlauf Kündigung"
   },
   "settings_days_before_cancellation_desc": {
-    "other": "Wie viele Tage vor der Kündigung soll die Erinnerung gesendet werden"
+    "other": "Tage vor Kündigung"
   },
   "settings_shoutrrr": {
     "other": "Push-Benachrichtigungen (Shoutrrr)"
@@ -246,7 +246,106 @@
     "other": "Währung"
   },
   "settings_currency_desc": {
-    "other": "Wählen Sie Ihre bevorzugte Währung für die Anzeige der Abonnementkosten"
+    "other": "Bevorzugte Währung für die Anzeige der Abo-Kosten"
+  },
+  "currency_usd": {
+    "other": "US-Dollar"
+  },
+  "currency_eur": {
+    "other": "Euro"
+  },
+  "currency_gbp": {
+    "other": "Britisches Pfund"
+  },
+  "currency_jpy": {
+    "other": "Japanischer Yen"
+  },
+  "currency_rub": {
+    "other": "Russischer Rubel"
+  },
+  "currency_sek": {
+    "other": "Schwedische Krone"
+  },
+  "currency_pln": {
+    "other": "Polnischer Zloty"
+  },
+  "currency_inr": {
+    "other": "Indische Rupie"
+  },
+  "currency_chf": {
+    "other": "Schweizer Franken"
+  },
+  "currency_brl": {
+    "other": "Brasilianischer Real"
+  },
+  "currency_cop": {
+    "other": "Kolumbianischer Peso"
+  },
+  "currency_bdt": {
+    "other": "Bangladeschischer Taka"
+  },
+  "currency_aud": {
+    "other": "Australischer Dollar"
+  },
+  "currency_cad": {
+    "other": "Kanadischer Dollar"
+  },
+  "currency_cny": {
+    "other": "Chinesischer Yuan"
+  },
+  "currency_czk": {
+    "other": "Tschechische Krone"
+  },
+  "currency_dkk": {
+    "other": "Dänische Krone"
+  },
+  "currency_hkd": {
+    "other": "Hongkong-Dollar"
+  },
+  "currency_huf": {
+    "other": "Ungarischer Forint"
+  },
+  "currency_idr": {
+    "other": "Indonesische Rupiah"
+  },
+  "currency_ils": {
+    "other": "Israelischer Schekel"
+  },
+  "currency_isk": {
+    "other": "Isländische Krone"
+  },
+  "currency_krw": {
+    "other": "Südkoreanischer Won"
+  },
+  "currency_mxn": {
+    "other": "Mexikanischer Peso"
+  },
+  "currency_myr": {
+    "other": "Malaysischer Ringgit"
+  },
+  "currency_nok": {
+    "other": "Norwegische Krone"
+  },
+  "currency_nzd": {
+    "other": "Neuseeland-Dollar"
+  },
+  "currency_php": {
+    "other": "Philippinischer Peso"
+  },
+  "currency_ron": {
+    "other": "Rumänischer Leu"
+  },
+  "currency_sgd": {
+    "other": "Singapur-Dollar"
+  },
+  "currency_thb": {
+    "other": "Thailändischer Baht"
+  },
+  "currency_try": {
+    "other": "Türkische Lira"
+  },
+  "currency_zar": {
+    "other": "Südafrikanischer Rand"
   },
   "settings_categories": {
     "other": "Kategorien"
@@ -574,6 +673,15 @@
   },
   "api_docs_resources": {
     "other": "Weitere Ressourcen"
+  },
+  "api_docs_resources_desc": {
+    "other": "Weitere Informationen und Beispiele zur API finden Sie in der README-Datei des Projekts."
+  },
+  "api_docs_update_sub": {
+    "other": "Abonnement aktualisieren (partiell)"
+  },
+  "api_docs_delete_sub": {
+    "other": "Abonnement löschen"
   },
   "api_docs_key_info": {
     "other": "Fügen Sie den API-Schlüssel im"

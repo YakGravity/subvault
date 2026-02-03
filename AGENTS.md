@@ -52,7 +52,7 @@ subtrackr-xyz/
 - **subscription.go**: Subscription operations
 - **settings.go**: Settings management
 - **category.go**: Category operations
-- **currency.go**: Currency conversion (Fixer.io integration)
+- **currency.go**: Currency conversion (ECB exchange rates)
 - **email.go**: Email notification service (SMTP)
 - **pushover.go**: Pushover notification service
 
@@ -133,10 +133,10 @@ subtrackr-xyz/
    - Works alongside email notifications
 
 4. **Currency Support**
-   - USD, EUR, GBP, JPY, RUB, SEK, PLN, INR, CHF, BRL, COP, BDT
-   - Optional Fixer.io integration for real-time rates
-   - Automatic conversion display
-   - BDT (Bangladeshi Taka) with ৳ symbol
+   - 33 currencies: EUR, USD, GBP, JPY, CHF, SEK, PLN, INR, BRL, AUD, CAD, CNY, CZK, DKK, HKD, HUF, IDR, ILS, ISK, KRW, MXN, MYR, NOK, NZD, PHP, RON, SGD, THB, TRY, ZAR, RUB, COP, BDT
+   - ECB exchange rates (no API key required)
+   - Dashboard stats with automatic currency conversion
+   - RUB, COP, BDT: no ECB rates, 1:1 fallback
 
 5. **API Access**
    - API key authentication
@@ -232,7 +232,7 @@ This project uses versioned branches for releases. See `CLAUDE.md` for the compl
 1. Add currency code to `SupportedCurrencies` in `internal/service/currency.go`
 2. Add currency symbol mapping in `GetCurrencySymbol()` in `internal/service/settings.go`
 3. Add currency option to currency selection in `templates/settings.html`
-4. Update exchange rate handling if using Fixer.io
+4. Add to `ecbCurrencies` map if the currency has ECB rates
 
 #### Adding a New Notification Method
 1. Create notification config model in `internal/models/settings.go`
@@ -248,7 +248,6 @@ This project uses versioned branches for releases. See `CLAUDE.md` for the compl
 - `PORT` - Server port (default: 8080)
 - `DATABASE_PATH` - SQLite database path (default: ./data/subtrackr.db)
 - `GIN_MODE` - Gin mode: debug/release (default: debug)
-- `FIXER_API_KEY` - Fixer.io API key for currency conversion (optional)
 
 ### Building and Running
 
