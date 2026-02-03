@@ -933,5 +933,67 @@
   },
   "tooltip_renewal_date": {
     "other": "Das Verlängerungsdatum wird nach dem Klick auf Aktualisieren automatisch berechnet"
+  },
+  "calendar_day_sun": {
+    "other": "So"
+  },
+  "calendar_day_mon": {
+    "other": "Mo"
+  },
+  "calendar_day_tue": {
+    "other": "Di"
+  },
+  "calendar_day_wed": {
+    "other": "Mi"
+  },
+  "calendar_day_thu": {
+    "other": "Do"
+  },
+  "calendar_day_fri": {
+    "other": "Fr"
+  },
+  "calendar_day_sat": {
+    "other": "Sa"
+  },
+  "calendar_export_ical": {
+    "other": "Als iCal exportieren"
+  },
+  "analytics_across_active": {
+    "one": "Über {{.Count}} aktives Abonnement",
+    "other": "Über {{.Count}} aktive Abonnements"
+  },
+  "analytics_from_cancelled": {
+    "one": "Aus {{.Count}} gekündigtem Abonnement",
+    "other": "Aus {{.Count}} gekündigten Abonnements"
+  },
+  "api_key_created": {
+    "other": "Erstellt"
+  },
+  "api_key_last_used": {
+    "other": "Zuletzt genutzt"
+  },
+  "api_key_never_used": {
+    "other": "Nie genutzt"
+  },
+  "api_key_usage": {
+    "other": "Nutzung"
+  },
+  "api_key_requests": {
+    "other": "Anfragen"
+  },
+  "category_no_categories": {
+    "other": "Keine Kategorien gefunden."
+  },
+  "analytics_projected_yearly": {
+    "other": "Voraussichtliche Jahreskosten"
+  },
+  "api_key_new_badge": {
+    "other": "Neu"
+  },
+  "api_key_important": {
+    "other": "Wichtig:"
+  },
+  "api_key_copy_warning": {
+    "other": "Kopiere diesen API-Schlüssel jetzt. Du kannst ihn danach nicht mehr einsehen!"
   }
 }

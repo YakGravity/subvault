@@ -5,13 +5,13 @@
             <div class="flex items-center space-x-3">
                 <h5 class="text-sm font-medium text-gray-900">{{.Name}}</h5>
                 {{if .IsNew}}
-                <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded">New</span>
+                <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded">{{$.T.Tr "api_key_new_badge"}}</span>
                 {{end}}
             </div>
             {{if .IsNew}}
             <div class="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
                 <p class="text-xs text-yellow-800 mb-1">
-                    <strong>Important:</strong> Copy this API key now. You won't be able to see it again!
+                    <strong>{{$.T.Tr "api_key_important"}}</strong> {{$.T.Tr "api_key_copy_warning"}}
                 </p>
                 <div class="flex items-center space-x-2">
                     <code class="flex-1 text-xs bg-yellow-100 px-2 py-1 rounded font-mono">{{.Key}}</code>
@@ -25,14 +25,14 @@
             </div>
             {{else}}
             <div class="text-xs text-gray-500 mt-1">
-                Created: {{$.T.FormatDate .CreatedAt}} •
-                {{if .LastUsed}}Last used: {{$.T.FormatDate .LastUsed}}{{else}}Never used{{end}} •
-                Usage: {{.UsageCount}} requests
+                {{$.T.Tr "api_key_created"}}: {{$.T.FormatDate .CreatedAt}} •
+                {{if .LastUsed}}{{$.T.Tr "api_key_last_used"}}: {{$.T.FormatDate .LastUsed}}{{else}}{{$.T.Tr "api_key_never_used"}}{{end}} •
+                {{$.T.Tr "api_key_usage"}}: {{.UsageCount}} {{$.T.Tr "api_key_requests"}}
             </div>
             {{end}}
         </div>
         <button hx-delete="/api/settings/apikeys/{{.ID}}"
-                hx-confirm="{{.T.Tr "confirm_delete_api_key"}}"
+                hx-confirm="{{$.T.Tr "confirm_delete_api_key"}}"
                 hx-target="#api-keys-list"
                 hx-swap="innerHTML"
                 class="ml-4 text-gray-400 hover:text-danger">
