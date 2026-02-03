@@ -60,7 +60,12 @@ func main() {
 	subscriptionService := service.NewSubscriptionService(subscriptionRepo, categoryService)
 	settingsService := service.NewSettingsService(settingsRepo)
 	emailService := service.NewEmailService(settingsService, i18nService)
-	pushoverService := service.NewPushoverService(settingsService, i18nService)
+	shoutrrrService := service.NewShoutrrrService(settingsService, i18nService)
+
+	// Migrate existing Pushover config to Shoutrrr format (one-time migration)
+	if err := settingsService.MigratePushoverToShoutrrr(); err != nil {
+		log.Printf("Warning: Pushover to Shoutrrr migration failed: %v", err)
+	}
 	logoService := service.NewLogoService()
 
 	// Handle CLI commands (run before starting HTTP server)
@@ -82,7 +87,7 @@ func main() {
 	sessionService := service.NewSessionService(sessionSecret)
 
 	// Initialize handlers
-	subscriptionHandler := handlers.NewSubscriptionHandler(subscriptionService, settingsService, currencyService, emailService, pushoverService, logoService)
+	subscriptionHandler := handlers.NewSubscriptionHandler(subscriptionService, settingsService, currencyService, emailService, shoutrrrService, logoService)
 	settingsHandler := handlers.NewSettingsHandler(settingsService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	authHandler := handlers.NewAuthHandler(settingsService, sessionService, emailService)
@@ -192,10 +197,10 @@ func main() {
 	// }
 
 	// Start renewal reminder scheduler
-	go startRenewalReminderScheduler(subscriptionService, emailService, pushoverService, settingsService)
+	go startRenewalReminderScheduler(subscriptionService, emailService, shoutrrrService, settingsService)
 
 	// Start cancellation reminder scheduler
-	go startCancellationReminderScheduler(subscriptionService, emailService, pushoverService, settingsService)
+	go startCancellationReminderScheduler(subscriptionService, emailService, shoutrrrService, settingsService)
 
 	// Start server
 	port := os.Getenv("PORT")
@@ -373,9 +378,9 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 		// Settings routes
 		api.POST("/settings/smtp", settingsHandler.SaveSMTPSettings)
 		api.POST("/settings/smtp/test", settingsHandler.TestSMTPConnection)
-		api.POST("/settings/pushover", settingsHandler.SavePushoverSettings)
-		api.POST("/settings/pushover/test", settingsHandler.TestPushoverConnection)
-		api.GET("/settings/pushover", settingsHandler.GetPushoverConfig)
+		api.POST("/settings/shoutrrr", settingsHandler.SaveShoutrrrSettings)
+		api.POST("/settings/shoutrrr/test", settingsHandler.TestShoutrrrConnection)
+		api.GET("/settings/shoutrrr", settingsHandler.GetShoutrrrConfig)
 		api.POST("/settings/notifications/:setting", settingsHandler.UpdateNotificationSetting)
 		api.GET("/settings/notifications", settingsHandler.GetNotificationSettings)
 		api.GET("/settings/smtp", settingsHandler.GetSMTPConfig)
@@ -422,10 +427,10 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 	{
 		// Subscription endpoints
 		v1.GET("/subscriptions", handler.GetSubscriptionsAPI)
-		v1.POST("/subscriptions", handler.CreateSubscription)
+		v1.POST("/subscriptions", handler.CreateSubscriptionAPI)
 		v1.GET("/subscriptions/:id", handler.GetSubscription)
-		v1.PUT("/subscriptions/:id", handler.UpdateSubscription)
-		v1.DELETE("/subscriptions/:id", handler.DeleteSubscription)
+		v1.PUT("/subscriptions/:id", handler.UpdateSubscriptionAPI)
+		v1.DELETE("/subscriptions/:id", handler.DeleteSubscriptionAPI)
 
 		// Stats and export endpoints
 		v1.GET("/stats", handler.GetStats)
@@ -435,12 +440,12 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 }
 
 // startRenewalReminderScheduler starts a background goroutine that checks for
-// upcoming renewals and sends reminder emails and Pushover notifications daily
-func startRenewalReminderScheduler(subscriptionService *service.SubscriptionService, emailService *service.EmailService, pushoverService *service.PushoverService, settingsService *service.SettingsService) {
+// upcoming renewals and sends reminder emails and Shoutrrr notifications daily
+func startRenewalReminderScheduler(subscriptionService *service.SubscriptionService, emailService *service.EmailService, shoutrrrService *service.ShoutrrrService, settingsService *service.SettingsService) {
 	// Run immediately on startup (after a short delay to let server initialize)
 	go func() {
 		time.Sleep(30 * time.Second) // Wait 30 seconds for server to fully start
-		checkAndSendRenewalReminders(subscriptionService, emailService, pushoverService, settingsService)
+		checkAndSendRenewalReminders(subscriptionService, emailService, shoutrrrService, settingsService)
 	}()
 
 	// Then run daily at midnight
@@ -457,14 +462,14 @@ func startRenewalReminderScheduler(subscriptionService *service.SubscriptionServ
 						log.Printf("Panic in renewal reminder check: %v", r)
 					}
 				}()
-				checkAndSendRenewalReminders(subscriptionService, emailService, pushoverService, settingsService)
+				checkAndSendRenewalReminders(subscriptionService, emailService, shoutrrrService, settingsService)
 			}()
 		}
 	}()
 }
 
-// checkAndSendRenewalReminders checks for subscriptions needing reminders and sends emails and Pushover notifications
-func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionService, emailService *service.EmailService, pushoverService *service.PushoverService, settingsService *service.SettingsService) {
+// checkAndSendRenewalReminders checks for subscriptions needing reminders and sends emails and Shoutrrr notifications
+func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionService, emailService *service.EmailService, shoutrrrService *service.ShoutrrrService, settingsService *service.SettingsService) {
 	// Check if renewal reminders are enabled
 	enabled, err := settingsService.GetBoolSetting("renewal_reminders", false)
 	if err != nil || !enabled {
@@ -491,16 +496,16 @@ func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionServi
 
 	log.Printf("Checking %d subscription(s) for renewal reminders", len(subscriptions))
 
-	// Send reminder for each subscription (both email and Pushover)
+	// Send reminder for each subscription (both email and Shoutrrr)
 	sentCount := 0
 	failedCount := 0
 	for sub, daysUntil := range subscriptions {
 		emailErr := emailService.SendRenewalReminder(sub, daysUntil)
-		pushoverErr := pushoverService.SendRenewalReminder(sub, daysUntil)
+		shoutrrrErr := shoutrrrService.SendRenewalReminder(sub, daysUntil)
 
 		// If both fail, count as failed; otherwise consider it sent
-		if emailErr != nil && pushoverErr != nil {
-			log.Printf("Error sending renewal reminder for subscription %s (ID: %d): email=%v, pushover=%v", sub.Name, sub.ID, emailErr, pushoverErr)
+		if emailErr != nil && shoutrrrErr != nil {
+			log.Printf("Error sending renewal reminder for subscription %s (ID: %d): email=%v, shoutrrr=%v", sub.Name, sub.ID, emailErr, shoutrrrErr)
 			failedCount++
 		} else {
 			// Mark reminder as sent for this renewal date
@@ -518,11 +523,11 @@ func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionServi
 			}
 
 			if emailErr != nil {
-				log.Printf("Sent Pushover renewal reminder for subscription %s (renews in %d days) - email failed: %v", sub.Name, daysUntil, emailErr)
-			} else if pushoverErr != nil {
-				log.Printf("Sent email renewal reminder for subscription %s (renews in %d days) - Pushover failed: %v", sub.Name, daysUntil, pushoverErr)
+				log.Printf("Sent Shoutrrr renewal reminder for subscription %s (renews in %d days) - email failed: %v", sub.Name, daysUntil, emailErr)
+			} else if shoutrrrErr != nil {
+				log.Printf("Sent email renewal reminder for subscription %s (renews in %d days) - Shoutrrr failed: %v", sub.Name, daysUntil, shoutrrrErr)
 			} else {
-				log.Printf("Sent renewal reminders (email and Pushover) for subscription %s (renews in %d days)", sub.Name, daysUntil)
+				log.Printf("Sent renewal reminders (email and Shoutrrr) for subscription %s (renews in %d days)", sub.Name, daysUntil)
 			}
 			sentCount++
 		}
@@ -532,12 +537,12 @@ func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionServi
 }
 
 // startCancellationReminderScheduler starts a background goroutine that checks for
-// upcoming cancellations and sends reminder emails and Pushover notifications daily
-func startCancellationReminderScheduler(subscriptionService *service.SubscriptionService, emailService *service.EmailService, pushoverService *service.PushoverService, settingsService *service.SettingsService) {
+// upcoming cancellations and sends reminder emails and Shoutrrr notifications daily
+func startCancellationReminderScheduler(subscriptionService *service.SubscriptionService, emailService *service.EmailService, shoutrrrService *service.ShoutrrrService, settingsService *service.SettingsService) {
 	// Run immediately on startup (after a short delay to let server initialize)
 	go func() {
 		time.Sleep(30 * time.Second) // Wait 30 seconds for server to fully start
-		checkAndSendCancellationReminders(subscriptionService, emailService, pushoverService, settingsService)
+		checkAndSendCancellationReminders(subscriptionService, emailService, shoutrrrService, settingsService)
 	}()
 
 	// Then run daily at midnight
@@ -554,14 +559,14 @@ func startCancellationReminderScheduler(subscriptionService *service.Subscriptio
 						log.Printf("Panic in cancellation reminder check: %v", r)
 					}
 				}()
-				checkAndSendCancellationReminders(subscriptionService, emailService, pushoverService, settingsService)
+				checkAndSendCancellationReminders(subscriptionService, emailService, shoutrrrService, settingsService)
 			}()
 		}
 	}()
 }
 
-// checkAndSendCancellationReminders checks for subscriptions needing cancellation reminders and sends emails and Pushover notifications
-func checkAndSendCancellationReminders(subscriptionService *service.SubscriptionService, emailService *service.EmailService, pushoverService *service.PushoverService, settingsService *service.SettingsService) {
+// checkAndSendCancellationReminders checks for subscriptions needing cancellation reminders and sends emails and Shoutrrr notifications
+func checkAndSendCancellationReminders(subscriptionService *service.SubscriptionService, emailService *service.EmailService, shoutrrrService *service.ShoutrrrService, settingsService *service.SettingsService) {
 	// Check if cancellation reminders are enabled
 	enabled, err := settingsService.GetBoolSetting("cancellation_reminders", false)
 	if err != nil || !enabled {
@@ -588,16 +593,16 @@ func checkAndSendCancellationReminders(subscriptionService *service.Subscription
 
 	log.Printf("Checking %d subscription(s) for cancellation reminders", len(subscriptions))
 
-	// Send reminder for each subscription (both email and Pushover)
+	// Send reminder for each subscription (both email and Shoutrrr)
 	sentCount := 0
 	failedCount := 0
 	for sub, daysUntil := range subscriptions {
 		emailErr := emailService.SendCancellationReminder(sub, daysUntil)
-		pushoverErr := pushoverService.SendCancellationReminder(sub, daysUntil)
+		shoutrrrErr := shoutrrrService.SendCancellationReminder(sub, daysUntil)
 
 		// If both fail, count as failed; otherwise consider it sent
-		if emailErr != nil && pushoverErr != nil {
-			log.Printf("Error sending cancellation reminder for subscription %s (ID: %d): email=%v, pushover=%v", sub.Name, sub.ID, emailErr, pushoverErr)
+		if emailErr != nil && shoutrrrErr != nil {
+			log.Printf("Error sending cancellation reminder for subscription %s (ID: %d): email=%v, shoutrrr=%v", sub.Name, sub.ID, emailErr, shoutrrrErr)
 			failedCount++
 		} else {
 			// Mark reminder as sent for this cancellation date
@@ -615,11 +620,11 @@ func checkAndSendCancellationReminders(subscriptionService *service.Subscription
 			}
 
 			if emailErr != nil {
-				log.Printf("Sent Pushover cancellation reminder for subscription %s (ends in %d days) - email failed: %v", sub.Name, daysUntil, emailErr)
-			} else if pushoverErr != nil {
-				log.Printf("Sent email cancellation reminder for subscription %s (ends in %d days) - Pushover failed: %v", sub.Name, daysUntil, pushoverErr)
+				log.Printf("Sent Shoutrrr cancellation reminder for subscription %s (ends in %d days) - email failed: %v", sub.Name, daysUntil, emailErr)
+			} else if shoutrrrErr != nil {
+				log.Printf("Sent email cancellation reminder for subscription %s (ends in %d days) - Shoutrrr failed: %v", sub.Name, daysUntil, shoutrrrErr)
 			} else {
-				log.Printf("Sent cancellation reminders (email and Pushover) for subscription %s (ends in %d days)", sub.Name, daysUntil)
+				log.Printf("Sent cancellation reminders (email and Shoutrrr) for subscription %s (ends in %d days)", sub.Name, daysUntil)
 			}
 			sentCount++
 		}
