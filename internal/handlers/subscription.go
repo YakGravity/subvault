@@ -19,12 +19,13 @@ import (
 // SubscriptionWithConversion represents a subscription with currency conversion info
 type SubscriptionWithConversion struct {
 	*models.Subscription
-	ConvertedCost         float64 `json:"converted_cost"`
-	ConvertedAnnualCost   float64 `json:"converted_annual_cost"`
-	ConvertedMonthlyCost  float64 `json:"converted_monthly_cost"`
-	DisplayCurrency       string  `json:"display_currency"`
-	DisplayCurrencySymbol string  `json:"display_currency_symbol"`
-	ShowConversion        bool    `json:"show_conversion"`
+	ConvertedCost          float64 `json:"converted_cost"`
+	ConvertedAnnualCost    float64 `json:"converted_annual_cost"`
+	ConvertedMonthlyCost   float64 `json:"converted_monthly_cost"`
+	DisplayCurrency        string  `json:"display_currency"`
+	DisplayCurrencySymbol  string  `json:"display_currency_symbol"`
+	OriginalCurrencySymbol string  `json:"original_currency_symbol"`
+	ShowConversion         bool    `json:"show_conversion"`
 }
 
 type SubscriptionHandler struct {
@@ -57,11 +58,13 @@ func (h *SubscriptionHandler) enrichWithCurrencyConversion(subscriptions []model
 	for i := range subscriptions {
 		// Create a copy of the subscription for modification; this pattern is correct for Go 1.22+
 		sub := subscriptions[i]
+		originalSymbol := service.CurrencySymbolForCode(sub.OriginalCurrency)
 		enriched := SubscriptionWithConversion{
-			Subscription:          &sub,
-			DisplayCurrency:       displayCurrency,
-			DisplayCurrencySymbol: displaySymbol,
-			ShowConversion:        false,
+			Subscription:           &sub,
+			DisplayCurrency:        displayCurrency,
+			DisplayCurrencySymbol:  displaySymbol,
+			OriginalCurrencySymbol: originalSymbol,
+			ShowConversion:         false,
 		}
 
 		// Only show conversion if currency service is enabled and currencies differ

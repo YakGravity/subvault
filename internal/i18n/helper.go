@@ -1,6 +1,8 @@
 package i18n
 
 import (
+	"time"
+
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
@@ -8,13 +10,38 @@ import (
 type TranslationHelper struct {
 	localizer *i18n.Localizer
 	service   *I18nService
+	lang      string
 }
 
 // NewTranslationHelper creates a new TranslationHelper for use in templates
-func NewTranslationHelper(service *I18nService, localizer *i18n.Localizer) *TranslationHelper {
+func NewTranslationHelper(service *I18nService, localizer *i18n.Localizer, lang string) *TranslationHelper {
 	return &TranslationHelper{
 		localizer: localizer,
 		service:   service,
+		lang:      lang,
+	}
+}
+
+// FormatDate formats a date according to the current locale.
+// Accepts time.Time or *time.Time.
+func (h *TranslationHelper) FormatDate(v any) string {
+	var t time.Time
+	switch val := v.(type) {
+	case time.Time:
+		t = val
+	case *time.Time:
+		if val == nil {
+			return ""
+		}
+		t = *val
+	default:
+		return ""
+	}
+	switch h.lang {
+	case "de":
+		return t.Format("02.01.2006")
+	default:
+		return t.Format("Jan 2, 2006")
 	}
 }
 

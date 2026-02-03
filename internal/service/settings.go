@@ -205,10 +205,9 @@ func (s *SettingsService) GetCurrency() string {
 	return currency
 }
 
-// GetCurrencySymbol returns the symbol for the current currency
-func (s *SettingsService) GetCurrencySymbol() string {
-	currency := s.GetCurrency()
-	switch currency {
+// CurrencySymbolForCode returns the symbol for a given currency code
+func CurrencySymbolForCode(code string) string {
+	switch code {
 	case "EUR":
 		return "€"
 	case "PLN":
@@ -232,6 +231,11 @@ func (s *SettingsService) GetCurrencySymbol() string {
 	default:
 		return "$"
 	}
+}
+
+// GetCurrencySymbol returns the symbol for the current currency
+func (s *SettingsService) GetCurrencySymbol() string {
+	return CurrencySymbolForCode(s.GetCurrency())
 }
 
 // SetDarkMode saves the dark mode preference
