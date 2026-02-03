@@ -292,7 +292,7 @@ func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) erro
 		return fmt.Errorf("failed to execute email template: %w", err)
 	}
 
-	subject := fmt.Sprintf("%s: %s - %s%.2f/month", e.t("pushover_high_cost_alert"), subscription.Name, currencySymbol, subscription.MonthlyCost())
+	subject := fmt.Sprintf("%s: %s - %s%.2f/month", e.t("shoutrrr_high_cost_alert"), subscription.Name, currencySymbol, subscription.MonthlyCost())
 	return e.SendEmail(subject, buf.String())
 }
 
@@ -395,7 +395,7 @@ func (e *EmailService) SendRenewalReminder(subscription *models.Subscription, da
 		return fmt.Errorf("failed to execute email template: %w", err)
 	}
 
-	subject := fmt.Sprintf("%s: %s", e.t("pushover_renewal_reminder"), reminderText)
+	subject := fmt.Sprintf("%s: %s", e.t("shoutrrr_renewal_reminder"), reminderText)
 	return e.SendEmail(subject, buf.String())
 }
 
@@ -498,6 +498,6 @@ func (e *EmailService) SendCancellationReminder(subscription *models.Subscriptio
 		return fmt.Errorf("failed to execute email template: %w", err)
 	}
 
-	subject := fmt.Sprintf("%s: %s", e.t("pushover_cancellation_reminder"), reminderText)
+	subject := fmt.Sprintf("%s: %s", e.t("shoutrrr_cancellation_reminder"), reminderText)
 	return e.SendEmail(subject, buf.String())
 }

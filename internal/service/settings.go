@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
@@ -402,31 +403,72 @@ func (s *SettingsService) ClearResetToken() error {
 	return nil
 }
 
-// SavePushoverConfig saves Pushover configuration
-func (s *SettingsService) SavePushoverConfig(config *models.PushoverConfig) error {
-	// Convert to JSON
+// SaveShoutrrrConfig saves Shoutrrr configuration
+func (s *SettingsService) SaveShoutrrrConfig(config *models.ShoutrrrConfig) error {
 	data, err := json.Marshal(config)
 	if err != nil {
 		return err
 	}
 
-	return s.repo.Set("pushover_config", string(data))
+	return s.repo.Set("shoutrrr_config", string(data))
 }
 
-// GetPushoverConfig retrieves Pushover configuration
-func (s *SettingsService) GetPushoverConfig() (*models.PushoverConfig, error) {
-	data, err := s.repo.Get("pushover_config")
+// GetShoutrrrConfig retrieves Shoutrrr configuration
+func (s *SettingsService) GetShoutrrrConfig() (*models.ShoutrrrConfig, error) {
+	data, err := s.repo.Get("shoutrrr_config")
 	if err != nil {
 		return nil, err
 	}
 
-	var config models.PushoverConfig
+	var config models.ShoutrrrConfig
 	err = json.Unmarshal([]byte(data), &config)
 	if err != nil {
 		return nil, err
 	}
 
 	return &config, nil
+}
+
+// MigratePushoverToShoutrrr migrates existing Pushover config to Shoutrrr format
+func (s *SettingsService) MigratePushoverToShoutrrr() error {
+	data, err := s.repo.Get("pushover_config")
+	if err != nil {
+		return nil // No Pushover config exists, nothing to migrate
+	}
+
+	var oldConfig struct {
+		UserKey  string `json:"pushover_user_key"`
+		AppToken string `json:"pushover_app_token"`
+	}
+	if err := json.Unmarshal([]byte(data), &oldConfig); err != nil {
+		return nil // Invalid config, skip migration
+	}
+
+	if oldConfig.UserKey == "" || oldConfig.AppToken == "" {
+		return nil // Empty config, skip migration
+	}
+
+	// Check if Shoutrrr config already exists
+	if existing, err := s.GetShoutrrrConfig(); err == nil && len(existing.URLs) > 0 {
+		return nil // Already migrated
+	}
+
+	// Convert to Shoutrrr Pushover URL format
+	shoutrrrURL := fmt.Sprintf("pushover://shoutrrr:%s@%s/", oldConfig.AppToken, oldConfig.UserKey)
+
+	newConfig := &models.ShoutrrrConfig{
+		URLs: []string{shoutrrrURL},
+	}
+
+	if err := s.SaveShoutrrrConfig(newConfig); err != nil {
+		return fmt.Errorf("failed to save migrated Shoutrrr config: %w", err)
+	}
+
+	// Delete old Pushover config
+	s.repo.Delete("pushover_config")
+	log.Printf("Migrated Pushover config to Shoutrrr URL format")
+
+	return nil
 }
 
 // SupportedLanguages defines the available UI languages

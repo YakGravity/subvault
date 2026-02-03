@@ -185,29 +185,23 @@
   "settings_days_before_cancellation_desc": {
     "other": "How many days before cancellation to send reminder"
   },
-  "settings_pushover": {
-    "other": "Pushover Notifications"
+  "settings_shoutrrr": {
+    "other": "Push Notifications (Shoutrrr)"
   },
-  "settings_pushover_desc": {
-    "other": "Receive push notifications on your mobile device via Pushover"
+  "settings_shoutrrr_desc": {
+    "other": "Send notifications via Shoutrrr to Pushover, Telegram, Discord, Slack, and many more services"
   },
-  "settings_pushover_config": {
-    "other": "Pushover Configuration"
+  "settings_shoutrrr_config": {
+    "other": "Shoutrrr Configuration"
   },
-  "pushover_user_key": {
-    "other": "User Key"
+  "shoutrrr_urls_label": {
+    "other": "Notification URLs (one per line)"
   },
-  "pushover_user_key_hint": {
-    "other": "Get your User Key from"
+  "shoutrrr_urls_hint": {
+    "other": "Enter one Shoutrrr URL per line. Supported services and URL formats:"
   },
-  "pushover_app_token": {
-    "other": "Application Token"
-  },
-  "pushover_app_token_hint": {
-    "other": "Create an application at"
-  },
-  "btn_save_pushover": {
-    "other": "Save Pushover Settings"
+  "btn_save_shoutrrr": {
+    "other": "Save Notification Settings"
   },
   "settings_security": {
     "other": "Security"
@@ -673,37 +667,37 @@
   "email_cancellation_date": {
     "other": "Cancellation Date:"
   },
-  "pushover_high_cost_alert": {
+  "shoutrrr_high_cost_alert": {
     "other": "High Cost Alert"
   },
-  "pushover_renewal_reminder": {
+  "shoutrrr_renewal_reminder": {
     "other": "Renewal Reminder"
   },
-  "pushover_cancellation_reminder": {
+  "shoutrrr_cancellation_reminder": {
     "other": "Cancellation Reminder"
   },
-  "pushover_sub_details": {
+  "shoutrrr_sub_details": {
     "other": "Subscription Details:"
   },
-  "pushover_cost": {
+  "shoutrrr_cost": {
     "other": "Cost:"
   },
-  "pushover_monthly_cost": {
+  "shoutrrr_monthly_cost": {
     "other": "Monthly Cost:"
   },
-  "pushover_category": {
+  "shoutrrr_category": {
     "other": "Category:"
   },
-  "pushover_next_renewal": {
+  "shoutrrr_next_renewal": {
     "other": "Next Renewal:"
   },
-  "pushover_renewal_date": {
+  "shoutrrr_renewal_date": {
     "other": "Renewal Date:"
   },
-  "pushover_cancellation_date": {
+  "shoutrrr_cancellation_date": {
     "other": "Cancellation Date:"
   },
-  "pushover_url": {
+  "shoutrrr_url": {
     "other": "URL:"
   },
   "month_january": {
@@ -904,17 +898,20 @@
   "settings_success_auth_disabled": {
     "other": "Authentication disabled successfully"
   },
-  "settings_error_pushover_required": {
-    "other": "User Key and App Token are required"
+  "settings_error_shoutrrr_required": {
+    "other": "At least one notification URL is required"
   },
-  "settings_success_pushover_saved": {
-    "other": "Pushover settings saved successfully"
+  "settings_success_shoutrrr_saved": {
+    "other": "Notification settings saved successfully"
   },
-  "settings_error_pushover_test_required": {
-    "other": "User Key and App Token are required for testing"
+  "settings_error_shoutrrr_test_required": {
+    "other": "At least one notification URL is required for testing"
   },
-  "settings_success_pushover_test": {
-    "other": "Pushover connection test successful! Check your device for the test notification."
+  "settings_error_shoutrrr_test_failed": {
+    "other": "Failed to send test notification"
+  },
+  "settings_success_shoutrrr_test": {
+    "other": "Test notification sent successfully! Check your devices."
   },
   "no_api_keys_yet": {
     "other": "No API keys created yet"

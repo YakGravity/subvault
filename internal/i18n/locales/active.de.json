@@ -185,29 +185,23 @@
   "settings_days_before_cancellation_desc": {
     "other": "Wie viele Tage vor der Kündigung soll die Erinnerung gesendet werden"
   },
-  "settings_pushover": {
-    "other": "Pushover-Benachrichtigungen"
+  "settings_shoutrrr": {
+    "other": "Push-Benachrichtigungen (Shoutrrr)"
   },
-  "settings_pushover_desc": {
-    "other": "Erhalten Sie Push-Benachrichtigungen auf Ihrem Mobilgerät über Pushover"
+  "settings_shoutrrr_desc": {
+    "other": "Benachrichtigungen über Shoutrrr an Pushover, Telegram, Discord, Slack und viele weitere Dienste senden"
   },
-  "settings_pushover_config": {
-    "other": "Pushover-Konfiguration"
+  "settings_shoutrrr_config": {
+    "other": "Shoutrrr-Konfiguration"
   },
-  "pushover_user_key": {
-    "other": "Benutzerschlüssel"
+  "shoutrrr_urls_label": {
+    "other": "Benachrichtigungs-URLs (eine pro Zeile)"
   },
-  "pushover_user_key_hint": {
-    "other": "Ihren Benutzerschlüssel erhalten Sie unter"
+  "shoutrrr_urls_hint": {
+    "other": "Geben Sie eine Shoutrrr-URL pro Zeile ein. Unterstützte Dienste und URL-Formate:"
   },
-  "pushover_app_token": {
-    "other": "Anwendungstoken"
-  },
-  "pushover_app_token_hint": {
-    "other": "Erstellen Sie eine Anwendung unter"
-  },
-  "btn_save_pushover": {
-    "other": "Pushover-Einstellungen speichern"
+  "btn_save_shoutrrr": {
+    "other": "Benachrichtigungseinstellungen speichern"
   },
   "settings_security": {
     "other": "Sicherheit"
@@ -673,37 +667,37 @@
   "email_cancellation_date": {
     "other": "Kündigungsdatum:"
   },
-  "pushover_high_cost_alert": {
+  "shoutrrr_high_cost_alert": {
     "other": "Hochkosten-Warnung"
   },
-  "pushover_renewal_reminder": {
+  "shoutrrr_renewal_reminder": {
     "other": "Verlängerungserinnerung"
   },
-  "pushover_cancellation_reminder": {
+  "shoutrrr_cancellation_reminder": {
     "other": "Kündigungserinnerung"
   },
-  "pushover_sub_details": {
+  "shoutrrr_sub_details": {
     "other": "Abonnementdetails:"
   },
-  "pushover_cost": {
+  "shoutrrr_cost": {
     "other": "Kosten:"
   },
-  "pushover_monthly_cost": {
+  "shoutrrr_monthly_cost": {
     "other": "Monatliche Kosten:"
   },
-  "pushover_category": {
+  "shoutrrr_category": {
     "other": "Kategorie:"
   },
-  "pushover_next_renewal": {
+  "shoutrrr_next_renewal": {
     "other": "Nächste Verlängerung:"
   },
-  "pushover_renewal_date": {
+  "shoutrrr_renewal_date": {
     "other": "Verlängerungsdatum:"
   },
-  "pushover_cancellation_date": {
+  "shoutrrr_cancellation_date": {
     "other": "Kündigungsdatum:"
   },
-  "pushover_url": {
+  "shoutrrr_url": {
     "other": "URL:"
   },
   "month_january": {
@@ -904,17 +898,20 @@
   "settings_success_auth_disabled": {
     "other": "Authentifizierung erfolgreich deaktiviert"
   },
-  "settings_error_pushover_required": {
-    "other": "User Key und App Token sind erforderlich"
+  "settings_error_shoutrrr_required": {
+    "other": "Mindestens eine Benachrichtigungs-URL ist erforderlich"
   },
-  "settings_success_pushover_saved": {
-    "other": "Pushover-Einstellungen erfolgreich gespeichert"
+  "settings_success_shoutrrr_saved": {
+    "other": "Benachrichtigungseinstellungen erfolgreich gespeichert"
   },
-  "settings_error_pushover_test_required": {
-    "other": "User Key und App Token sind zum Testen erforderlich"
+  "settings_error_shoutrrr_test_required": {
+    "other": "Mindestens eine Benachrichtigungs-URL ist zum Testen erforderlich"
   },
-  "settings_success_pushover_test": {
-    "other": "Pushover-Verbindungstest erfolgreich! Prüfen Sie Ihr Gerät auf die Testbenachrichtigung."
+  "settings_error_shoutrrr_test_failed": {
+    "other": "Testbenachrichtigung konnte nicht gesendet werden"
+  },
+  "settings_success_shoutrrr_test": {
+    "other": "Testbenachrichtigung erfolgreich gesendet! Prüfen Sie Ihre Geräte."
   },
   "no_api_keys_yet": {
     "other": "Noch keine API-Schlüssel erstellt"

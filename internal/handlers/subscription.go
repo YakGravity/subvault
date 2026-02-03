@@ -33,17 +33,17 @@ type SubscriptionHandler struct {
 	settingsService *service.SettingsService
 	currencyService *service.CurrencyService
 	emailService    *service.EmailService
-	pushoverService *service.PushoverService
+	shoutrrrService *service.ShoutrrrService
 	logoService     *service.LogoService
 }
 
-func NewSubscriptionHandler(service *service.SubscriptionService, settingsService *service.SettingsService, currencyService *service.CurrencyService, emailService *service.EmailService, pushoverService *service.PushoverService, logoService *service.LogoService) *SubscriptionHandler {
+func NewSubscriptionHandler(service *service.SubscriptionService, settingsService *service.SettingsService, currencyService *service.CurrencyService, emailService *service.EmailService, shoutrrrService *service.ShoutrrrService, logoService *service.LogoService) *SubscriptionHandler {
 	return &SubscriptionHandler{
 		service:         service,
 		settingsService: settingsService,
 		currencyService: currencyService,
 		emailService:    emailService,
-		pushoverService: pushoverService,
+		shoutrrrService: shoutrrrService,
 		logoService:     logoService,
 	}
 }
@@ -407,13 +407,13 @@ func (h *SubscriptionHandler) Settings(c *gin.Context) {
 		smtpConfigured = true
 	}
 
-	// Load Pushover config if available
-	var pushoverConfig *models.PushoverConfig
-	pushoverConfigured := false
-	pushoverCfg, err := h.settingsService.GetPushoverConfig()
-	if err == nil && pushoverCfg != nil {
-		pushoverConfig = pushoverCfg
-		pushoverConfigured = true
+	// Load Shoutrrr config if available
+	var shoutrrrConfig *models.ShoutrrrConfig
+	shoutrrrConfigured := false
+	shoutrrrCfg, err := h.settingsService.GetShoutrrrConfig()
+	if err == nil && shoutrrrCfg != nil && len(shoutrrrCfg.URLs) > 0 {
+		shoutrrrConfig = shoutrrrCfg
+		shoutrrrConfigured = true
 	}
 
 	// Get auth settings
@@ -430,8 +430,8 @@ func (h *SubscriptionHandler) Settings(c *gin.Context) {
 		"SupportedLanguages":       service.SupportedLanguages,
 		"RenewalReminders":         h.settingsService.GetBoolSettingWithDefault("renewal_reminders", false),
 		"HighCostAlerts":           h.settingsService.GetBoolSettingWithDefault("high_cost_alerts", true),
-		"PushoverConfig":           pushoverConfig,
-		"PushoverConfigured":       pushoverConfigured,
+		"ShoutrrrConfig":           shoutrrrConfig,
+		"ShoutrrrConfigured":       shoutrrrConfigured,
 		"HighCostThreshold":        h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
 		"ReminderDays":             h.settingsService.GetIntSettingWithDefault("reminder_days", 7),
 		"CancellationReminders":    h.settingsService.GetBoolSettingWithDefault("cancellation_reminders", false),
@@ -544,7 +544,7 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 		return
 	}
 
-	// Send high-cost alert email and Pushover notification if applicable
+	// Send high-cost alert email and Shoutrrr notification if applicable
 	if h.isHighCostWithCurrency(created) {
 		// Reload subscription with category for email template
 		subscriptionWithCategory, err := h.service.GetByID(created.ID)
@@ -554,10 +554,10 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 				// Log error but don't fail the request
 				log.Printf("Failed to send high-cost alert email: %v", err)
 			}
-			// Send Pushover notification
-			if err := h.pushoverService.SendHighCostAlert(subscriptionWithCategory); err != nil {
+			// Send Shoutrrr notification
+			if err := h.shoutrrrService.SendHighCostAlert(subscriptionWithCategory); err != nil {
 				// Log error but don't fail the request
-				log.Printf("Failed to send high-cost alert Pushover notification: %v", err)
+				log.Printf("Failed to send high-cost alert Shoutrrr notification: %v", err)
 			}
 		}
 	}
@@ -656,7 +656,7 @@ func (h *SubscriptionHandler) UpdateSubscription(c *gin.Context) {
 		return
 	}
 
-	// Send high-cost alert email and Pushover notification if subscription became high-cost (wasn't before, but is now)
+	// Send high-cost alert email and Shoutrrr notification if subscription became high-cost (wasn't before, but is now)
 	if updated != nil && !wasHighCost && h.isHighCostWithCurrency(updated) {
 		// Reload subscription with category for email template
 		subscriptionWithCategory, err := h.service.GetByID(updated.ID)
@@ -666,10 +666,10 @@ func (h *SubscriptionHandler) UpdateSubscription(c *gin.Context) {
 				// Log error but don't fail the request
 				log.Printf("Failed to send high-cost alert email: %v", err)
 			}
-			// Send Pushover notification
-			if err := h.pushoverService.SendHighCostAlert(subscriptionWithCategory); err != nil {
+			// Send Shoutrrr notification
+			if err := h.shoutrrrService.SendHighCostAlert(subscriptionWithCategory); err != nil {
 				// Log error but don't fail the request
-				log.Printf("Failed to send high-cost alert Pushover notification: %v", err)
+				log.Printf("Failed to send high-cost alert Shoutrrr notification: %v", err)
 			}
 		}
 	}

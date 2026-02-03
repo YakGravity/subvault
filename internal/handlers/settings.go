@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/smtp"
 	"strconv"
+	"strings"
 	"subtrackr/internal/models"
 	"subtrackr/internal/service"
 
@@ -505,25 +506,29 @@ func (h *SettingsHandler) GetTheme(c *gin.Context) {
 	})
 }
 
-// SavePushoverSettings saves Pushover configuration
-func (h *SettingsHandler) SavePushoverSettings(c *gin.Context) {
-	var config models.PushoverConfig
+// SaveShoutrrrSettings saves Shoutrrr notification URL configuration
+func (h *SettingsHandler) SaveShoutrrrSettings(c *gin.Context) {
+	urlsRaw := c.PostForm("shoutrrr_urls")
 
-	// Parse form data
-	config.UserKey = c.PostForm("pushover_user_key")
-	config.AppToken = c.PostForm("pushover_app_token")
+	// Parse URLs (one per line)
+	var urls []string
+	for _, line := range strings.Split(urlsRaw, "\n") {
+		line = strings.TrimSpace(line)
+		if line != "" {
+			urls = append(urls, line)
+		}
+	}
 
-	// Validate required fields
-	if config.UserKey == "" || config.AppToken == "" {
+	if len(urls) == 0 {
 		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
-			"Error": tr(c, "settings_error_pushover_required", "User Key and App Token are required"),
+			"Error": tr(c, "settings_error_shoutrrr_required", "At least one notification URL is required"),
 			"Type":  "error",
 		})
 		return
 	}
 
-	// Save configuration
-	err := h.service.SavePushoverConfig(&config)
+	config := &models.ShoutrrrConfig{URLs: urls}
+	err := h.service.SaveShoutrrrConfig(config)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "smtp-message.html", gin.H{
 			"Error": err.Error(),
@@ -533,83 +538,60 @@ func (h *SettingsHandler) SavePushoverSettings(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "smtp-message.html", gin.H{
-		"Message": tr(c, "settings_success_pushover_saved", "Pushover settings saved successfully"),
+		"Message": tr(c, "settings_success_shoutrrr_saved", "Notification settings saved successfully"),
 		"Type":    "success",
 	})
 }
 
-// TestPushoverConnection tests Pushover configuration
-func (h *SettingsHandler) TestPushoverConnection(c *gin.Context) {
-	var config models.PushoverConfig
+// TestShoutrrrConnection tests Shoutrrr notification URLs
+func (h *SettingsHandler) TestShoutrrrConnection(c *gin.Context) {
+	urlsRaw := c.PostForm("shoutrrr_urls")
 
-	// Parse form data
-	config.UserKey = c.PostForm("pushover_user_key")
-	config.AppToken = c.PostForm("pushover_app_token")
-
-	// Validate required fields
-	if config.UserKey == "" || config.AppToken == "" {
-		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
-			"Error": tr(c, "settings_error_pushover_test_required", "User Key and App Token are required for testing"),
-			"Type":  "error",
-		})
-		return
-	}
-
-	// Create a temporary PushoverService to test
-	pushoverService := service.NewPushoverService(h.service)
-
-	// Temporarily save config for testing
-	originalConfig, _ := h.service.GetPushoverConfig()
-	defer func() {
-		if originalConfig != nil {
-			h.service.SavePushoverConfig(originalConfig)
-		} else {
-			// No original config existed, so delete the test config by saving empty values
-			h.service.SavePushoverConfig(&models.PushoverConfig{
-				UserKey:  "",
-				AppToken: "",
-			})
+	// Parse URLs (one per line)
+	var urls []string
+	for _, line := range strings.Split(urlsRaw, "\n") {
+		line = strings.TrimSpace(line)
+		if line != "" {
+			urls = append(urls, line)
 		}
-	}()
+	}
 
-	// Save test config
-	if err := h.service.SavePushoverConfig(&config); err != nil {
+	if len(urls) == 0 {
 		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
-			"Error": fmt.Sprintf("Failed to save test config: %v", err),
+			"Error": tr(c, "settings_error_shoutrrr_test_required", "At least one notification URL is required for testing"),
 			"Type":  "error",
 		})
 		return
 	}
 
-	// Send test notification
-	err := pushoverService.SendNotification("SubTrackr Test", "This is a test notification from SubTrackr. If you received this, your Pushover configuration is working correctly!", 0)
+	// Test directly with the provided URLs (no need to save first)
+	shoutrrrService := service.NewShoutrrrService(h.service)
+	err := shoutrrrService.SendTestNotification(urls)
 	if err != nil {
 		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
-			"Error": fmt.Sprintf("Failed to send test notification: %v", err),
+			"Error": fmt.Sprintf("%s: %v", tr(c, "settings_error_shoutrrr_test_failed", "Failed to send test notification"), err),
 			"Type":  "error",
 		})
 		return
 	}
 
 	c.HTML(http.StatusOK, "smtp-message.html", gin.H{
-		"Message": tr(c, "settings_success_pushover_test", "Pushover connection test successful! Check your device for the test notification."),
+		"Message": tr(c, "settings_success_shoutrrr_test", "Test notification sent successfully! Check your devices."),
 		"Type":    "success",
 	})
 }
 
-// GetPushoverConfig returns current Pushover configuration (without sensitive data)
-func (h *SettingsHandler) GetPushoverConfig(c *gin.Context) {
-	config, err := h.service.GetPushoverConfig()
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"configured": false})
+// GetShoutrrrConfig returns current Shoutrrr configuration
+func (h *SettingsHandler) GetShoutrrrConfig(c *gin.Context) {
+	config, err := h.service.GetShoutrrrConfig()
+	if err != nil || len(config.URLs) == 0 {
+		c.JSON(http.StatusOK, gin.H{"configured": false, "url_count": 0})
 		return
 	}
 
-	// Don't send the full token, just indicate if configured
 	c.JSON(http.StatusOK, gin.H{
-		"configured":    true,
-		"has_user_key":  config.UserKey != "",
-		"has_app_token": config.AppToken != "",
+		"configured": true,
+		"url_count":  len(config.URLs),
 	})
 }
 

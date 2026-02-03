@@ -518,49 +518,41 @@
                 </div>
             </div>
 
-            <!-- Pushover Notifications -->
+            <!-- Shoutrrr Notifications -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_pushover"}}</h3>
-                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_pushover_desc"}}</p>
-                
-                <!-- Pushover Settings -->
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_shoutrrr"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_shoutrrr_desc"}}</p>
+
+                <!-- Shoutrrr Settings -->
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4 transition-colors duration-200">
-                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_pushover_config"}}</h4>
-                    <form id="pushover-form" hx-post="/api/settings/pushover" hx-trigger="submit" hx-target="#pushover-message" hx-swap="innerHTML">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label for="pushover_user_key" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "pushover_user_key"}}</label>
-                                <input type="text" id="pushover_user_key" name="pushover_user_key" placeholder="Your Pushover User Key" value="{{if .PushoverConfig}}{{.PushoverConfig.UserKey}}{{end}}"
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{.T.Tr "pushover_user_key_hint"}} <a href="https://pushover.net/" target="_blank" class="text-primary hover:underline">pushover.net</a></p>
-                            </div>
-                            <div>
-                                <label for="pushover_app_token" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "pushover_app_token"}}</label>
-                                <input type="text" id="pushover_app_token" name="pushover_app_token" placeholder="Your Application Token" value="{{if .PushoverConfig}}{{.PushoverConfig.AppToken}}{{end}}"
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm transition-colors duration-150">
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{.T.Tr "pushover_app_token_hint"}} <a href="https://pushover.net/apps/build" target="_blank" class="text-primary hover:underline">pushover.net/apps</a></p>
-                            </div>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_shoutrrr_config"}}</h4>
+                    <form id="shoutrrr-form" hx-post="/api/settings/shoutrrr" hx-trigger="submit" hx-target="#shoutrrr-message" hx-swap="innerHTML">
+                        <div class="mb-4">
+                            <label for="shoutrrr_urls" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "shoutrrr_urls_label"}}</label>
+                            <textarea id="shoutrrr_urls" name="shoutrrr_urls" rows="4" placeholder="pushover://shoutrrr:token@userkey/&#10;telegram://token@telegram?channels=@channel&#10;discord://token@id"
+                                      class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm font-mono transition-colors duration-150">{{if .ShoutrrrConfig}}{{range $i, $url := .ShoutrrrConfig.URLs}}{{if $i}}&#10;{{end}}{{$url}}{{end}}{{end}}</textarea>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{.T.Tr "shoutrrr_urls_hint"}} <a href="https://containrrr.dev/shoutrrr/latest/services/overview/" target="_blank" class="text-primary hover:underline">containrrr.dev/shoutrrr</a></p>
                         </div>
                         <div class="mb-4">
-                            <div id="pushover-message"></div>
+                            <div id="shoutrrr-message"></div>
                         </div>
                         <div class="flex items-center justify-end">
                             <div class="flex space-x-2">
                                 <button type="button"
-                                        id="test-pushover-btn"
-                                        hx-post="/api/settings/pushover/test"
-                                        hx-include="#pushover-form"
-                                        hx-target="#pushover-message"
-                                        hx-indicator="#pushover-spinner"
+                                        id="test-shoutrrr-btn"
+                                        hx-post="/api/settings/shoutrrr/test"
+                                        hx-include="#shoutrrr-form"
+                                        hx-target="#shoutrrr-message"
+                                        hx-indicator="#shoutrrr-spinner"
                                         class="bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-500 flex items-center transition-colors duration-150">
-                                    <svg id="pushover-spinner" class="htmx-indicator animate-spin -ml-1 mr-2 h-4 w-4 text-gray-700 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <svg id="shoutrrr-spinner" class="htmx-indicator animate-spin -ml-1 mr-2 h-4 w-4 text-gray-700 dark:text-gray-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
                                     {{.T.Tr "btn_test_connection"}}
                                 </button>
                                 <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">
-                                    {{.T.Tr "btn_save_pushover"}}
+                                    {{.T.Tr "btn_save_shoutrrr"}}
                                 </button>
                             </div>
                         </div>

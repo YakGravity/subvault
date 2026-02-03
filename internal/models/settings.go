@@ -24,10 +24,9 @@ type SMTPConfig struct {
 	To       string `json:"smtp_to"` // Recipient email address for notifications
 }
 
-// PushoverConfig represents Pushover notification configuration
-type PushoverConfig struct {
-	UserKey  string `json:"pushover_user_key"`  // Pushover user key
-	AppToken string `json:"pushover_app_token"` // Pushover application token
+// ShoutrrrConfig represents Shoutrrr notification configuration
+type ShoutrrrConfig struct {
+	URLs []string `json:"shoutrrr_urls"`
 }
 
 // NotificationSettings represents notification preferences
