@@ -303,6 +303,38 @@
                 </div>
             </div>
 
+            <!-- Calendar Subscription -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_calendar_sub"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_calendar_desc"}}</p>
+                <div id="calendar-token-section">
+                    {{if .CalendarToken}}
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{{.T.Tr "settings_calendar_url"}}</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" readonly value="{{.BaseURL}}/cal/{{.CalendarToken}}/subscriptions.ics"
+                                   class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg text-sm font-mono"
+                                   id="calendar-url-input">
+                            <button onclick="navigator.clipboard.writeText(document.getElementById('calendar-url-input').value)"
+                                    class="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-150">
+                                📋
+                            </button>
+                        </div>
+                    </div>
+                    <button onclick="revokeCalendarToken()"
+                            class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition-colors duration-150">
+                        {{.T.Tr "btn_revoke_calendar"}}
+                    </button>
+                    {{else}}
+                    <button onclick="generateCalendarToken()"
+                            class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150">
+                        {{.T.Tr "btn_generate_calendar"}}
+                    </button>
+                    {{end}}
+                </div>
+                <div id="calendar-message" class="mt-2"></div>
+            </div>
+
             <!-- Export Data -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
                 <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_export"}}</h3>
@@ -315,8 +347,56 @@
                         {{.T.Tr "btn_export_json"}}
                     </a>
                 </div>
+                <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">{{.T.Tr "export_encrypted_title"}}</h4>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">{{.T.Tr "export_encrypted_desc"}}</p>
+                    <div class="flex items-center space-x-2">
+                        <input type="password" id="export-password" placeholder="{{.T.Tr "export_password_placeholder"}}"
+                               class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-primary">
+                        <input type="password" id="export-password-confirm" placeholder="{{.T.Tr "export_password_confirm"}}"
+                               class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-primary">
+                        <button onclick="exportEncrypted()" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 whitespace-nowrap transition-colors duration-150">
+                            {{.T.Tr "btn_export_encrypted"}}
+                        </button>
+                    </div>
+                    <div id="export-encrypted-message" class="mt-2 text-sm"></div>
+                </div>
             </div>
             
+            <!-- Import Data -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_import"}}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">{{.T.Tr "settings_import_desc"}}</p>
+                <form id="import-form" enctype="multipart/form-data">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <select id="import-format" name="format" class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-primary">
+                            <option value="">Auto-detect</option>
+                            <option value="wallos">{{.T.Tr "import_format_wallos"}}</option>
+                            <option value="subtrackr">{{.T.Tr "import_format_subtrackr"}}</option>
+                        </select>
+                        <input type="file" id="import-file" name="file" accept=".json" class="text-sm text-gray-500 dark:text-gray-400 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary/90 file:cursor-pointer">
+                    </div>
+                    <button type="button" onclick="importSubscriptions()" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150">
+                        {{.T.Tr "btn_import_json"}}
+                    </button>
+                </form>
+                <div id="import-result" class="mt-4"></div>
+                <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-white mb-2">{{.T.Tr "import_encrypted_title"}}</h4>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <input type="file" id="import-encrypted-file" accept=".stbk" class="text-sm text-gray-500 dark:text-gray-400 file:mr-2 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 dark:file:bg-gray-600 file:text-gray-700 dark:file:text-gray-200 file:cursor-pointer">
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="password" id="import-encrypted-password" placeholder="{{.T.Tr "export_password_placeholder"}}"
+                               class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-primary">
+                        <button onclick="importEncrypted()" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 whitespace-nowrap transition-colors duration-150">
+                            {{.T.Tr "btn_import_encrypted"}}
+                        </button>
+                    </div>
+                    <div id="import-encrypted-result" class="mt-2"></div>
+                </div>
+            </div>
+
             <!-- Data Management -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-8">
                 <h3 class="text-base font-medium text-gray-900 dark:text-white mb-4">{{.T.Tr "settings_data_mgmt"}}</h3>
@@ -443,6 +523,30 @@
                                    hx-trigger="change"
                                    hx-swap="none"
                                    class="w-24 px-2 py-1 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-150">
+                        </div>
+                    </div>
+
+                    <!-- Monthly Budget -->
+                    <div class="flex items-center justify-between py-3">
+                        <div class="flex-1">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{.T.Tr "settings_monthly_budget"}}</span>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">{{.T.Tr "settings_monthly_budget_desc"}}</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="number"
+                                   id="monthly-budget"
+                                   step="0.01"
+                                   min="0"
+                                   value="{{printf "%.2f" .MonthlyBudget}}"
+                                   placeholder="0.00"
+                                   class="w-28 px-3 py-1.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-primary transition-colors duration-150">
+                            <button hx-post="/api/settings/notifications/budget"
+                                    hx-include="#monthly-budget"
+                                    hx-vals='js:{"value": document.getElementById("monthly-budget").value}'
+                                    hx-swap="none"
+                                    class="px-3 py-1.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-150">
+                                {{.T.Tr "btn_save"}}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1420,6 +1524,26 @@ document.getElementById('add-category-form').onsubmit = addCategory;
 window.loadCategories = loadCategories;
 document.addEventListener('DOMContentLoaded', loadCategories);
 
+function generateCalendarToken() {
+    fetch('/api/settings/calendar/generate', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+}
+
+function revokeCalendarToken() {
+    fetch('/api/settings/calendar/revoke', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+}
+
 // Auth form toggle
 function toggleAuthForm() {
     const toggle = document.getElementById('auth-toggle');
@@ -1430,6 +1554,76 @@ function toggleAuthForm() {
     } else {
         container.classList.add('hidden');
     }
+}
+
+function importSubscriptions() {
+    const fileInput = document.getElementById('import-file');
+    const formatSelect = document.getElementById('import-format');
+    if (!fileInput.files.length) return;
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('format', formatSelect.value);
+
+    fetch('/api/import/subscriptions', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.text())
+    .then(html => {
+        document.getElementById('import-result').innerHTML = html;
+    });
+}
+
+function exportEncrypted() {
+    const password = document.getElementById('export-password').value;
+    const confirm = document.getElementById('export-password-confirm').value;
+    const msgDiv = document.getElementById('export-encrypted-message');
+
+    if (!password) return;
+    if (password !== confirm) {
+        msgDiv.innerHTML = '<span class="text-red-600">{{.T.Tr "export_password_mismatch"}}</span>';
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('password', password);
+
+    fetch('/api/export/encrypted', { method: 'POST', body: formData })
+        .then(r => {
+            if (!r.ok) throw new Error('Export failed');
+            return r.blob();
+        })
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'subtrackr-backup.stbk';
+            a.click();
+            URL.revokeObjectURL(url);
+            document.getElementById('export-password').value = '';
+            document.getElementById('export-password-confirm').value = '';
+            msgDiv.innerHTML = '';
+        })
+        .catch(() => {
+            msgDiv.innerHTML = '<span class="text-red-600">Export failed</span>';
+        });
+}
+
+function importEncrypted() {
+    const fileInput = document.getElementById('import-encrypted-file');
+    const password = document.getElementById('import-encrypted-password').value;
+    if (!fileInput.files.length || !password) return;
+
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('password', password);
+
+    fetch('/api/import/encrypted', { method: 'POST', body: formData })
+        .then(r => r.text())
+        .then(html => {
+            document.getElementById('import-encrypted-result').innerHTML = html;
+        });
 }
 </script>
 </body>

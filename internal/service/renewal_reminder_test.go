@@ -325,11 +325,11 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_BoundaryCases(t *t
 	now := time.Now()
 
 	tests := []struct {
-		name        string
-		renewalDate time.Time
+		name         string
+		renewalDate  time.Time
 		reminderDays int
-		shouldFind  bool
-		description string
+		shouldFind   bool
+		description  string
 	}{
 		{
 			name:         "Exactly at reminder window boundary",

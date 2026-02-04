@@ -483,3 +483,28 @@ func (e *EmailService) SendCancellationReminder(subscription *models.Subscriptio
 	subject := fmt.Sprintf("%s: %s", e.t("shoutrrr_cancellation_reminder"), reminderText)
 	return e.SendEmail(subject, buf.String())
 }
+
+func (e *EmailService) SendBudgetExceededAlert(totalSpend, budget float64, currencySymbol string) error {
+	config, err := e.settingsService.GetSMTPConfig()
+	if err != nil || config == nil || config.Host == "" {
+		return nil
+	}
+
+	subject := e.t("email_budget_exceeded_subject")
+
+	body := fmt.Sprintf(`<html><body style="font-family: Arial, sans-serif; padding: 20px;">
+<h2>%s</h2>
+<p>%s</p>
+<p><strong>%s:</strong> %s%.2f</p>
+<p><strong>%s:</strong> %s%.2f</p>
+<p style="color: #dc2626;">%s: %s%.2f</p>
+</body></html>`,
+		e.t("email_budget_exceeded_subject"),
+		e.t("budget_exceeded_alert"),
+		e.t("dashboard_budget"), currencySymbol, budget,
+		e.t("analytics_monthly_cost"), currencySymbol, totalSpend,
+		e.t("dashboard_budget_exceeded"), currencySymbol, totalSpend-budget,
+	)
+
+	return e.SendEmail(subject, body)
+}
