@@ -199,12 +199,6 @@ func (e *EmailService) SendEmail(subject, body string) error {
 
 // SendHighCostAlert sends an email alert when a high-cost subscription is created
 func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) error {
-	// Check if high cost alerts are enabled
-	enabled, err := e.settingsService.GetBoolSetting("high_cost_alerts", true)
-	if err != nil || !enabled {
-		return nil // Silently skip if disabled
-	}
-
 	// Get currency symbol
 	currencySymbol := e.settingsService.GetCurrencySymbol()
 
@@ -298,12 +292,6 @@ func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) erro
 
 // SendRenewalReminder sends an email reminder for an upcoming subscription renewal
 func (e *EmailService) SendRenewalReminder(subscription *models.Subscription, daysUntilRenewal int) error {
-	// Check if renewal reminders are enabled
-	enabled, err := e.settingsService.GetBoolSetting("renewal_reminders", false)
-	if err != nil || !enabled {
-		return nil // Silently skip if disabled
-	}
-
 	// Get currency symbol
 	currencySymbol := e.settingsService.GetCurrencySymbol()
 
@@ -401,12 +389,6 @@ func (e *EmailService) SendRenewalReminder(subscription *models.Subscription, da
 
 // SendCancellationReminder sends an email reminder for an upcoming subscription cancellation
 func (e *EmailService) SendCancellationReminder(subscription *models.Subscription, daysUntilCancellation int) error {
-	// Check if cancellation reminders are enabled
-	enabled, err := e.settingsService.GetBoolSetting("cancellation_reminders", false)
-	if err != nil || !enabled {
-		return nil // Silently skip if disabled
-	}
-
 	// Get currency symbol
 	currencySymbol := e.settingsService.GetCurrencySymbol()
 

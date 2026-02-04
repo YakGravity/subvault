@@ -263,6 +263,59 @@
                           placeholder="{{.T.Tr "placeholder_notes"}}"
                           class="w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-150">{{if .Subscription}}{{.Subscription.Notes}}{{end}}</textarea>
             </div>
+
+            <!-- Notifications Section -->
+            <div class="md:col-span-3 border-t border-gray-200 dark:border-gray-600 pt-4 mt-2">
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">{{.T.Tr "sub_form_section_notifications"}}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Renewal Reminder -->
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="renewal_reminder" id="renewal_reminder"
+                                   {{if .Subscription}}{{if .Subscription.RenewalReminder}}checked{{end}}{{end}}
+                                   class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary dark:border-gray-600 dark:bg-gray-700">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{.T.Tr "sub_form_renewal_reminder"}}</span>
+                        </label>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{.T.Tr "sub_form_renewal_reminder_desc"}}</p>
+                        <div class="flex items-center gap-2">
+                            <input type="number" name="renewal_reminder_days" id="renewal_reminder_days"
+                                   value="{{if .Subscription}}{{.Subscription.RenewalReminderDays}}{{else}}3{{end}}"
+                                   min="1" max="30"
+                                   class="w-20 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                            <span class="text-xs text-gray-500 dark:text-gray-400">{{.T.Tr "sub_form_renewal_reminder_days"}}</span>
+                        </div>
+                    </div>
+
+                    <!-- Cancellation Reminder -->
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="cancellation_reminder" id="cancellation_reminder"
+                                   {{if .Subscription}}{{if .Subscription.CancellationReminder}}checked{{end}}{{end}}
+                                   class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary dark:border-gray-600 dark:bg-gray-700">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{.T.Tr "sub_form_cancellation_reminder"}}</span>
+                        </label>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{.T.Tr "sub_form_cancellation_reminder_desc"}}</p>
+                        <div class="flex items-center gap-2">
+                            <input type="number" name="cancellation_reminder_days" id="cancellation_reminder_days"
+                                   value="{{if .Subscription}}{{.Subscription.CancellationReminderDays}}{{else}}7{{end}}"
+                                   min="1" max="30"
+                                   class="w-20 px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                            <span class="text-xs text-gray-500 dark:text-gray-400">{{.T.Tr "sub_form_cancellation_reminder_days"}}</span>
+                        </div>
+                    </div>
+
+                    <!-- High Cost Alert -->
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="high_cost_alert" id="high_cost_alert"
+                                   {{if .Subscription}}{{if .Subscription.HighCostAlert}}checked{{end}}{{end}}
+                                   class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary dark:border-gray-600 dark:bg-gray-700">
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{.T.Tr "sub_form_high_cost_alert"}}</span>
+                        </label>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{.T.Tr "sub_form_high_cost_alert_desc"}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>

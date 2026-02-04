@@ -470,20 +470,8 @@ func startRenewalReminderScheduler(subscriptionService *service.SubscriptionServ
 
 // checkAndSendRenewalReminders checks for subscriptions needing reminders and sends emails and Shoutrrr notifications
 func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionService, emailService *service.EmailService, shoutrrrService *service.ShoutrrrService, settingsService *service.SettingsService) {
-	// Check if renewal reminders are enabled
-	enabled, err := settingsService.GetBoolSetting("renewal_reminders", false)
-	if err != nil || !enabled {
-		return // Silently skip if disabled or error
-	}
-
-	// Get reminder days setting
-	reminderDays := settingsService.GetIntSettingWithDefault("reminder_days", 7)
-	if reminderDays <= 0 {
-		return // No reminders if days is 0 or negative
-	}
-
-	// Get subscriptions needing reminders
-	subscriptions, err := subscriptionService.GetSubscriptionsNeedingReminders(reminderDays)
+	// Get subscriptions needing reminders (per-subscription settings)
+	subscriptions, err := subscriptionService.GetSubscriptionsNeedingReminders()
 	if err != nil {
 		log.Printf("Error getting subscriptions for renewal reminders: %v", err)
 		return
@@ -567,20 +555,8 @@ func startCancellationReminderScheduler(subscriptionService *service.Subscriptio
 
 // checkAndSendCancellationReminders checks for subscriptions needing cancellation reminders and sends emails and Shoutrrr notifications
 func checkAndSendCancellationReminders(subscriptionService *service.SubscriptionService, emailService *service.EmailService, shoutrrrService *service.ShoutrrrService, settingsService *service.SettingsService) {
-	// Check if cancellation reminders are enabled
-	enabled, err := settingsService.GetBoolSetting("cancellation_reminders", false)
-	if err != nil || !enabled {
-		return // Silently skip if disabled or error
-	}
-
-	// Get reminder days setting
-	reminderDays := settingsService.GetIntSettingWithDefault("cancellation_reminder_days", 7)
-	if reminderDays <= 0 {
-		return // No reminders if days is 0 or negative
-	}
-
-	// Get subscriptions needing cancellation reminders
-	subscriptions, err := subscriptionService.GetSubscriptionsNeedingCancellationReminders(reminderDays)
+	// Get subscriptions needing cancellation reminders (per-subscription settings)
+	subscriptions, err := subscriptionService.GetSubscriptionsNeedingCancellationReminders()
 	if err != nil {
 		log.Printf("Error getting subscriptions for cancellation reminders: %v", err)
 		return

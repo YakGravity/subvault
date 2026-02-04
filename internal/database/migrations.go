@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"strconv"
 	"subtrackr/internal/models"
 
 	"gorm.io/gorm"
@@ -26,6 +27,7 @@ func RunMigrations(db *gorm.DB) error {
 		migrateDefaultCategory,
 		migrateTaxFields,
 		migrateContractFields,
+		migratePerSubscriptionNotifications,
 	}
 
 	for _, migration := range migrations {
@@ -284,5 +286,64 @@ func migrateContractFields(db *gorm.DB) error {
 	}
 	// Migrate data from account to login_name
 	db.Exec("UPDATE subscriptions SET login_name = account WHERE account != '' AND account IS NOT NULL AND (login_name = '' OR login_name IS NULL)")
+	return nil
+}
+
+func migratePerSubscriptionNotifications(db *gorm.DB) error {
+	columns := map[string]string{
+		"renewal_reminder":           "RenewalReminder",
+		"renewal_reminder_days":      "RenewalReminderDays",
+		"cancellation_reminder":      "CancellationReminder",
+		"cancellation_reminder_days": "CancellationReminderDays",
+		"high_cost_alert":            "HighCostAlert",
+	}
+	for col, field := range columns {
+		if !db.Migrator().HasColumn(&models.Subscription{}, col) {
+			db.Migrator().AddColumn(&models.Subscription{}, field)
+		}
+	}
+
+	// Migrate global settings values to existing subscriptions
+	type settingRow struct {
+		Value string
+	}
+	getSettingValue := func(key string) string {
+		var row settingRow
+		if err := db.Table("settings").Select("value").Where("`key` = ?", key).First(&row).Error; err != nil {
+			return ""
+		}
+		return row.Value
+	}
+
+	renewalEnabled := getSettingValue("renewal_reminders") == "true"
+	cancellationEnabled := getSettingValue("cancellation_reminders") == "true"
+	highCostEnabled := getSettingValue("high_cost_alerts")
+	// high_cost_alerts defaults to true if not set
+	highCostAlertOn := highCostEnabled == "" || highCostEnabled == "true"
+
+	reminderDaysStr := getSettingValue("reminder_days")
+	reminderDays := 3
+	if reminderDaysStr != "" {
+		if v, err := strconv.Atoi(reminderDaysStr); err == nil {
+			reminderDays = v
+		}
+	}
+
+	cancellationDaysStr := getSettingValue("cancellation_reminder_days")
+	cancellationDays := 7
+	if cancellationDaysStr != "" {
+		if v, err := strconv.Atoi(cancellationDaysStr); err == nil {
+			cancellationDays = v
+		}
+	}
+
+	// Apply global settings to all existing subscriptions that still have defaults
+	db.Exec("UPDATE subscriptions SET renewal_reminder = ?, renewal_reminder_days = ? WHERE renewal_reminder = 0 OR renewal_reminder IS NULL",
+		renewalEnabled, reminderDays)
+	db.Exec("UPDATE subscriptions SET cancellation_reminder = ?, cancellation_reminder_days = ? WHERE cancellation_reminder = 0 OR cancellation_reminder IS NULL",
+		cancellationEnabled, cancellationDays)
+	db.Exec("UPDATE subscriptions SET high_cost_alert = ? WHERE high_cost_alert = 0 OR high_cost_alert IS NULL",
+		highCostAlertOn)
+
 	return nil
 }

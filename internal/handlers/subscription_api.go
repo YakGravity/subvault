@@ -13,49 +13,59 @@ import (
 // CreateSubscriptionRequest is the DTO for creating a subscription via API.
 // Required fields are enforced via binding tags.
 type CreateSubscriptionRequest struct {
-	Name             string     `json:"name" binding:"required"`
-	Cost             float64    `json:"cost" binding:"required,gt=0"`
-	Schedule         string     `json:"schedule" binding:"required,oneof=Monthly Annual Weekly Daily Quarterly"`
-	Status           string     `json:"status" binding:"required,oneof=Active Cancelled Paused Trial"`
-	OriginalCurrency string     `json:"original_currency"`
-	CategoryID       uint       `json:"category_id"`
-	PaymentMethod    string     `json:"payment_method"`
-	LoginName        string     `json:"login_name"`
-	TaxRate          float64    `json:"tax_rate"`
-	PriceType        string     `json:"price_type"`
-	CustomerNumber   string     `json:"customer_number"`
-	ContractNumber   string     `json:"contract_number"`
-	StartDate        *time.Time `json:"start_date"`
-	RenewalDate      *time.Time `json:"renewal_date"`
-	CancellationDate *time.Time `json:"cancellation_date"`
-	URL              string     `json:"url"`
-	IconURL          string     `json:"icon_url"`
-	Notes            string     `json:"notes"`
-	Usage            string     `json:"usage" binding:"omitempty,oneof=High Medium Low None"`
+	Name                     string     `json:"name" binding:"required"`
+	Cost                     float64    `json:"cost" binding:"required,gt=0"`
+	Schedule                 string     `json:"schedule" binding:"required,oneof=Monthly Annual Weekly Daily Quarterly"`
+	Status                   string     `json:"status" binding:"required,oneof=Active Cancelled Paused Trial"`
+	OriginalCurrency         string     `json:"original_currency"`
+	CategoryID               uint       `json:"category_id"`
+	PaymentMethod            string     `json:"payment_method"`
+	LoginName                string     `json:"login_name"`
+	TaxRate                  float64    `json:"tax_rate"`
+	PriceType                string     `json:"price_type"`
+	CustomerNumber           string     `json:"customer_number"`
+	ContractNumber           string     `json:"contract_number"`
+	StartDate                *time.Time `json:"start_date"`
+	RenewalDate              *time.Time `json:"renewal_date"`
+	CancellationDate         *time.Time `json:"cancellation_date"`
+	URL                      string     `json:"url"`
+	IconURL                  string     `json:"icon_url"`
+	Notes                    string     `json:"notes"`
+	Usage                    string     `json:"usage" binding:"omitempty,oneof=High Medium Low None"`
+	RenewalReminder          bool       `json:"renewal_reminder"`
+	RenewalReminderDays      int        `json:"renewal_reminder_days"`
+	CancellationReminder     bool       `json:"cancellation_reminder"`
+	CancellationReminderDays int        `json:"cancellation_reminder_days"`
+	HighCostAlert            bool       `json:"high_cost_alert"`
 }
 
 // UpdateSubscriptionRequest is the DTO for partial updates via API.
 // All fields are pointers so we can distinguish between "not provided" (nil) and "set to zero value".
 type UpdateSubscriptionRequest struct {
-	Name             *string    `json:"name"`
-	Cost             *float64   `json:"cost" binding:"omitempty,gt=0"`
-	Schedule         *string    `json:"schedule" binding:"omitempty,oneof=Monthly Annual Weekly Daily Quarterly"`
-	Status           *string    `json:"status" binding:"omitempty,oneof=Active Cancelled Paused Trial"`
-	OriginalCurrency *string    `json:"original_currency"`
-	CategoryID       *uint      `json:"category_id"`
-	PaymentMethod    *string    `json:"payment_method"`
-	LoginName        *string    `json:"login_name"`
-	TaxRate          *float64   `json:"tax_rate"`
-	PriceType        *string    `json:"price_type"`
-	CustomerNumber   *string    `json:"customer_number"`
-	ContractNumber   *string    `json:"contract_number"`
-	StartDate        *time.Time `json:"start_date"`
-	RenewalDate      *time.Time `json:"renewal_date"`
-	CancellationDate *time.Time `json:"cancellation_date"`
-	URL              *string    `json:"url"`
-	IconURL          *string    `json:"icon_url"`
-	Notes            *string    `json:"notes"`
-	Usage            *string    `json:"usage" binding:"omitempty,oneof=High Medium Low None"`
+	Name                     *string    `json:"name"`
+	Cost                     *float64   `json:"cost" binding:"omitempty,gt=0"`
+	Schedule                 *string    `json:"schedule" binding:"omitempty,oneof=Monthly Annual Weekly Daily Quarterly"`
+	Status                   *string    `json:"status" binding:"omitempty,oneof=Active Cancelled Paused Trial"`
+	OriginalCurrency         *string    `json:"original_currency"`
+	CategoryID               *uint      `json:"category_id"`
+	PaymentMethod            *string    `json:"payment_method"`
+	LoginName                *string    `json:"login_name"`
+	TaxRate                  *float64   `json:"tax_rate"`
+	PriceType                *string    `json:"price_type"`
+	CustomerNumber           *string    `json:"customer_number"`
+	ContractNumber           *string    `json:"contract_number"`
+	StartDate                *time.Time `json:"start_date"`
+	RenewalDate              *time.Time `json:"renewal_date"`
+	CancellationDate         *time.Time `json:"cancellation_date"`
+	URL                      *string    `json:"url"`
+	IconURL                  *string    `json:"icon_url"`
+	Notes                    *string    `json:"notes"`
+	Usage                    *string    `json:"usage" binding:"omitempty,oneof=High Medium Low None"`
+	RenewalReminder          *bool      `json:"renewal_reminder"`
+	RenewalReminderDays      *int       `json:"renewal_reminder_days"`
+	CancellationReminder     *bool      `json:"cancellation_reminder"`
+	CancellationReminderDays *int       `json:"cancellation_reminder_days"`
+	HighCostAlert            *bool      `json:"high_cost_alert"`
 }
 
 // CreateSubscriptionAPI handles creating a new subscription via JSON API
@@ -72,26 +82,40 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 		priceType = "gross"
 	}
 
+	reminderDays := req.RenewalReminderDays
+	if reminderDays <= 0 {
+		reminderDays = 3
+	}
+	cancellationDays := req.CancellationReminderDays
+	if cancellationDays <= 0 {
+		cancellationDays = 7
+	}
+
 	subscription := models.Subscription{
-		Name:             req.Name,
-		Cost:             req.Cost,
-		Schedule:         req.Schedule,
-		Status:           req.Status,
-		OriginalCurrency: req.OriginalCurrency,
-		CategoryID:       req.CategoryID,
-		PaymentMethod:    req.PaymentMethod,
-		LoginName:        req.LoginName,
-		TaxRate:          req.TaxRate,
-		PriceType:        priceType,
-		CustomerNumber:   req.CustomerNumber,
-		ContractNumber:   req.ContractNumber,
-		StartDate:        req.StartDate,
-		RenewalDate:      req.RenewalDate,
-		CancellationDate: req.CancellationDate,
-		URL:              req.URL,
-		IconURL:          req.IconURL,
-		Notes:            req.Notes,
-		Usage:            req.Usage,
+		Name:                     req.Name,
+		Cost:                     req.Cost,
+		Schedule:                 req.Schedule,
+		Status:                   req.Status,
+		OriginalCurrency:         req.OriginalCurrency,
+		CategoryID:               req.CategoryID,
+		PaymentMethod:            req.PaymentMethod,
+		LoginName:                req.LoginName,
+		TaxRate:                  req.TaxRate,
+		PriceType:                priceType,
+		CustomerNumber:           req.CustomerNumber,
+		ContractNumber:           req.ContractNumber,
+		StartDate:                req.StartDate,
+		RenewalDate:              req.RenewalDate,
+		CancellationDate:         req.CancellationDate,
+		URL:                      req.URL,
+		IconURL:                  req.IconURL,
+		Notes:                    req.Notes,
+		Usage:                    req.Usage,
+		RenewalReminder:          req.RenewalReminder,
+		RenewalReminderDays:      reminderDays,
+		CancellationReminder:     req.CancellationReminder,
+		CancellationReminderDays: cancellationDays,
+		HighCostAlert:            req.HighCostAlert,
 	}
 
 	if subscription.OriginalCurrency == "" {
@@ -107,8 +131,8 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 		return
 	}
 
-	// Send high-cost alert if applicable
-	if h.isHighCostWithCurrency(created) {
+	// Send high-cost alert if applicable (per-subscription setting)
+	if created.HighCostAlert && h.isHighCostWithCurrency(created) {
 		subscriptionWithCategory, err := h.service.GetByID(created.ID)
 		if err == nil && subscriptionWithCategory != nil {
 			if err := h.emailService.SendHighCostAlert(subscriptionWithCategory); err != nil {
@@ -204,6 +228,21 @@ func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 	if req.Usage != nil {
 		subscription.Usage = *req.Usage
 	}
+	if req.RenewalReminder != nil {
+		subscription.RenewalReminder = *req.RenewalReminder
+	}
+	if req.RenewalReminderDays != nil {
+		subscription.RenewalReminderDays = *req.RenewalReminderDays
+	}
+	if req.CancellationReminder != nil {
+		subscription.CancellationReminder = *req.CancellationReminder
+	}
+	if req.CancellationReminderDays != nil {
+		subscription.CancellationReminderDays = *req.CancellationReminderDays
+	}
+	if req.HighCostAlert != nil {
+		subscription.HighCostAlert = *req.HighCostAlert
+	}
 
 	// Fetch logo if URL changed or new URL without icon
 	urlChanged := req.URL != nil && original.URL != subscription.URL
@@ -217,8 +256,8 @@ func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 		return
 	}
 
-	// Send high-cost alert if subscription became high-cost
-	if updated != nil && !wasHighCost && h.isHighCostWithCurrency(updated) {
+	// Send high-cost alert if subscription became high-cost (per-subscription setting)
+	if updated != nil && updated.HighCostAlert && !wasHighCost && h.isHighCostWithCurrency(updated) {
 		subscriptionWithCategory, err := h.service.GetByID(updated.ID)
 		if err == nil && subscriptionWithCategory != nil {
 			if err := h.emailService.SendHighCostAlert(subscriptionWithCategory); err != nil {

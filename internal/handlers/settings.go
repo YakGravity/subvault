@@ -177,37 +177,6 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 	setting := c.Param("setting")
 
 	switch setting {
-	case "renewal":
-		current, _ := h.service.GetBoolSetting("renewal_reminders", false)
-		err := h.service.SetBoolSetting("renewal_reminders", !current)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"enabled": !current})
-
-	case "highcost":
-		current, _ := h.service.GetBoolSetting("high_cost_alerts", true)
-		err := h.service.SetBoolSetting("high_cost_alerts", !current)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"enabled": !current})
-
-	case "days":
-		daysStr := c.PostForm("reminder_days")
-		if days, err := strconv.Atoi(daysStr); err == nil && days > 0 && days <= 30 {
-			err := h.service.SetIntSetting("reminder_days", days)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-				return
-			}
-			c.JSON(http.StatusOK, gin.H{"days": days})
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid days value"})
-		}
-
 	case "threshold":
 		thresholdStr := c.PostForm("high_cost_threshold")
 		if threshold, err := strconv.ParseFloat(thresholdStr, 64); err == nil && threshold >= 0 && threshold <= 10000 {
@@ -219,28 +188,6 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"threshold": threshold})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid threshold value (must be between 0 and 10000)"})
-		}
-
-	case "cancellation":
-		current, _ := h.service.GetBoolSetting("cancellation_reminders", false)
-		err := h.service.SetBoolSetting("cancellation_reminders", !current)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"enabled": !current})
-
-	case "cancellation_days":
-		daysStr := c.PostForm("cancellation_reminder_days")
-		if days, err := strconv.Atoi(daysStr); err == nil && days > 0 && days <= 30 {
-			err := h.service.SetIntSetting("cancellation_reminder_days", days)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-				return
-			}
-			c.JSON(http.StatusOK, gin.H{"days": days})
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid days value"})
 		}
 
 	default:

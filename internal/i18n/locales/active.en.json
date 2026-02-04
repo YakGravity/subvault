@@ -1157,5 +1157,35 @@
   },
   "api_key_copy_warning": {
     "other": "Copy this API key now. You won't be able to see it again!"
+  },
+  "sub_form_section_notifications": {
+    "other": "Notifications"
+  },
+  "sub_form_renewal_reminder": {
+    "other": "Renewal Reminder"
+  },
+  "sub_form_renewal_reminder_desc": {
+    "other": "Get notified before this subscription renews"
+  },
+  "sub_form_renewal_reminder_days": {
+    "other": "Days before renewal"
+  },
+  "sub_form_cancellation_reminder": {
+    "other": "Cancellation Reminder"
+  },
+  "sub_form_cancellation_reminder_desc": {
+    "other": "Get notified before the cancellation date"
+  },
+  "sub_form_cancellation_reminder_days": {
+    "other": "Days before cancellation"
+  },
+  "sub_form_high_cost_alert": {
+    "other": "High Cost Alert"
+  },
+  "sub_form_high_cost_alert_desc": {
+    "other": "Alert when this subscription exceeds the cost threshold"
+  },
+  "settings_notifications_moved": {
+    "other": "Notification toggles have been moved to individual subscriptions. Configure them when adding or editing a subscription."
   }
 }

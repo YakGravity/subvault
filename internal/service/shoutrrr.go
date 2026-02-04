@@ -111,11 +111,6 @@ func (s *ShoutrrrService) SendTestNotification(urls []string) error {
 }
 
 func (s *ShoutrrrService) SendHighCostAlert(subscription *models.Subscription) error {
-	enabled, err := s.settingsService.GetBoolSetting("high_cost_alerts", true)
-	if err != nil || !enabled {
-		return nil
-	}
-
 	currencySymbol := s.settingsService.GetCurrencySymbol()
 
 	message := fmt.Sprintf("⚠️ %s\n\n", s.t("shoutrrr_high_cost_alert"))
@@ -142,11 +137,6 @@ func (s *ShoutrrrService) SendHighCostAlert(subscription *models.Subscription) e
 }
 
 func (s *ShoutrrrService) SendRenewalReminder(subscription *models.Subscription, daysUntilRenewal int) error {
-	enabled, err := s.settingsService.GetBoolSetting("renewal_reminders", false)
-	if err != nil || !enabled {
-		return nil
-	}
-
 	currencySymbol := s.settingsService.GetCurrencySymbol()
 	renewalText := s.tPlural("email_renewal_reminder", daysUntilRenewal, map[string]interface{}{"Name": subscription.Name})
 
@@ -175,11 +165,6 @@ func (s *ShoutrrrService) SendRenewalReminder(subscription *models.Subscription,
 }
 
 func (s *ShoutrrrService) SendCancellationReminder(subscription *models.Subscription, daysUntilCancellation int) error {
-	enabled, err := s.settingsService.GetBoolSetting("cancellation_reminders", false)
-	if err != nil || !enabled {
-		return nil
-	}
-
 	currencySymbol := s.settingsService.GetCurrencySymbol()
 	cancellationText := s.tPlural("email_cancellation_reminder", daysUntilCancellation, map[string]interface{}{"Name": subscription.Name})
 
