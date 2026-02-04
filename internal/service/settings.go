@@ -10,17 +10,70 @@ import (
 	"strconv"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
+	"sync"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
+const settingsCacheTTL = 30 * time.Second
+
 type SettingsService struct {
-	repo *repository.SettingsRepository
+	repo     *repository.SettingsRepository
+	mu       sync.RWMutex
+	cache    map[string]string
+	lastLoad time.Time
 }
 
 func NewSettingsService(repo *repository.SettingsRepository) *SettingsService {
-	return &SettingsService{repo: repo}
+	return &SettingsService{
+		repo:  repo,
+		cache: make(map[string]string),
+	}
+}
+
+// loadCache loads all settings into the in-memory cache
+func (s *SettingsService) loadCache() {
+	settings, err := s.repo.GetAll()
+	if err != nil {
+		log.Printf("Warning: Failed to load settings cache: %v", err)
+		return
+	}
+	s.cache = make(map[string]string, len(settings))
+	for _, setting := range settings {
+		s.cache[setting.Key] = setting.Value
+	}
+	s.lastLoad = time.Now()
+}
+
+// getCached returns a cached setting value.
+// Returns ("", false) if key is not found.
+func (s *SettingsService) getCached(key string) (string, bool) {
+	s.mu.RLock()
+	if time.Since(s.lastLoad) < settingsCacheTTL && s.lastLoad != (time.Time{}) {
+		val, ok := s.cache[key]
+		s.mu.RUnlock()
+		return val, ok
+	}
+	s.mu.RUnlock()
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	// Double-check after acquiring write lock
+	if time.Since(s.lastLoad) < settingsCacheTTL && s.lastLoad != (time.Time{}) {
+		val, ok := s.cache[key]
+		return val, ok
+	}
+	s.loadCache()
+	val, ok := s.cache[key]
+	return val, ok
+}
+
+// invalidateCache clears the settings cache
+func (s *SettingsService) invalidateCache() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.lastLoad = time.Time{}
 }
 
 // SaveSMTPConfig saves SMTP configuration
@@ -31,18 +84,19 @@ func (s *SettingsService) SaveSMTPConfig(config *models.SMTPConfig) error {
 		return err
 	}
 
+	defer s.invalidateCache()
 	return s.repo.Set("smtp_config", string(data))
 }
 
 // GetSMTPConfig retrieves SMTP configuration
 func (s *SettingsService) GetSMTPConfig() (*models.SMTPConfig, error) {
-	data, err := s.repo.Get("smtp_config")
-	if err != nil {
-		return nil, err
+	data, ok := s.getCached("smtp_config")
+	if !ok {
+		return nil, fmt.Errorf("smtp_config not found")
 	}
 
 	var config models.SMTPConfig
-	err = json.Unmarshal([]byte(data), &config)
+	err := json.Unmarshal([]byte(data), &config)
 	if err != nil {
 		return nil, err
 	}
@@ -52,16 +106,16 @@ func (s *SettingsService) GetSMTPConfig() (*models.SMTPConfig, error) {
 
 // SetBoolSetting saves a boolean setting
 func (s *SettingsService) SetBoolSetting(key string, value bool) error {
+	defer s.invalidateCache()
 	return s.repo.Set(key, fmt.Sprintf("%t", value))
 }
 
 // GetBoolSetting retrieves a boolean setting
 func (s *SettingsService) GetBoolSetting(key string, defaultValue bool) (bool, error) {
-	value, err := s.repo.Get(key)
-	if err != nil {
-		return defaultValue, err
+	value, ok := s.getCached(key)
+	if !ok {
+		return defaultValue, nil
 	}
-
 	return value == "true", nil
 }
 
@@ -76,21 +130,20 @@ func (s *SettingsService) GetBoolSettingWithDefault(key string, defaultValue boo
 
 // SetIntSetting saves an integer setting
 func (s *SettingsService) SetIntSetting(key string, value int) error {
+	defer s.invalidateCache()
 	return s.repo.Set(key, strconv.Itoa(value))
 }
 
 // GetIntSetting retrieves an integer setting
 func (s *SettingsService) GetIntSetting(key string, defaultValue int) (int, error) {
-	value, err := s.repo.Get(key)
-	if err != nil {
-		return defaultValue, err
+	value, ok := s.getCached(key)
+	if !ok {
+		return defaultValue, nil
 	}
-
 	intValue, err := strconv.Atoi(value)
 	if err != nil {
 		return defaultValue, err
 	}
-
 	return intValue, nil
 }
 
@@ -105,35 +158,35 @@ func (s *SettingsService) GetIntSettingWithDefault(key string, defaultValue int)
 
 // SetFloatSetting saves a float setting
 func (s *SettingsService) SetFloatSetting(key string, value float64) error {
+	defer s.invalidateCache()
 	return s.repo.Set(key, fmt.Sprintf("%.2f", value))
 }
 
 // GetFloatSetting retrieves a float setting
 func (s *SettingsService) GetFloatSetting(key string, defaultValue float64) (float64, error) {
-	value, err := s.repo.Get(key)
-	if err != nil {
-		return defaultValue, err
+	value, ok := s.getCached(key)
+	if !ok {
+		return defaultValue, nil
 	}
-
 	floatValue, err := strconv.ParseFloat(value, 64)
 	if err != nil {
 		return defaultValue, err
 	}
-
 	return floatValue, nil
 }
 
 // GetTheme retrieves the current theme setting
 func (s *SettingsService) GetTheme() (string, error) {
-	theme, err := s.repo.Get("theme")
-	if err != nil {
-		return "default", err
+	theme, ok := s.getCached("theme")
+	if !ok || theme == "" {
+		return "default", nil
 	}
 	return theme, nil
 }
 
 // SetTheme saves the theme preference
 func (s *SettingsService) SetTheme(theme string) error {
+	defer s.invalidateCache()
 	return s.repo.Set("theme", theme)
 }
 
@@ -194,14 +247,15 @@ func (s *SettingsService) SetCurrency(currency string) error {
 	if !isValid {
 		return fmt.Errorf("invalid currency: %s", currency)
 	}
+	defer s.invalidateCache()
 	return s.repo.Set("currency", currency)
 }
 
 // GetCurrency retrieves the currency preference
 func (s *SettingsService) GetCurrency() string {
-	currency, err := s.repo.Get("currency")
-	if err != nil || currency == "" {
-		return "USD" // Default to USD
+	currency, ok := s.getCached("currency")
+	if !ok || currency == "" {
+		return "USD"
 	}
 	return currency
 }
@@ -307,11 +361,16 @@ func (s *SettingsService) SetAuthEnabled(enabled bool) error {
 
 // GetAuthUsername returns the configured admin username
 func (s *SettingsService) GetAuthUsername() (string, error) {
-	return s.repo.Get("auth_username")
+	val, ok := s.getCached("auth_username")
+	if !ok {
+		return "", fmt.Errorf("auth_username not found")
+	}
+	return val, nil
 }
 
 // SetAuthUsername sets the admin username
 func (s *SettingsService) SetAuthUsername(username string) error {
+	defer s.invalidateCache()
 	return s.repo.Set("auth_username", username)
 }
 
@@ -330,13 +389,14 @@ func (s *SettingsService) SetAuthPassword(password string) error {
 	if err != nil {
 		return err
 	}
+	defer s.invalidateCache()
 	return s.repo.Set("auth_password_hash", hash)
 }
 
 // ValidatePassword checks if a password matches the stored hash
 func (s *SettingsService) ValidatePassword(password string) error {
-	hash, err := s.repo.Get("auth_password_hash")
-	if err != nil {
+	hash, ok := s.getCached("auth_password_hash")
+	if !ok {
 		return fmt.Errorf("no password configured")
 	}
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
@@ -344,8 +404,8 @@ func (s *SettingsService) ValidatePassword(password string) error {
 
 // GetOrGenerateSessionSecret returns the session secret, generating one if it doesn't exist
 func (s *SettingsService) GetOrGenerateSessionSecret() (string, error) {
-	secret, err := s.repo.Get("auth_session_secret")
-	if err == nil && secret != "" {
+	secret, ok := s.getCached("auth_session_secret")
+	if ok && secret != "" {
 		return secret, nil
 	}
 
@@ -360,6 +420,7 @@ func (s *SettingsService) GetOrGenerateSessionSecret() (string, error) {
 	if err := s.repo.Set("auth_session_secret", secret); err != nil {
 		return "", err
 	}
+	s.invalidateCache()
 
 	return secret, nil
 }
@@ -407,7 +468,6 @@ func (s *SettingsService) GenerateResetToken() (string, error) {
 	}
 	token := base64.URLEncoding.EncodeToString(bytes)
 
-	// Store token with 1-hour expiry
 	if err := s.repo.Set("auth_reset_token", token); err != nil {
 		return "", err
 	}
@@ -417,18 +477,19 @@ func (s *SettingsService) GenerateResetToken() (string, error) {
 		return "", err
 	}
 
+	s.invalidateCache()
 	return token, nil
 }
 
 // ValidateResetToken checks if a reset token is valid
 func (s *SettingsService) ValidateResetToken(token string) error {
-	storedToken, err := s.repo.Get("auth_reset_token")
-	if err != nil || subtle.ConstantTimeCompare([]byte(storedToken), []byte(token)) != 1 {
+	storedToken, ok := s.getCached("auth_reset_token")
+	if !ok || subtle.ConstantTimeCompare([]byte(storedToken), []byte(token)) != 1 {
 		return fmt.Errorf("invalid token")
 	}
 
-	expiryStr, err := s.repo.Get("auth_reset_token_expiry")
-	if err != nil {
+	expiryStr, ok := s.getCached("auth_reset_token_expiry")
+	if !ok {
 		return fmt.Errorf("token expired")
 	}
 
@@ -444,6 +505,7 @@ func (s *SettingsService) ValidateResetToken(token string) error {
 func (s *SettingsService) ClearResetToken() error {
 	s.repo.Delete("auth_reset_token")
 	s.repo.Delete("auth_reset_token_expiry")
+	s.invalidateCache()
 	return nil
 }
 
@@ -454,18 +516,19 @@ func (s *SettingsService) SaveShoutrrrConfig(config *models.ShoutrrrConfig) erro
 		return err
 	}
 
+	defer s.invalidateCache()
 	return s.repo.Set("shoutrrr_config", string(data))
 }
 
 // GetShoutrrrConfig retrieves Shoutrrr configuration
 func (s *SettingsService) GetShoutrrrConfig() (*models.ShoutrrrConfig, error) {
-	data, err := s.repo.Get("shoutrrr_config")
-	if err != nil {
-		return nil, err
+	data, ok := s.getCached("shoutrrr_config")
+	if !ok {
+		return nil, fmt.Errorf("shoutrrr_config not found")
 	}
 
 	var config models.ShoutrrrConfig
-	err = json.Unmarshal([]byte(data), &config)
+	err := json.Unmarshal([]byte(data), &config)
 	if err != nil {
 		return nil, err
 	}
@@ -475,8 +538,8 @@ func (s *SettingsService) GetShoutrrrConfig() (*models.ShoutrrrConfig, error) {
 
 // MigratePushoverToShoutrrr migrates existing Pushover config to Shoutrrr format
 func (s *SettingsService) MigratePushoverToShoutrrr() error {
-	data, err := s.repo.Get("pushover_config")
-	if err != nil {
+	data, ok := s.getCached("pushover_config")
+	if !ok {
 		return nil // No Pushover config exists, nothing to migrate
 	}
 
@@ -530,13 +593,14 @@ func (s *SettingsService) SetLanguage(lang string) error {
 	if !isValid {
 		return fmt.Errorf("invalid language: %s", lang)
 	}
+	defer s.invalidateCache()
 	return s.repo.Set("language", lang)
 }
 
 // GetLanguage retrieves the language preference
 func (s *SettingsService) GetLanguage() string {
-	lang, err := s.repo.Get("language")
-	if err != nil || lang == "" {
+	lang, ok := s.getCached("language")
+	if !ok || lang == "" {
 		return "en"
 	}
 	return lang
@@ -552,15 +616,21 @@ func (s *SettingsService) GenerateCalendarToken() (string, error) {
 	if err := s.repo.Set("calendar_token", token); err != nil {
 		return "", err
 	}
+	s.invalidateCache()
 	return token, nil
 }
 
 // GetCalendarToken retrieves the calendar feed token
 func (s *SettingsService) GetCalendarToken() (string, error) {
-	return s.repo.Get("calendar_token")
+	val, ok := s.getCached("calendar_token")
+	if !ok {
+		return "", fmt.Errorf("calendar_token not found")
+	}
+	return val, nil
 }
 
 // RevokeCalendarToken deletes the calendar feed token
 func (s *SettingsService) RevokeCalendarToken() error {
+	defer s.invalidateCache()
 	return s.repo.Set("calendar_token", "")
 }

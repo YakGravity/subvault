@@ -498,6 +498,7 @@ type Stats struct {
 	CategorySpending       map[string]float64 `json:"category_spending"`
 	MonthlyBudget          float64            `json:"monthly_budget"`
 	BudgetUtilization      float64            `json:"budget_utilization"`
+	AllSubscriptions       []Subscription     `json:"-"`
 }
 
 // CategoryStat represents spending by category

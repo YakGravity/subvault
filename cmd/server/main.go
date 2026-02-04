@@ -151,8 +151,17 @@ func main() {
 		router.LoadHTMLGlob("templates/*")
 	}
 
-	// Serve static files
-	router.Static("/static", "./web/static")
+	// Serve static files with cache headers
+	staticFS := http.Dir("./web/static")
+	staticHandler := http.StripPrefix("/static/", http.FileServer(staticFS))
+	router.GET("/static/*filepath", func(c *gin.Context) {
+		c.Header("Cache-Control", "public, max-age=86400")
+		staticHandler.ServeHTTP(c.Writer, c.Request)
+	})
+	router.HEAD("/static/*filepath", func(c *gin.Context) {
+		c.Header("Cache-Control", "public, max-age=86400")
+		staticHandler.ServeHTTP(c.Writer, c.Request)
+	})
 	router.StaticFile("/favicon.ico", "./web/static/favicon.ico")
 	router.StaticFile("/manifest.json", "./web/static/manifest.json")
 

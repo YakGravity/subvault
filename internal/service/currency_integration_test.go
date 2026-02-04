@@ -42,16 +42,18 @@ func TestCurrencyService_ConvertAmount_WithCachedRate(t *testing.T) {
 	repo := repository.NewExchangeRateRepository(db)
 	service := NewCurrencyService(repo)
 
-	// Create a cached rate
+	// Create EUR-based cached rates (matches ECB format)
 	err := repo.SaveRates([]models.ExchangeRate{
-		{BaseCurrency: "USD", Currency: "EUR", Rate: 0.85, Date: time.Now()},
+		{BaseCurrency: "EUR", Currency: "EUR", Rate: 1.0, Date: time.Now()},
+		{BaseCurrency: "EUR", Currency: "USD", Rate: 1.1, Date: time.Now()},
 	})
 	assert.NoError(t, err)
 
+	// USD->EUR cross-rate: EUR_rate / USD_rate = 1.0 / 1.1
 	result, err := service.ConvertAmount(100.0, "USD", "EUR")
 
 	assert.NoError(t, err)
-	assert.Equal(t, 85.0, result)
+	assert.InDelta(t, 90.909, result, 0.01)
 }
 
 func TestCurrencyService_ConvertAmount_NoECBRate(t *testing.T) {
@@ -72,17 +74,19 @@ func TestCurrencyService_ConvertAmount_InvalidAmount(t *testing.T) {
 	repo := repository.NewExchangeRateRepository(db)
 	service := NewCurrencyService(repo)
 
-	// Pre-cache a rate
+	// Pre-cache EUR-based rates
 	repo.SaveRates([]models.ExchangeRate{
-		{BaseCurrency: "USD", Currency: "EUR", Rate: 0.85, Date: time.Now()},
+		{BaseCurrency: "EUR", Currency: "EUR", Rate: 1.0, Date: time.Now()},
+		{BaseCurrency: "EUR", Currency: "USD", Rate: 1.1, Date: time.Now()},
 	})
 
+	// Cross-rate USD->EUR = 1.0/1.1 ≈ 0.9091
 	tests := []struct {
 		name     string
 		amount   float64
 		expected float64
 	}{
-		{"Negative amount", -100.0, -85.0},
+		{"Negative amount", -100.0, -90.909},
 		{"Zero amount", 0.0, 0.0},
 	}
 
@@ -90,7 +94,7 @@ func TestCurrencyService_ConvertAmount_InvalidAmount(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			result, err := service.ConvertAmount(tt.amount, "USD", "EUR")
 			assert.NoError(t, err)
-			assert.Equal(t, tt.expected, result)
+			assert.InDelta(t, tt.expected, result, 0.01)
 		})
 	}
 }

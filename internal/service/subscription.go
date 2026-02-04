@@ -68,53 +68,48 @@ func (s *SubscriptionService) convertAmount(amount float64, fromCurrency, toCurr
 func (s *SubscriptionService) GetStats() (*models.Stats, error) {
 	displayCurrency := s.settingsService.GetCurrency()
 
-	activeSubscriptions, err := s.repo.GetActiveSubscriptions()
+	// Single query: load all subscriptions with categories
+	allSubs, err := s.repo.GetAll()
 	if err != nil {
 		return nil, err
 	}
 
-	cancelledSubscriptions, err := s.repo.GetCancelledSubscriptions()
-	if err != nil {
-		return nil, err
-	}
-
-	upcomingRenewals, err := s.repo.GetUpcomingRenewals(7)
-	if err != nil {
-		return nil, err
-	}
+	// Partition in-memory
+	now := time.Now()
+	renewalCutoff := now.AddDate(0, 0, 7)
 
 	stats := &models.Stats{
-		ActiveSubscriptions:    len(activeSubscriptions),
-		CancelledSubscriptions: len(cancelledSubscriptions),
-		UpcomingRenewals:       len(upcomingRenewals),
-		CategorySpending:       make(map[string]float64),
+		CategorySpending: make(map[string]float64),
+		AllSubscriptions: allSubs,
 	}
 
-	// Calculate totals with currency conversion
-	for _, sub := range activeSubscriptions {
-		monthly := s.convertAmount(sub.MonthlyCost(), sub.OriginalCurrency, displayCurrency)
-		annual := s.convertAmount(sub.AnnualCost(), sub.OriginalCurrency, displayCurrency)
-		stats.TotalMonthlySpend += monthly
-		stats.TotalAnnualSpend += annual
+	for _, sub := range allSubs {
+		switch sub.Status {
+		case "Active":
+			stats.ActiveSubscriptions++
+			monthly := s.convertAmount(sub.MonthlyCost(), sub.OriginalCurrency, displayCurrency)
+			annual := s.convertAmount(sub.AnnualCost(), sub.OriginalCurrency, displayCurrency)
+			stats.TotalMonthlySpend += monthly
+			stats.TotalAnnualSpend += annual
 
-		// Build category spending from active subscriptions (replaces SQL aggregation)
-		categoryName := "Uncategorized"
-		if sub.Category.Name != "" {
-			categoryName = sub.Category.Name
-		}
-		stats.CategorySpending[categoryName] += monthly
-	}
+			categoryName := "Uncategorized"
+			if sub.Category.Name != "" {
+				categoryName = sub.Category.Name
+			}
+			stats.CategorySpending[categoryName] += monthly
 
-	// Calculate savings from cancelled subscriptions
-	for _, sub := range cancelledSubscriptions {
-		stats.TotalSaved += s.convertAmount(sub.AnnualCost(), sub.OriginalCurrency, displayCurrency)
-		stats.MonthlySaved += s.convertAmount(sub.MonthlyCost(), sub.OriginalCurrency, displayCurrency)
-	}
+			// Check upcoming renewals
+			if sub.RenewalDate != nil && !sub.RenewalDate.Before(now) && !sub.RenewalDate.After(renewalCutoff) {
+				stats.UpcomingRenewals++
+			}
 
-	// Log if any subscriptions couldn't be converted
-	for _, sub := range activeSubscriptions {
-		if sub.OriginalCurrency != displayCurrency && !HasECBRate(sub.OriginalCurrency) {
-			log.Printf("Warning: No ECB exchange rate for %s, using 1:1 fallback for subscription %q", sub.OriginalCurrency, sub.Name)
+			if sub.OriginalCurrency != displayCurrency && !HasECBRate(sub.OriginalCurrency) {
+				log.Printf("Warning: No ECB exchange rate for %s, using 1:1 fallback for subscription %q", sub.OriginalCurrency, sub.Name)
+			}
+		case "Cancelled":
+			stats.CancelledSubscriptions++
+			stats.TotalSaved += s.convertAmount(sub.AnnualCost(), sub.OriginalCurrency, displayCurrency)
+			stats.MonthlySaved += s.convertAmount(sub.MonthlyCost(), sub.OriginalCurrency, displayCurrency)
 		}
 	}
 
