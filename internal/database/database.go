@@ -14,16 +14,30 @@ func Initialize(dbPath string) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	// Enable foreign key constraints
 	sqlDB, err := db.DB()
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = sqlDB.Exec("PRAGMA foreign_keys = ON")
-	if err != nil {
-		return nil, err
+	// SQLite performance tuning
+	pragmas := []string{
+		"PRAGMA journal_mode = WAL",
+		"PRAGMA synchronous = NORMAL",
+		"PRAGMA busy_timeout = 5000",
+		"PRAGMA cache_size = -20000",
+		"PRAGMA temp_store = MEMORY",
+		"PRAGMA foreign_keys = ON",
 	}
+	for _, pragma := range pragmas {
+		if _, err := sqlDB.Exec(pragma); err != nil {
+			return nil, err
+		}
+	}
+
+	// Connection pool for SQLite (single writer)
+	sqlDB.SetMaxOpenConns(1)
+	sqlDB.SetMaxIdleConns(1)
+	sqlDB.SetConnMaxLifetime(0)
 
 	return db, nil
 }

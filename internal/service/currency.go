@@ -9,6 +9,7 @@ import (
 	"strings"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
+	"sync"
 	"time"
 )
 
@@ -59,11 +60,70 @@ type ecbRate struct {
 }
 
 type CurrencyService struct {
-	repo *repository.ExchangeRateRepository
+	repo     *repository.ExchangeRateRepository
+	mu       sync.RWMutex
+	eurRates map[string]float64 // currency -> rate (EUR-based)
+	rateDate time.Time
 }
 
 func NewCurrencyService(repo *repository.ExchangeRateRepository) *CurrencyService {
-	return &CurrencyService{repo: repo}
+	return &CurrencyService{
+		repo:     repo,
+		eurRates: make(map[string]float64),
+	}
+}
+
+// ensureRates loads exchange rates into memory if needed
+func (s *CurrencyService) ensureRates() error {
+	s.mu.RLock()
+	if len(s.eurRates) > 0 && time.Since(s.rateDate) < 24*time.Hour {
+		s.mu.RUnlock()
+		return nil
+	}
+	s.mu.RUnlock()
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	// Double-check after write lock
+	if len(s.eurRates) > 0 && time.Since(s.rateDate) < 24*time.Hour {
+		return nil
+	}
+
+	// Try loading from DB first
+	rates, err := s.repo.GetLatestRates("EUR")
+	if err == nil && len(rates) > 0 && !rates[0].IsStale() {
+		s.eurRates = make(map[string]float64, len(rates)+1)
+		s.eurRates["EUR"] = 1.0
+		for _, r := range rates {
+			s.eurRates[r.Currency] = r.Rate
+		}
+		s.rateDate = rates[0].Date
+		return nil
+	}
+
+	// Fetch fresh rates from ECB
+	return s.fetchAndCacheRatesLocked()
+}
+
+// getCrossRate computes a cross-rate via EUR. Caller must ensure rates are loaded.
+func (s *CurrencyService) getCrossRate(from, to string) (float64, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	if from == to {
+		return 1.0, nil
+	}
+
+	fromRate, okFrom := s.eurRates[from]
+	toRate, okTo := s.eurRates[to]
+
+	if !okFrom || !okTo || fromRate == 0 {
+		return 0, fmt.Errorf("no exchange rate available for %s to %s", from, to)
+	}
+
+	// Cross-rate via EUR: toRate / fromRate
+	return toRate / fromRate, nil
 }
 
 // GetExchangeRate retrieves exchange rate between two currencies
@@ -72,19 +132,15 @@ func (s *CurrencyService) GetExchangeRate(fromCurrency, toCurrency string) (floa
 		return 1.0, nil
 	}
 
-	// Try to get cached rate first
-	rate, err := s.repo.GetRate(fromCurrency, toCurrency)
-	if err == nil && !rate.IsStale() {
-		return rate.Rate, nil
-	}
-
-	// Check if both currencies have ECB support
 	if !HasECBRate(fromCurrency) || !HasECBRate(toCurrency) {
 		return 0, fmt.Errorf("no exchange rate available for %s to %s (not provided by ECB)", fromCurrency, toCurrency)
 	}
 
-	// Fetch from ECB
-	return s.fetchAndCacheRates(fromCurrency, toCurrency)
+	if err := s.ensureRates(); err != nil {
+		return 0, err
+	}
+
+	return s.getCrossRate(fromCurrency, toCurrency)
 }
 
 // ConvertAmount converts an amount from one currency to another
@@ -96,9 +152,9 @@ func (s *CurrencyService) ConvertAmount(amount float64, fromCurrency, toCurrency
 	return amount * rate, nil
 }
 
-// fetchAndCacheRates fetches rates from the ECB and caches them.
-// ECB provides rates with EUR as base, so cross-rate calculations are used for other pairs.
-func (s *CurrencyService) fetchAndCacheRates(baseCurrency, targetCurrency string) (float64, error) {
+// fetchAndCacheRatesLocked fetches all EUR-based rates from ECB and populates the in-memory cache.
+// Caller must hold s.mu write lock.
+func (s *CurrencyService) fetchAndCacheRatesLocked() error {
 	client := &http.Client{
 		Timeout: 10 * time.Second,
 		Transport: &http.Transport{
@@ -109,41 +165,35 @@ func (s *CurrencyService) fetchAndCacheRates(baseCurrency, targetCurrency string
 	}
 	resp, err := client.Get(ecbDailyURL)
 	if err != nil {
-		return 0, fmt.Errorf("failed to fetch ECB exchange rates: %w", err)
+		return fmt.Errorf("failed to fetch ECB exchange rates: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return 0, fmt.Errorf("ECB API returned status %d", resp.StatusCode)
+		return fmt.Errorf("ECB API returned status %d", resp.StatusCode)
 	}
 
 	var envelope ecbEnvelope
 	if err := xml.NewDecoder(resp.Body).Decode(&envelope); err != nil {
-		return 0, fmt.Errorf("failed to decode ECB response: %w", err)
+		return fmt.Errorf("failed to decode ECB response: %w", err)
 	}
 
 	if len(envelope.Rates) == 0 {
-		return 0, fmt.Errorf("ECB response contained no rates")
+		return fmt.Errorf("ECB response contained no rates")
 	}
 
-	// Build rates map
-	ratesMap := make(map[string]float64)
-	for _, r := range envelope.Rates {
-		ratesMap[r.Currency] = r.Rate
-	}
-
-	// Cache all rates with EUR as base
+	// Populate in-memory cache
 	rateDate := time.Now()
+	s.eurRates = make(map[string]float64, len(envelope.Rates)+1)
+	s.eurRates["EUR"] = 1.0
+	for _, r := range envelope.Rates {
+		s.eurRates[r.Currency] = r.Rate
+	}
+	s.rateDate = rateDate
+
+	// Persist to DB for restart recovery
 	var ratesToSave []models.ExchangeRate
-
-	ratesToSave = append(ratesToSave, models.ExchangeRate{
-		BaseCurrency: "EUR",
-		Currency:     "EUR",
-		Rate:         1.0,
-		Date:         rateDate,
-	})
-
-	for currency, rate := range ratesMap {
+	for currency, rate := range s.eurRates {
 		ratesToSave = append(ratesToSave, models.ExchangeRate{
 			BaseCurrency: "EUR",
 			Currency:     currency,
@@ -151,36 +201,18 @@ func (s *CurrencyService) fetchAndCacheRates(baseCurrency, targetCurrency string
 			Date:         rateDate,
 		})
 	}
-
-	if len(ratesToSave) > 0 {
-		if err := s.repo.SaveRates(ratesToSave); err != nil {
-			log.Printf("Warning: failed to cache exchange rates: %v", err)
-		}
+	if err := s.repo.SaveRates(ratesToSave); err != nil {
+		log.Printf("Warning: failed to cache exchange rates: %v", err)
 	}
 
-	// Calculate cross-rate
-	if baseCurrency == "EUR" {
-		if rate, exists := ratesMap[targetCurrency]; exists {
-			return rate, nil
-		}
-	} else if targetCurrency == "EUR" {
-		if rate, exists := ratesMap[baseCurrency]; exists && rate != 0 {
-			return 1.0 / rate, nil
-		}
-	} else {
-		baseToEur, exists1 := ratesMap[baseCurrency]
-		eurToTarget, exists2 := ratesMap[targetCurrency]
-		if exists1 && exists2 && baseToEur != 0 {
-			return eurToTarget / baseToEur, nil
-		}
-	}
-
-	return 0, fmt.Errorf("exchange rate for %s to %s not available", baseCurrency, targetCurrency)
+	return nil
 }
 
 // RefreshRates updates all exchange rates from the ECB
 func (s *CurrencyService) RefreshRates() error {
-	_, err := s.fetchAndCacheRates("EUR", "USD")
+	s.mu.Lock()
+	err := s.fetchAndCacheRatesLocked()
+	s.mu.Unlock()
 	if err != nil {
 		return fmt.Errorf("failed to refresh rates: %w", err)
 	}

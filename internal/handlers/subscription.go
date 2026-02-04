@@ -175,14 +175,8 @@ func (h *SubscriptionHandler) Dashboard(c *gin.Context) {
 		return
 	}
 
-	subscriptions, err := h.service.GetAll()
-	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.html", gin.H{"error": err.Error()})
-		return
-	}
-
-	// Enrich with currency conversion
-	enrichedSubs := h.enrichWithCurrencyConversion(subscriptions)
+	// Use subscriptions from GetStats (already loaded, avoids duplicate DB query)
+	enrichedSubs := h.enrichWithCurrencyConversion(stats.AllSubscriptions)
 
 	data := baseTemplateData(c)
 	mergeTemplateData(data, gin.H{
