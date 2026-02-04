@@ -419,6 +419,9 @@
   "dashboard_all_subscriptions": {
     "other": "All Subscriptions"
   },
+  "default_category_name": {
+    "other": "General"
+  },
   "subscriptions_title": {
     "other": "Subscriptions"
   },
@@ -491,8 +494,14 @@
   "sub_form_edit_title": {
     "other": "Edit Subscription"
   },
+  "sub_form_gross_cost": {
+    "other": "Gross"
+  },
   "sub_form_name": {
     "other": "Subscription Name"
+  },
+  "sub_form_net_cost": {
+    "other": "Net"
   },
   "sub_form_category": {
     "other": "Category"
@@ -500,20 +509,35 @@
   "sub_form_select_category": {
     "other": "Select a category"
   },
+  "sub_form_contract_number": {
+    "other": "Contract Number"
+  },
   "sub_form_cost": {
     "other": "Cost"
   },
   "sub_form_currency": {
     "other": "Currency"
   },
+  "sub_form_customer_number": {
+    "other": "Customer Number"
+  },
   "sub_form_schedule": {
     "other": "Billing Schedule"
+  },
+  "sub_form_section_contract": {
+    "other": "Contract Details"
   },
   "sub_form_status": {
     "other": "Status"
   },
   "sub_form_start_date": {
     "other": "Start Date"
+  },
+  "sub_form_tax_amount": {
+    "other": "Tax"
+  },
+  "sub_form_tax_rate": {
+    "other": "Tax Rate (%)"
   },
   "sub_form_renewal_date": {
     "other": "Renewal Date"
@@ -524,6 +548,9 @@
   "sub_form_payment_method": {
     "other": "Payment Method"
   },
+  "sub_form_price_type": {
+    "other": "Price Type"
+  },
   "sub_form_account": {
     "other": "Account"
   },
@@ -533,11 +560,17 @@
   "sub_form_icon_url": {
     "other": "Icon URL"
   },
+  "sub_form_login_name": {
+    "other": "Login Name"
+  },
   "sub_form_notes": {
     "other": "Notes"
   },
   "sub_form_usage": {
     "other": "Usage Level"
+  },
+  "tooltip_original_amount": {
+    "other": "Original amount before conversion (rates from ECB)"
   },
   "btn_save": {
     "other": "Save"
@@ -925,8 +958,14 @@
   "confirm_delete_api_key": {
     "other": "Are you sure you want to delete this API key?"
   },
+  "category_cannot_delete_default": {
+    "other": "Cannot delete the default category"
+  },
   "category_enter_name": {
     "other": "Please enter a category name"
+  },
+  "category_is_default": {
+    "other": "Default"
   },
   "btn_add": {
     "other": "Add"
@@ -1030,11 +1069,26 @@
   "placeholder_account": {
     "other": "Account email or username"
   },
+  "placeholder_contract_number": {
+    "other": "e.g. VN-67890"
+  },
+  "placeholder_customer_number": {
+    "other": "e.g. KD-12345"
+  },
+  "placeholder_login_name": {
+    "other": "Username or email"
+  },
   "placeholder_notes": {
     "other": "Additional notes about this subscription"
   },
   "placeholder_new_category": {
     "other": "New category name"
+  },
+  "price_type_gross": {
+    "other": "Gross"
+  },
+  "price_type_net": {
+    "other": "Net"
   },
   "tooltip_renewal_date": {
     "other": "Renewal date will automatically update after you click Update"
@@ -1088,6 +1142,9 @@
   },
   "category_no_categories": {
     "other": "No categories found."
+  },
+  "category_reassign_info": {
+    "other": "Subscriptions will be moved to the default category"
   },
   "analytics_projected_yearly": {
     "other": "Projected yearly cost"

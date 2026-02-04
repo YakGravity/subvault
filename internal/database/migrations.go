@@ -23,6 +23,9 @@ func RunMigrations(db *gorm.DB) error {
 		migrateSubscriptionIcons,
 		migrateReminderTracking,
 		migrateCancellationReminderTracking,
+		migrateDefaultCategory,
+		migrateTaxFields,
+		migrateContractFields,
 	}
 
 	for _, migration := range migrations {
@@ -235,5 +238,51 @@ func migrateCancellationReminderTracking(db *gorm.DB) error {
 	}
 
 	log.Println("Migration completed: Cancellation reminder tracking fields added")
+	return nil
+}
+
+// migrateDefaultCategory adds is_default column and creates a default category
+func migrateDefaultCategory(db *gorm.DB) error {
+	// Add is_default column if not exists
+	if !db.Migrator().HasColumn(&models.Category{}, "is_default") {
+		db.Migrator().AddColumn(&models.Category{}, "IsDefault")
+	}
+
+	// Create default category if none exists
+	var count int64
+	db.Model(&models.Category{}).Where("is_default = ?", true).Count(&count)
+	if count == 0 {
+		db.Create(&models.Category{
+			Name:      "General",
+			IsDefault: true,
+		})
+	}
+	return nil
+}
+
+// migrateTaxFields adds tax_rate and price_type columns to subscriptions
+func migrateTaxFields(db *gorm.DB) error {
+	if !db.Migrator().HasColumn(&models.Subscription{}, "tax_rate") {
+		db.Migrator().AddColumn(&models.Subscription{}, "TaxRate")
+	}
+	if !db.Migrator().HasColumn(&models.Subscription{}, "price_type") {
+		db.Migrator().AddColumn(&models.Subscription{}, "PriceType")
+	}
+	return nil
+}
+
+// migrateContractFields adds customer_number, contract_number, and login_name columns to subscriptions
+func migrateContractFields(db *gorm.DB) error {
+	if !db.Migrator().HasColumn(&models.Subscription{}, "customer_number") {
+		db.Migrator().AddColumn(&models.Subscription{}, "CustomerNumber")
+	}
+	if !db.Migrator().HasColumn(&models.Subscription{}, "contract_number") {
+		db.Migrator().AddColumn(&models.Subscription{}, "ContractNumber")
+	}
+	if !db.Migrator().HasColumn(&models.Subscription{}, "login_name") {
+		db.Migrator().AddColumn(&models.Subscription{}, "LoginName")
+	}
+	// Migrate data from account to login_name
+	db.Exec("UPDATE subscriptions SET login_name = account WHERE account != '' AND account IS NOT NULL AND (login_name = '' OR login_name IS NULL)")
 	return nil
 }

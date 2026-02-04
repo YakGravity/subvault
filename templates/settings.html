@@ -1350,7 +1350,7 @@
 
     <!-- Modal -->
     <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto m-4 transition-colors duration-200">
+        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto m-4 transition-colors duration-200">
             <div id="modal-content">
                 <!-- Dynamic content loaded here -->
             </div>
@@ -1408,6 +1408,10 @@
     </script>
     <script>
 // --- Category Management Vanilla JS ---
+const categoryIsDefaultText = '{{.T.Tr "category_is_default"}}';
+const categoryReassignText = '{{.T.Tr "category_reassign_info"}}';
+const categoryCannotDeleteDefaultText = '{{.T.Tr "category_cannot_delete_default"}}';
+
 function renderCategories(categories) {
     const list = document.getElementById('categories-list');
     if (!categories.length) {
@@ -1415,18 +1419,19 @@ function renderCategories(categories) {
         return;
     }
     list.innerHTML = categories.map(cat => `
-        <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg">
-            <div class="flex-1">
-                <span class="category-name text-sm font-medium text-gray-900" id="category-name-${cat.id}">${cat.name}</span>
+        <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div class="flex-1 flex items-center">
+                <span class="category-name text-sm font-medium text-gray-900 dark:text-gray-100" id="category-name-${cat.id}">${cat.name}</span>
+                ${cat.is_default ? `<span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded-full ml-2">${categoryIsDefaultText}</span>` : ''}
                 <form id="edit-category-form-${cat.id}" class="hidden inline">
-                    <input type="text" name="name" value="${cat.name}" class="px-2 py-1 border border-gray-300 rounded text-sm">
+                    <input type="text" name="name" value="${cat.name}" class="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                     <button type="submit" class="text-primary text-sm font-medium ml-2">{{.T.Tr "btn_save"}}</button>
                     <button type="button" onclick="cancelEdit(${cat.id})" class="text-gray-500 text-sm ml-1">{{.T.Tr "btn_cancel"}}</button>
                 </form>
             </div>
             <div class="flex items-center space-x-2">
                 <button onclick="startEdit(${cat.id})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">{{.T.Tr "btn_edit"}}</button>
-                <button onclick="deleteCategory(${cat.id})" class="text-red-600 hover:text-red-800 text-sm font-medium">{{.T.Tr "btn_delete"}}</button>
+                ${!cat.is_default ? `<button onclick="deleteCategory(${cat.id})" class="text-red-600 hover:text-red-800 text-sm font-medium">{{.T.Tr "btn_delete"}}</button>` : ''}
             </div>
         </div>
     `).join('');
@@ -1462,7 +1467,7 @@ function addCategory(e) {
     });
 }
 function deleteCategory(id) {
-    if (!confirm('{{.T.Tr "confirm_delete_category"}}')) return;
+    if (!confirm('{{.T.Tr "confirm_delete_category"}}' + '\n\n' + categoryReassignText)) return;
     fetch(`/api/categories/${id}`, { method: 'DELETE' })
         .then(async response => {
             if (!response.ok) {

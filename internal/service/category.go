@@ -1,7 +1,7 @@
 package service
 
 import (
-	"errors"
+	"fmt"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
 )
@@ -32,13 +32,23 @@ func (s *CategoryService) Update(id uint, category *models.Category) (*models.Ca
 }
 
 func (s *CategoryService) Delete(id uint) error {
-	// Check if category has any subscriptions
-	hasSubscriptions, err := s.repo.HasSubscriptions(id)
+	category, err := s.repo.GetByID(id)
 	if err != nil {
 		return err
 	}
-	if hasSubscriptions {
-		return errors.New("cannot delete category with active subscriptions")
+	if category.IsDefault {
+		return fmt.Errorf("cannot delete default category")
+	}
+	defaultCat, err := s.repo.GetDefault()
+	if err != nil {
+		return fmt.Errorf("failed to find default category: %w", err)
+	}
+	if err := s.repo.ReassignSubscriptions(id, defaultCat.ID); err != nil {
+		return fmt.Errorf("failed to reassign subscriptions: %w", err)
 	}
 	return s.repo.Delete(id)
+}
+
+func (s *CategoryService) GetDefault() (*models.Category, error) {
+	return s.repo.GetDefault()
 }

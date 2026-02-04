@@ -53,3 +53,16 @@ func (r *CategoryRepository) HasSubscriptions(id uint) (bool, error) {
 	err := r.db.Model(&models.Subscription{}).Where("category_id = ?", id).Count(&count).Error
 	return count > 0, err
 }
+
+func (r *CategoryRepository) GetDefault() (*models.Category, error) {
+	var category models.Category
+	result := r.db.Where("is_default = ?", true).First(&category)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &category, nil
+}
+
+func (r *CategoryRepository) ReassignSubscriptions(fromID, toID uint) error {
+	return r.db.Model(&models.Subscription{}).Where("category_id = ?", fromID).Update("category_id", toID).Error
+}

@@ -1,21 +1,26 @@
 {{if .}}
     {{range .}}
-        <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg">
-            <div class="flex-1">
-                <span class="category-name text-sm font-medium text-gray-900" id="category-name-{{.ID}}">{{.Name}}</span>
+        <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div class="flex-1 flex items-center">
+                <span class="category-name text-sm font-medium text-gray-900 dark:text-gray-100" id="category-name-{{.ID}}">{{.Name}}</span>
+                {{if .IsDefault}}
+                    <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-0.5 rounded-full ml-2">Default</span>
+                {{end}}
                 <form id="edit-category-form-{{.ID}}" class="hidden inline" hx-put="/api/categories/{{.ID}}" hx-target="#categories-list" hx-swap="innerHTML">
-                    <input type="text" name="name" value="{{.Name}}" class="px-2 py-1 border border-gray-300 rounded text-sm">
+                    <input type="text" name="name" value="{{.Name}}" class="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                     <button type="submit" class="text-primary text-sm font-medium ml-2">Save</button>
                     <button type="button" onclick="cancelEditCategory({{.ID}})" class="text-gray-500 text-sm ml-1">Cancel</button>
                 </form>
             </div>
             <div class="flex items-center space-x-2">
                 <button id="edit-btn-{{.ID}}" onclick="startEditCategory({{.ID}})" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Edit</button>
-                <button hx-delete="/api/categories/{{.ID}}" hx-confirm="Delete this category?" hx-target="#categories-list" hx-swap="innerHTML" class="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
+                {{if not .IsDefault}}
+                    <button hx-delete="/api/categories/{{.ID}}" hx-confirm="Delete this category? Subscriptions will be moved to the default category." hx-target="#categories-list" hx-swap="innerHTML" class="text-red-600 hover:text-red-800 text-sm font-medium">Delete</button>
+                {{end}}
             </div>
         </div>
     {{end}}
 {{else}}
     <div class="text-center py-4 text-gray-500">No categories found.</div>
-{{end}} 
-<script src="/static/category-management.js"></script> 
+{{end}}
+<script src="/static/category-management.js"></script>

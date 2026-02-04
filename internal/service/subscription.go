@@ -125,6 +125,10 @@ func (s *SubscriptionService) GetAllCategories() ([]models.Category, error) {
 	return s.categoryService.GetAll()
 }
 
+func (s *SubscriptionService) GetDefaultCategory() (*models.Category, error) {
+	return s.categoryService.GetDefault()
+}
+
 // GetSubscriptionsNeedingReminders returns subscriptions that need renewal reminders
 // based on the reminder_days setting. It returns a map of subscription to days until renewal.
 func (s *SubscriptionService) GetSubscriptionsNeedingReminders(reminderDays int) (map[*models.Subscription]int, error) {

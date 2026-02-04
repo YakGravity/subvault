@@ -17,7 +17,12 @@ type Subscription struct {
 	CategoryID                   uint       `json:"category_id"`
 	Category                     Category   `json:"category" gorm:"foreignKey:CategoryID"`
 	PaymentMethod                string     `json:"payment_method" gorm:""`
-	Account                      string     `json:"account" gorm:""`
+	Account                      string     `json:"-" gorm:""`
+	TaxRate                      float64    `json:"tax_rate" gorm:"default:0"`
+	PriceType                    string     `json:"price_type" gorm:"default:'gross'"`
+	CustomerNumber               string     `json:"customer_number" gorm:"default:''"`
+	ContractNumber               string     `json:"contract_number" gorm:"default:''"`
+	LoginName                    string     `json:"login_name" gorm:"default:''"`
 	StartDate                    *time.Time `json:"start_date" gorm:""`
 	RenewalDate                  *time.Time `json:"renewal_date" gorm:""`
 	CancellationDate             *time.Time `json:"cancellation_date" gorm:""`
@@ -36,37 +41,39 @@ type Subscription struct {
 
 // AnnualCost calculates the annual cost based on schedule
 func (s *Subscription) AnnualCost() float64 {
+	cost := s.GrossCost()
 	switch s.Schedule {
 	case "Annual":
-		return s.Cost
+		return cost
 	case "Quarterly":
-		return s.Cost * 4
+		return cost * 4
 	case "Monthly":
-		return s.Cost * 12
+		return cost * 12
 	case "Weekly":
-		return s.Cost * 52
+		return cost * 52
 	case "Daily":
-		return s.Cost * 365
+		return cost * 365
 	default:
-		return s.Cost * 12
+		return cost * 12
 	}
 }
 
 // MonthlyCost calculates the monthly cost based on schedule
 func (s *Subscription) MonthlyCost() float64 {
+	cost := s.GrossCost()
 	switch s.Schedule {
 	case "Annual":
-		return s.Cost / 12
+		return cost / 12
 	case "Quarterly":
-		return s.Cost / 3
+		return cost / 3
 	case "Monthly":
-		return s.Cost
+		return cost
 	case "Weekly":
-		return s.Cost * 4.33 // 52 weeks / 12 months
+		return cost * 4.33 // 52 weeks / 12 months
 	case "Daily":
-		return s.Cost * 30.44 // Average days per month
+		return cost * 30.44 // Average days per month
 	default:
-		return s.Cost
+		return cost
 	}
 }
 
@@ -451,6 +458,27 @@ func (s *Subscription) calculateNextRenewalDateFromNowV2() {
 		renewalDate := now.AddMonthsNoOverflow(1).StdTime()
 		s.RenewalDate = &renewalDate
 	}
+}
+
+// GrossCost returns the gross cost of the subscription
+func (s *Subscription) GrossCost() float64 {
+	if s.PriceType == "net" && s.TaxRate > 0 {
+		return s.Cost * (1 + s.TaxRate/100)
+	}
+	return s.Cost
+}
+
+// NetCost returns the net cost of the subscription
+func (s *Subscription) NetCost() float64 {
+	if s.PriceType == "gross" && s.TaxRate > 0 {
+		return s.Cost / (1 + s.TaxRate/100)
+	}
+	return s.Cost
+}
+
+// TaxAmount returns the tax amount of the subscription
+func (s *Subscription) TaxAmount() float64 {
+	return s.GrossCost() - s.NetCost()
 }
 
 // Stats represents aggregated subscription statistics
