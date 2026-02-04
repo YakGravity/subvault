@@ -4,434 +4,178 @@
     <script src="/static/js/theme-init.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#37889b">
+    <meta name="theme-color" content="#c2410c">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <title>{{.Title}} - SubTrackr</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': '#3b82f6',
-                        'success': '#10b981',
-                        'warning': '#f59e0b',
-                        'danger': '#ef4444',
-                        'info': '#3b82f6',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/static/css/design-system.css">
     <link rel="stylesheet" href="/static/css/themes.css">
     <script src="/static/js/themes.js"></script>
-    <script src="/static/js/mobile-menu.js"></script>
     <script src="/static/js/sorting.js"></script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200">
-    <div class="flex flex-col min-h-screen">
-        <!-- Header -->
-        <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 transition-colors duration-200">
-            <div class="flex items-center justify-between max-w-7xl mx-auto">
-                <div class="flex items-center space-x-4 md:space-x-8">
-                    <img src="/static/images/logo.svg" alt="SubTrackr" class="h-8 w-auto">
-                    <!-- Desktop Navigation -->
-                    <nav class="hidden md:flex space-x-1">
-                        <a href="/" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"></path>
-                            </svg>
-                            {{.T.Tr "nav_dashboard"}}
-                        </a>
-                        <a href="/subscriptions" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-light">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_subscriptions"}}
-                        </a>
-                        <a href="/analytics" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_analytics"}}
-                        </a>
-                        <a href="/calendar" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_calendar"}}
-                        </a>
-                    </nav>
-                    <!-- Mobile Hamburger Button -->
-                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150" aria-label="Open menu">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-                <!-- Desktop Actions -->
-                <div class="hidden md:flex items-center space-x-3">
-                    <button 
-                        hx-get="/form/subscription"
-                        hx-target="#modal-content"
-                        hx-trigger="click"
-                        onclick="document.getElementById('modal').classList.remove('hidden')"
-                        class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 flex items-center transition-colors duration-150">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        {{.T.Tr "nav_add"}}
-                    </button>
-                    <a href="/settings" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </a>
-                </div>
-                <!-- Mobile Actions (Settings only, Add is in menu) -->
-                <div class="md:hidden flex items-center">
-                    <a href="/settings" class="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </a>
-                </div>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-        </header>
-
-        <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu" class="hidden fixed inset-0 z-50 md:hidden">
-            <!-- Backdrop -->
-            <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onclick="closeMobileMenu()"></div>
-            <!-- Menu Panel -->
-            <div class="fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out">
-                <div class="flex flex-col h-full">
-                    <!-- Menu Header -->
-                    <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                        <img src="/static/images/logo.svg" alt="SubTrackr" class="h-8 w-auto">
-                        <button onclick="closeMobileMenu()" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150" aria-label="Close menu">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <!-- Menu Items -->
-                    <nav class="flex-1 overflow-y-auto p-4 space-y-2">
-                        <a href="/" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"></path>
-                            </svg>
-                            {{.T.Tr "nav_dashboard"}}
-                        </a>
-                        <a href="/subscriptions" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-light">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_subscriptions"}}
-                        </a>
-                        <a href="/analytics" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_analytics"}}
-                        </a>
-                        <a href="/calendar" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_calendar"}}
-                        </a>
-                        <div class="pt-4 border-t border-gray-200 dark:border-gray-700 mt-4">
-                            <button
-                                onclick="closeMobileMenuAndThen(function() { document.getElementById('modal').classList.remove('hidden'); });"
-                                hx-get="/form/subscription"
-                                hx-target="#modal-content"
-                                hx-trigger="click"
-                                class="w-full flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-primary text-white hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 transition-colors duration-150">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                {{.T.Tr "nav_add_subscription"}}
-                            </button>
-                        </div>
-                    </nav>
-                </div>
-            </div>
+            <span>SubTrackr</span>
         </div>
 
-        <!-- Main Content -->
-        <main class="flex-1 p-4">
-            <div class="max-w-7xl mx-auto">
+        <div class="nav-section">{{.T.Tr "nav_main_menu"}}</div>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{.T.Tr "subscriptions_title"}}</h2>
-            <button 
-                hx-get="/form/subscription"
-                hx-target="#modal-content"
-                hx-trigger="click"
-                onclick="document.getElementById('modal').classList.remove('hidden')"
-                class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 flex items-center transition-colors duration-150">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                {{.T.Tr "nav_add_subscription"}}
-            </button>
+        <a href="/" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"/></svg>
+            {{.T.Tr "nav_dashboard"}}
+        </a>
+        <a href="/subscriptions" class="nav-item active">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            {{.T.Tr "nav_subscriptions"}}
+        </a>
+        <a href="/analytics" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            {{.T.Tr "nav_analytics"}}
+        </a>
+        <a href="/calendar" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            {{.T.Tr "nav_calendar"}}
+        </a>
+
+        <div class="nav-section">{{.T.Tr "nav_system"}}</div>
+        <a href="/settings" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            {{.T.Tr "nav_settings"}}
+        </a>
+
+        <div class="sidebar-footer">
+            <a class="nav-item" style="font-size: 12px; color: var(--text-muted);">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                v0.11.0
+            </a>
         </div>
-    </div>
-    
-    <div id="subscription-list" class="overflow-x-auto">
-        {{if .Subscriptions}}
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-            <thead class="bg-gray-50 dark:bg-gray-800">
-                <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <button 
-                            hx-get="/api/subscriptions?sort=name&order={{if and (eq .SortBy "name") (eq .Order "asc")}}desc{{else}}asc{{end}}"
-                            hx-target="#subscription-list"
-                            hx-swap="outerHTML"
-                            class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-                            <span>{{.T.Tr "sub_list_name"}}</span>
-                            {{if eq .SortBy "name"}}
-                            <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{else}}
-                            <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{end}}
-                        </button>
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <button 
-                            hx-get="/api/subscriptions?sort=category&order={{if and (eq .SortBy "category") (eq .Order "asc")}}desc{{else}}asc{{end}}"
-                            hx-target="#subscription-list"
-                            hx-swap="outerHTML"
-                            class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-                            <span>{{.T.Tr "sub_form_category"}}</span>
-                            {{if eq .SortBy "category"}}
-                            <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{else}}
-                            <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{end}}
-                        </button>
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <button 
-                            hx-get="/api/subscriptions?sort=cost&order={{if and (eq .SortBy "cost") (eq .Order "asc")}}desc{{else}}asc{{end}}"
-                            hx-target="#subscription-list"
-                            hx-swap="outerHTML"
-                            class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-                            <span>{{.T.Tr "sub_list_cost"}}</span>
-                            {{if eq .SortBy "cost"}}
-                            <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{else}}
-                            <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{end}}
-                        </button>
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <button 
-                            hx-get="/api/subscriptions?sort=schedule&order={{if and (eq .SortBy "schedule") (eq .Order "asc")}}desc{{else}}asc{{end}}"
-                            hx-target="#subscription-list"
-                            hx-swap="outerHTML"
-                            class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-                            <span>{{.T.Tr "sub_list_schedule"}}</span>
-                            {{if eq .SortBy "schedule"}}
-                            <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{else}}
-                            <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{end}}
-                        </button>
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <button 
-                            hx-get="/api/subscriptions?sort=status&order={{if and (eq .SortBy "status") (eq .Order "asc")}}desc{{else}}asc{{end}}"
-                            hx-target="#subscription-list"
-                            hx-swap="outerHTML"
-                            class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-                            <span>{{.T.Tr "sub_list_status"}}</span>
-                            {{if eq .SortBy "status"}}
-                            <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{else}}
-                            <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{end}}
-                        </button>
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <button 
-                            hx-get="/api/subscriptions?sort=renewal_date&order={{if and (eq .SortBy "renewal_date") (eq .Order "asc")}}desc{{else}}asc{{end}}"
-                            hx-target="#subscription-list"
-                            hx-swap="outerHTML"
-                            class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
-                            <span>{{.T.Tr "sub_form_renewal_date"}}</span>
-                            {{if eq .SortBy "renewal_date"}}
-                            <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{else}}
-                            <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
-                            </svg>
-                            {{end}}
-                        </button>
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        {{.T.Tr "btn_actions"}}
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {{range .Subscriptions}}
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            {{if .IconURL}}
-                            <img src="{{.IconURL}}" alt="{{.Name}}" class="w-8 h-8 rounded mr-3 flex-shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="object-fit: contain;">
-                            <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else if eq .Status "Trial"}}bg-info{{else}}bg-warning{{end}} rounded-full mr-3" style="display:none;"></div>
-                            {{else}}
-                            <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else if eq .Status "Trial"}}bg-info{{else}}bg-warning{{end}} rounded-full mr-3"></div>
-                            {{end}}
-                            <div>
-                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{.Name}}</div>
-                                {{if .URL}}
-                                <a href="{{.URL}}" target="_blank" class="text-xs text-primary hover:text-primary/80 dark:text-primary-light">{{.URL}}</a>
-                    {{end}}
-                </div>
-            </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900 dark:text-white">{{.Category.Name}}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        {{if .ShowConversion}}
-                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}}</div>
-                        <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"
-                              title="{{$.T.Tr "tooltip_original_amount"}}">
-                            {{.OriginalCurrency}} {{printf "%.2f" .Cost}}
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </span>
-                        {{else}}
-                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}</div>
-                        {{end}}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm text-gray-900 dark:text-white">{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{if eq .Status "Active"}}bg-success/20 text-success{{else if eq .Status "Cancelled"}}bg-danger/20 text-danger{{else if eq .Status "Trial"}}bg-info/20 text-info{{else}}bg-warning/20 text-warning{{end}}">
-                            {{if eq .Status "Active"}}{{$.T.Tr "status_active"}}{{else if eq .Status "Cancelled"}}{{$.T.Tr "status_cancelled"}}{{else if eq .Status "Paused"}}{{$.T.Tr "status_paused"}}{{else if eq .Status "Trial"}}{{$.T.Tr "status_trial"}}{{else}}{{.Status}}{{end}}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {{if .RenewalDate}}
-                        {{$.T.FormatDate .RenewalDate}}
-                        {{else}}
-                        <span class="text-gray-400 dark:text-gray-500">—</span>
-                        {{end}}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div class="flex items-center justify-end space-x-2">
-                            {{if .Notes}}
-                            <div class="relative group">
-                                <button 
-                                    class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-150"
-                                    aria-label="View note"
-                                    aria-describedby="note-tooltip-{{.ID}}"
-                                    title="View note">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                                    </svg>
-                                </button>
-                                <div id="note-tooltip-{{.ID}}" class="absolute right-0 bottom-full mb-2 w-auto min-w-0 max-w-xs p-1.5 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-100 text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-10">
-                                    <p>{{.Notes}}</p>
-                                    <div class="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900 dark:border-t-gray-700"></div>
-                                </div>
-                            </div>
-                            {{end}}
-                            <button 
-                                hx-get="/form/subscription/{{.ID}}"
-                                hx-target="#modal-content"
-                                hx-trigger="click"
-                                onclick="document.getElementById('modal').classList.remove('hidden')"
-                                class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-150"
-                                title="{{$.T.Tr "btn_edit"}}">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </button>
-                            <button
-                                hx-delete="/api/subscriptions/{{.ID}}"
-                                hx-confirm="{{$.T.Tr "confirm_delete_subscription"}}"
-                                hx-target="#subscription-list"
-                                hx-swap="outerHTML"
-                                class="text-gray-400 dark:text-gray-500 hover:text-danger dark:hover:text-red-400 transition-colors duration-150"
-                                title="{{$.T.Tr "btn_delete"}}">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                {{end}}
-            </tbody>
-        </table>
-    {{else}}
-    <div class="p-12 text-center">
-            <svg class="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
-            <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">{{.T.Tr "sub_list_empty"}}</p>
-        <button 
+    </nav>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="fab" id="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')" style="bottom:90px;">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <!-- Mobile FAB: New Subscription -->
+    <button class="fab"
             hx-get="/form/subscription"
             hx-target="#modal-content"
             hx-trigger="click"
-            onclick="document.getElementById('modal').classList.remove('hidden')"
-                class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 transition-colors duration-150">
-            {{.T.Tr "sub_list_empty_hint"}}
-        </button>
-    </div>
-    {{end}}
-    </div>
-</div>
+            onclick="document.getElementById('modal').classList.add('active')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+    </button>
 
+    <!-- Main Content -->
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>{{.T.Tr "nav_subscriptions"}}</h1>
+                <div class="page-header-sub">{{.T.Tr "subscriptions_subtitle"}}</div>
             </div>
-        </main>
-    </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <button class="btn btn-primary"
+                        hx-get="/form/subscription"
+                        hx-target="#modal-content"
+                        hx-trigger="click"
+                        onclick="document.getElementById('modal').classList.add('active')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                    {{.T.Tr "nav_add"}}
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Tabs -->
+        <div class="tab-bar" id="sub-tabs">
+            <div class="tab-item active" data-filter="all">{{.T.Tr "filter_all"}} <span id="count-all"></span></div>
+            <div class="tab-item" data-filter="Active">{{.T.Tr "status_active"}} <span id="count-active"></span></div>
+            <div class="tab-item" data-filter="Cancelled">{{.T.Tr "status_cancelled"}} <span id="count-cancelled"></span></div>
+        </div>
+
+        {{if .Subscriptions}}
+        <div class="sub-grid" id="sub-grid">
+            {{range .Subscriptions}}
+            <div class="sub-card" data-status="{{.Status}}"{{if eq .Status "Cancelled"}} style="border-left: 3px solid var(--danger);cursor:pointer;"{{else}} style="cursor:pointer;"{{end}}
+                 onclick="htmx.ajax('GET', '/form/subscription/{{.ID}}', '#modal-content'); document.getElementById('modal').classList.add('active')">
+                <div class="sub-card-actions">
+                    <button
+                        hx-get="/form/subscription/{{.ID}}"
+                        hx-target="#modal-content"
+                        hx-trigger="click"
+                        onclick="event.stopPropagation();document.getElementById('modal').classList.add('active')"
+                        title="{{$.T.Tr "btn_edit"}}">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                    <button
+                        hx-delete="/api/subscriptions/{{.ID}}"
+                        hx-confirm="{{$.T.Tr "confirm_delete_subscription"}}"
+                        onclick="event.stopPropagation()"
+                        title="{{$.T.Tr "btn_delete"}}">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                </div>
+                <div class="sub-card-top">
+                    <div class="sub-card-icon">
+                        {{if .IconURL}}
+                        <img src="{{.IconURL}}" alt="{{.Name}}" onerror="this.style.display='none'">
+                        {{end}}
+                    </div>
+                    <div>
+                        <div class="sub-card-name"{{if eq .Status "Cancelled"}} style="opacity:.6;"{{end}}>{{.Name}}</div>
+                        <div class="sub-card-category">{{if .Category.Name}}{{.Category.Name}}{{else}}{{$.T.Tr "sub_list_uncategorized"}}{{end}}</div>
+                    </div>
+                    <div class="sub-card-right">
+                        {{if .ShowConversion}}
+                        <div class="sub-card-cost"{{if eq .Status "Cancelled"}} style="opacity:.6;text-decoration:line-through;"{{end}}>{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}}</div>
+                        {{else}}
+                        <div class="sub-card-cost"{{if eq .Status "Cancelled"}} style="opacity:.6;text-decoration:line-through;"{{end}}>{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}</div>
+                        {{end}}
+                        <div class="sub-card-schedule">/{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</div>
+                    </div>
+                </div>
+                <div class="sub-card-bottom">
+                    <span class="sub-card-status {{if eq .Status "Active"}}status-active{{else if eq .Status "Cancelled"}}status-cancelled{{else if eq .Status "Trial"}}status-trial{{else if eq .Status "Paused"}}status-paused{{end}}">
+                        <span class="dot"></span>
+                        {{if eq .Status "Active"}}{{$.T.Tr "status_active"}}{{else if eq .Status "Cancelled"}}{{$.T.Tr "status_cancelled"}}{{else if eq .Status "Paused"}}{{$.T.Tr "status_paused"}}{{else if eq .Status "Trial"}}{{$.T.Tr "status_trial"}}{{else}}{{.Status}}{{end}}
+                    </span>
+                    {{if .RenewalDate}}
+                    <span class="sub-card-renewal"{{if eq .Status "Cancelled"}} style="color:var(--danger);"{{end}}>
+                        {{if eq .Status "Cancelled"}}{{$.T.Tr "sub_card_ends"}}{{else}}{{$.T.Tr "sub_card_renewal"}}{{end}} {{$.T.FormatDate .RenewalDate}}
+                    </span>
+                    {{end}}
+                </div>
+            </div>
+            {{end}}
+        </div>
+        {{else}}
+        <div class="empty-row" style="padding:60px 20px;">
+            <svg style="width:48px;height:48px;color:var(--text-muted);margin:0 auto 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <div style="font-size:15px;font-weight:500;color:var(--text-secondary);margin-bottom:4px;">{{.T.Tr "sub_list_empty"}}</div>
+            <div style="margin-bottom:16px;color:var(--text-muted);">{{.T.Tr "sub_list_empty_hint"}}</div>
+            <button class="btn btn-primary"
+                    hx-get="/form/subscription"
+                    hx-target="#modal-content"
+                    hx-trigger="click"
+                    onclick="document.getElementById('modal').classList.add('active')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                {{.T.Tr "nav_add"}}
+            </button>
+        </div>
+        {{end}}
+
+    </div><!-- /.main -->
 
     <!-- Modal -->
-    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto m-4 transition-colors duration-200">
+    <div id="modal" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+        <div class="modal" style="max-width:800px;">
             <div id="modal-content">
                 <!-- Dynamic content loaded here -->
             </div>
@@ -439,12 +183,51 @@
     </div>
 
     <script>
-        // Close modal when clicking outside
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.add('hidden');
-            }
-        });
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Tab filter for subscription status
+        (function() {
+            var tabs = document.querySelectorAll('#sub-tabs .tab-item');
+            var cards = document.querySelectorAll('.sub-card');
+            var counts = { all: cards.length, Active: 0, Cancelled: 0, Trial: 0, Paused: 0 };
+            cards.forEach(function(c) {
+                var s = c.dataset.status;
+                if (counts[s] !== undefined) counts[s]++;
+            });
+            tabs.forEach(function(tab) {
+                var f = tab.dataset.filter;
+                var span = tab.querySelector('span');
+                if (span) span.textContent = '(' + (f === 'all' ? counts.all : (counts[f] || 0)) + ')';
+            });
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(function(t) { t.classList.remove('active'); });
+                    tab.classList.add('active');
+                    var filter = tab.dataset.filter;
+                    cards.forEach(function(card) {
+                        card.style.display = (filter === 'all' || card.dataset.status === filter) ? '' : 'none';
+                    });
+                });
+            });
+        })();
+
+        // Modal observer
+        var modalEl = document.getElementById('modal');
+        new MutationObserver(function(mutations) {
+            mutations.forEach(function(m) {
+                if (m.attributeName === 'class') {
+                    if (!modalEl.classList.contains('hidden')) {
+                        modalEl.classList.remove('hidden');
+                        modalEl.classList.add('active');
+                    }
+                }
+            });
+        }).observe(modalEl, { attributes: true });
     </script>
 </body>
 </html>

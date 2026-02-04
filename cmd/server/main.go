@@ -281,7 +281,11 @@ func loadTemplates() *template.Template {
 		"templates/subscriptions.html",
 		"templates/analytics.html",
 		"templates/calendar.html",
-		"templates/settings.html",
+		"templates/settings-general.html",
+		"templates/settings-notifications.html",
+		"templates/settings-data.html",
+		"templates/settings-security.html",
+		"templates/api-docs.html",
 		"templates/subscription-form.html",
 		"templates/subscription-list.html",
 		"templates/categories-list.html",
@@ -363,7 +367,11 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 	router.GET("/subscriptions", handler.SubscriptionsList)
 	router.GET("/analytics", handler.Analytics)
 	router.GET("/calendar", handler.Calendar)
-	router.GET("/settings", handler.Settings)
+	router.GET("/settings", settingsHandler.SettingsGeneral)
+	router.GET("/settings/notifications", settingsHandler.SettingsNotifications)
+	router.GET("/settings/data", settingsHandler.SettingsData)
+	router.GET("/settings/security", settingsHandler.SettingsSecurity)
+	router.GET("/api-docs", settingsHandler.APIDocs)
 
 	// Form routes for HTMX modals
 	form := router.Group("/form")

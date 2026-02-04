@@ -4,338 +4,196 @@
     <script src="/static/js/theme-init.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#37889b">
+    <meta name="theme-color" content="#c2410c">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <title>{{.Title}} - SubTrackr</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        'primary': '#3b82f6',
-                        'success': '#10b981',
-                        'warning': '#f59e0b',
-                        'danger': '#ef4444',
-                        'info': '#3b82f6',
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/static/css/design-system.css">
     <link rel="stylesheet" href="/static/css/themes.css">
     <script src="/static/js/themes.js"></script>
-    <script src="/static/js/mobile-menu.js"></script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-200">
-    <div class="flex flex-col min-h-screen">
-        <!-- Header -->
-        <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 transition-colors duration-200">
-            <div class="flex items-center justify-between max-w-7xl mx-auto">
-                <div class="flex items-center space-x-4 md:space-x-8">
-                    <img src="/static/images/logo.svg" alt="SubTrackr" class="h-8 w-auto">
-                    <!-- Desktop Navigation -->
-                    <nav class="hidden md:flex space-x-1">
-                        <a href="/" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-light">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"></path>
-                            </svg>
-                            {{.T.Tr "nav_dashboard"}}
-                        </a>
-                        <a href="/subscriptions" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_subscriptions"}}
-                        </a>
-                        <a href="/analytics" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_analytics"}}
-                        </a>
-                        <a href="/calendar" class="flex items-center px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_calendar"}}
-                        </a>
-                    </nav>
-                    <!-- Mobile Hamburger Button -->
-                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150" aria-label="Open menu">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-                <!-- Desktop Actions -->
-                <div class="hidden md:flex items-center space-x-3">
-                    <button 
-                        hx-get="/form/subscription"
-                        hx-target="#modal-content"
-                        hx-trigger="click"
-                        onclick="document.getElementById('modal').classList.remove('hidden')"
-                        class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 flex items-center transition-colors duration-150">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        {{.T.Tr "nav_add"}}
-                    </button>
-                    <a href="/settings" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </a>
-                </div>
-                <!-- Mobile Actions (Settings only, Add is in menu) -->
-                <div class="md:hidden flex items-center">
-                    <a href="/settings" class="p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-150">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                    </a>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <span>SubTrackr</span>
+        </div>
+
+        <div class="nav-section">{{.T.Tr "nav_main_menu"}}</div>
+
+        <a href="/" class="nav-item active">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"/></svg>
+            {{.T.Tr "nav_dashboard"}}
+        </a>
+        <a href="/subscriptions" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            {{.T.Tr "nav_subscriptions"}}
+            <span class="nav-badge">{{.Stats.ActiveSubscriptions}}</span>
+        </a>
+        <a href="/analytics" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            {{.T.Tr "nav_analytics"}}
+        </a>
+        <a href="/calendar" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            {{.T.Tr "nav_calendar"}}
+        </a>
+
+        <div class="nav-section">{{.T.Tr "nav_system"}}</div>
+        <a href="/settings" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            {{.T.Tr "nav_settings"}}
+        </a>
+
+        <div class="sidebar-footer">
+            <a class="nav-item" style="font-size: 12px; color: var(--text-muted);">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                v0.11.0
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="fab" id="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')" style="bottom:90px;">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <!-- Mobile FAB: New Subscription -->
+    <button class="fab"
+            hx-get="/form/subscription"
+            hx-target="#modal-content"
+            hx-trigger="click"
+            onclick="document.getElementById('modal').classList.add('active')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>{{.T.Tr "nav_dashboard"}}</h1>
+                <div class="page-header-sub">{{.T.Tr "dashboard_subtitle"}}</div>
+            </div>
+            <button class="btn btn-primary"
+                    hx-get="/form/subscription"
+                    hx-target="#modal-content"
+                    hx-trigger="click"
+                    onclick="document.getElementById('modal').classList.add('active')">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                {{.T.Tr "nav_add"}}
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">{{.T.Tr "dashboard_monthly_spend"}}</div>
+                <div class="stat-value">{{.CurrencySymbol}}{{printf "%.2f" .Stats.TotalMonthlySpend}}</div>
+                <div class="stat-sub">{{.T.Tr "dashboard_active_subs"}}: {{.Stats.ActiveSubscriptions}}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">{{.T.Tr "dashboard_annual_spend"}}</div>
+                <div class="stat-value">{{.CurrencySymbol}}{{printf "%.2f" .Stats.TotalAnnualSpend}}</div>
+                <div class="stat-sub">{{len .Subscriptions}} {{.T.Tr "nav_subscriptions"}}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">{{.T.Tr "dashboard_active_subs"}}</div>
+                <div class="stat-value">{{.Stats.ActiveSubscriptions}}</div>
+                <div class="stat-sub">{{.Stats.CancelledSubscriptions}} {{.T.Tr "dashboard_cancelled"}}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">{{.T.Tr "dashboard_monthly_savings"}}</div>
+                <div class="stat-value stat-trend-down">{{.CurrencySymbol}}{{printf "%.2f" .Stats.MonthlySaved}}</div>
+                <div class="stat-sub stat-trend-down">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 3.5L6 8.5L10 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {{.T.Tr "dashboard_from_cancellations"}}
                 </div>
             </div>
-        </header>
+        </div>
 
-        <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu" class="hidden fixed inset-0 z-50 md:hidden">
-            <!-- Backdrop -->
-            <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onclick="closeMobileMenu()"></div>
-            <!-- Menu Panel -->
-            <div class="fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out">
-                <div class="flex flex-col h-full">
-                    <!-- Menu Header -->
-                    <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-                        <img src="/static/images/logo.svg" alt="SubTrackr" class="h-8 w-auto">
-                        <button onclick="closeMobileMenu()" class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150" aria-label="Close menu">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-                    <!-- Menu Items -->
-                    <nav class="flex-1 overflow-y-auto p-4 space-y-2">
-                        <a href="/" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-light">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z"></path>
-                            </svg>
-                            {{.T.Tr "nav_dashboard"}}
-                        </a>
-                        <a href="/subscriptions" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_subscriptions"}}
-                        </a>
-                        <a href="/analytics" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_analytics"}}
-                        </a>
-                        <a href="/calendar" onclick="closeMobileMenu()" class="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                            {{.T.Tr "nav_calendar"}}
-                        </a>
-                        <div class="pt-4 border-t border-gray-200 dark:border-gray-700 mt-4">
-                            <button 
-                                onclick="closeMobileMenuAndThen(function() { document.getElementById('modal').classList.remove('hidden'); });"
-                                hx-get="/form/subscription"
-                                hx-target="#modal-content"
-                                hx-trigger="click"
-                                class="w-full flex items-center justify-center px-4 py-3 rounded-lg text-sm font-medium bg-primary text-white hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 transition-colors duration-150">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                {{.T.Tr "nav_add_subscription"}}
-                            </button>
+        {{if gt .Stats.MonthlyBudget 0}}
+        <!-- Budget -->
+        <div class="budget-strip">
+            <div class="budget-label">{{.T.Tr "dashboard_budget"}}</div>
+            <div class="budget-bar-wrap">
+                <div class="budget-bar-fill {{if gt .Stats.BudgetUtilization 100.0}}over{{else if gt .Stats.BudgetUtilization 80.0}}warn{{else}}ok{{end}}" style="width: {{if gt .Stats.BudgetUtilization 100.0}}100{{else}}{{printf "%.0f" .Stats.BudgetUtilization}}{{end}}%"></div>
+            </div>
+            <div class="budget-amount">
+                {{if gt .Stats.BudgetUtilization 100.0}}
+                <span class="over-budget">{{.CurrencySymbol}}{{printf "%.0f" .Stats.TotalMonthlySpend}} / {{.CurrencySymbol}}{{printf "%.0f" .Stats.MonthlyBudget}}</span>
+                {{else}}
+                <span>{{.CurrencySymbol}}{{printf "%.0f" .Stats.TotalMonthlySpend}} / {{.CurrencySymbol}}{{printf "%.0f" .Stats.MonthlyBudget}}</span>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Upcoming Renewals -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">{{.T.Tr "dashboard_upcoming_renewals"}}</span>
+                    <a href="/subscriptions" class="card-action">{{.T.Tr "dashboard_view_all"}} →</a>
+                </div>
+                <div class="renewal-list">
+                    {{range .UpcomingRenewals}}
+                    <div class="renewal-item">
+                        <div class="renewal-icon">
+                            {{if .IconURL}}
+                            <img src="{{.IconURL}}" alt="{{.Name}}" onerror="this.outerHTML='<div class=fallback></div>'">
+                            {{else}}
+                            <div class="fallback"></div>
+                            {{end}}
                         </div>
-                    </nav>
+                        <div class="renewal-info">
+                            <div class="renewal-name">{{.Name}}</div>
+                            <div class="renewal-meta">{{.Category.Name}} <span class="renewal-date-badge normal">{{.RenewalDate.Format "02. Jan"}}</span></div>
+                        </div>
+                        <div>
+                            <div class="renewal-cost">{{if .ShowConversion}}{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}}{{else}}{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}{{end}}</div>
+                            <div class="renewal-schedule">/{{.Schedule}}</div>
+                        </div>
+                    </div>
+                    {{else}}
+                    <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">
+                        {{.T.Tr "dashboard_no_upcoming"}}
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">{{.T.Tr "dashboard_spending_by_category"}}</span>
+                </div>
+                <div class="category-list">
+                    {{range $category, $amount := .Stats.CategorySpending}}
+                    <div class="category-item">
+                        <div class="category-dot" style="background: var(--accent)"></div>
+                        <span class="category-name">{{$category}}</span>
+                        <div class="category-bar-wrap"><div class="category-bar" style="width: {{printf "%.0f" (div (mul $amount 100.0) $.Stats.TotalMonthlySpend)}}%"></div></div>
+                        <span class="category-amount">{{$.CurrencySymbol}}{{printf "%.2f" $amount}}</span>
+                    </div>
+                    {{else}}
+                    <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;">
+                        {{.T.Tr "dashboard_no_category_data"}}
+                    </div>
+                    {{end}}
                 </div>
             </div>
         </div>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-4">
-            <div class="max-w-7xl mx-auto">
-<!-- Stats Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <!-- Monthly Spend -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">{{.T.Tr "dashboard_monthly_spend"}}</p>
-                <p class="text-3xl font-bold text-primary">{{.CurrencySymbol}}{{printf "%.2f" .Stats.TotalMonthlySpend}}</p>
-            </div>
-            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center">
-                <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
-                </svg>
-            </div>
-        </div>
-    </div>
-
-    <!-- Annual Spend -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">{{.T.Tr "dashboard_annual_spend"}}</p>
-                <p class="text-3xl font-bold text-success">{{.CurrencySymbol}}{{printf "%.2f" .Stats.TotalAnnualSpend}}</p>
-            </div>
-            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
-                <svg class="w-6 h-6 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                </svg>
-            </div>
-        </div>
-    </div>
-
-    <!-- Active Subscriptions -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">{{.T.Tr "dashboard_active_subs"}}</p>
-                <p class="text-3xl font-bold text-warning">{{.Stats.ActiveSubscriptions}}</p>
-            </div>
-            <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/50 rounded-full flex items-center justify-center">
-                <svg class="w-6 h-6 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-            </div>
-        </div>
-    </div>
-
-    <!-- Monthly Savings -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-300">{{.T.Tr "dashboard_monthly_savings"}}</p>
-                <p class="text-3xl font-bold text-danger">{{.CurrencySymbol}}{{printf "%.2f" .Stats.MonthlySaved}}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{.T.Tr "dashboard_from_cancellations"}}</p>
-            </div>
-            <div class="w-12 h-12 bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center">
-                <svg class="w-6 h-6 text-danger" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
-                </svg>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{if gt .Stats.MonthlyBudget 0}}
-<!-- Budget Progress -->
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8 transition-colors duration-200">
-    <div class="flex items-center justify-between mb-2">
-        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{.T.Tr "dashboard_budget"}}</h3>
-        <span class="text-sm font-medium {{if gt .Stats.BudgetUtilization 100.0}}text-red-600 dark:text-red-400{{else if gt .Stats.BudgetUtilization 80.0}}text-yellow-600 dark:text-yellow-400{{else}}text-green-600 dark:text-green-400{{end}}">
-            {{printf "%.0f" .Stats.BudgetUtilization}}%
-        </span>
-    </div>
-    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-2">
-        <div class="h-2.5 rounded-full transition-all duration-300 {{if gt .Stats.BudgetUtilization 100.0}}bg-red-600{{else if gt .Stats.BudgetUtilization 80.0}}bg-yellow-500{{else}}bg-green-500{{end}}"
-             style="width: {{if gt .Stats.BudgetUtilization 100.0}}100{{else}}{{printf "%.0f" .Stats.BudgetUtilization}}{{end}}%"></div>
-    </div>
-    <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-        <span>{{.CurrencySymbol}}{{printf "%.2f" .Stats.TotalMonthlySpend}} / {{.CurrencySymbol}}{{printf "%.2f" .Stats.MonthlyBudget}}</span>
-        {{if gt .Stats.BudgetUtilization 100.0}}
-        <span class="text-red-600 dark:text-red-400 font-medium">{{.T.Tr "dashboard_budget_exceeded"}}</span>
-        {{else}}
-        <span>{{.T.Tr "dashboard_budget_remaining"}}: {{.CurrencySymbol}}{{printf "%.2f" (sub .Stats.MonthlyBudget .Stats.TotalMonthlySpend)}}</span>
-        {{end}}
-    </div>
-</div>
-{{end}}
-
-<!-- Spending by Category -->
-<div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 mb-8 transition-colors duration-200">
-    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">{{.T.Tr "dashboard_spending_by_category"}}</h2>
-    
-    
-    <div class="space-y-4">
-        {{range $category, $amount := .Stats.CategorySpending}}
-        <div class="flex items-center justify-between">
-            <div class="flex items-center">
-                <div class="w-3 h-3 bg-primary rounded-full mr-3"></div>
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{$category}}</span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div class="w-32 rounded-full h-2 overflow-hidden" style="background-color: #e5e7eb;">
-                    <div class="h-2 rounded-full transition-all duration-300" 
-                         style="width: {{printf "%.0f" (div (mul $amount 100.0) $.Stats.TotalMonthlySpend)}}%; background-color: #3b82f6;"></div>
-                </div>
-                <span class="text-sm font-medium text-gray-900 dark:text-white w-16 text-right">{{$.CurrencySymbol}}{{printf "%.2f" $amount}}</span>
-            </div>
-        </div>
-        {{else}}
-        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-            <p>{{.T.Tr "dashboard_no_category_data"}}</p>
-            <p class="text-xs mt-2">{{.T.Tr "dashboard_add_subs_hint"}}</p>
-        </div>
-        {{end}}
-    </div>
-</div>
-
-<!-- All Subscriptions -->
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-200">
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">{{.T.Tr "dashboard_all_subscriptions"}}</h2>
-        </div>
-    </div>
-    <div class="divide-y divide-gray-200 dark:divide-gray-700">
-        {{range .Subscriptions}}
-        <div class="p-6 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
-            <div class="flex items-center">
-                {{if .IconURL}}
-                <img src="{{.IconURL}}" alt="{{.Name}}" class="w-8 h-8 rounded mr-3 flex-shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="object-fit: contain;">
-                <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else if eq .Status "Trial"}}bg-info{{else}}bg-warning{{end}} rounded-full mr-4" style="display:none;"></div>
-                {{else}}
-                <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else if eq .Status "Trial"}}bg-info{{else}}bg-warning{{end}} rounded-full mr-4"></div>
-                {{end}}
-                <div>
-                    <h3 class="text-sm font-medium text-gray-900 dark:text-white">{{.Name}}</h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{.Category.Name}} • {{.Status}}</p>
-                </div>
-            </div>
-            <div class="text-right">
-                {{if .ShowConversion}}
-                <p class="text-sm font-medium text-gray-900 dark:text-white">{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}}</p>
-                <span class="text-xs text-gray-500 dark:text-gray-400 inline-flex items-center gap-1"
-                      title="{{$.T.Tr "tooltip_original_amount"}}">
-                    {{.OriginalCurrency}} {{printf "%.2f" .Cost}}
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </span>
-                {{else}}
-                <p class="text-sm font-medium text-gray-900 dark:text-white">{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}</p>
-                {{end}}
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{.Schedule}}</p>
-            </div>
-        </div>
-        {{end}}
-    </div>
-</div>
-            </div>
-        </main>
-    </div>
+    </div><!-- /.main -->
 
     <!-- Modal -->
-    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto m-4 transition-colors duration-200">
+    <div id="modal" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+        <div class="modal" style="max-width:800px;">
             <div id="modal-content">
                 <!-- Dynamic content loaded here -->
             </div>
@@ -343,10 +201,17 @@
     </div>
 
     <script>
-        // Close modal when clicking outside
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.classList.add('hidden');
+        // Modal helpers
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        // HTMX: open modal after content is swapped in
+        document.body.addEventListener('htmx:afterSwap', function(e) {
+            if (e.detail.target.id === 'modal-content') {
+                document.getElementById('modal').classList.add('active');
             }
         });
     </script>

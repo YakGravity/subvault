@@ -7,11 +7,11 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"sort"
 	"strconv"
 	"subtrackr/internal/crypto"
 	"subtrackr/internal/models"
 	"subtrackr/internal/service"
-	"subtrackr/internal/version"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -178,14 +178,30 @@ func (h *SubscriptionHandler) Dashboard(c *gin.Context) {
 	// Use subscriptions from GetStats (already loaded, avoids duplicate DB query)
 	enrichedSubs := h.enrichWithCurrencyConversion(stats.AllSubscriptions)
 
+	// Build upcoming renewals (next 5 active subs by renewal date)
+	now := time.Now()
+	var upcoming []SubscriptionWithConversion
+	for _, sub := range enrichedSubs {
+		if sub.Status == "Active" && sub.RenewalDate != nil && sub.RenewalDate.After(now) {
+			upcoming = append(upcoming, sub)
+		}
+	}
+	sort.Slice(upcoming, func(i, j int) bool {
+		return upcoming[i].RenewalDate.Before(*upcoming[j].RenewalDate)
+	})
+	if len(upcoming) > 5 {
+		upcoming = upcoming[:5]
+	}
+
 	data := baseTemplateData(c)
 	mergeTemplateData(data, gin.H{
-		"Title":          "Dashboard",
-		"CurrentPage":    "dashboard",
-		"Stats":          stats,
-		"Subscriptions":  enrichedSubs,
-		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
-		"DarkMode":       h.settingsService.IsDarkModeEnabled(),
+		"Title":            "Dashboard",
+		"CurrentPage":      "dashboard",
+		"Stats":            stats,
+		"Subscriptions":    enrichedSubs,
+		"UpcomingRenewals": upcoming,
+		"CurrencySymbol":   h.settingsService.GetCurrencySymbol(),
+		"DarkMode":         h.settingsService.IsDarkModeEnabled(),
 	})
 	c.HTML(http.StatusOK, "dashboard.html", data)
 }
@@ -415,58 +431,6 @@ func (h *SubscriptionHandler) ServeCalendarFeed(c *gin.Context) {
 	c.Header("Content-Type", "text/calendar; charset=utf-8")
 	c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
 	c.Data(http.StatusOK, "text/calendar; charset=utf-8", []byte(icalContent))
-}
-
-// Settings renders the settings page
-func (h *SubscriptionHandler) Settings(c *gin.Context) {
-	// Load SMTP config if available (without password)
-	var smtpConfig *models.SMTPConfig
-	smtpConfigured := false
-	config, err := h.settingsService.GetSMTPConfig()
-	if err == nil && config != nil {
-		// Don't include password in template
-		config.Password = ""
-		smtpConfig = config
-		smtpConfigured = true
-	}
-
-	// Load Shoutrrr config if available
-	var shoutrrrConfig *models.ShoutrrrConfig
-	shoutrrrConfigured := false
-	shoutrrrCfg, err := h.settingsService.GetShoutrrrConfig()
-	if err == nil && shoutrrrCfg != nil && len(shoutrrrCfg.URLs) > 0 {
-		shoutrrrConfig = shoutrrrCfg
-		shoutrrrConfigured = true
-	}
-
-	// Get auth settings
-	authEnabled := h.settingsService.IsAuthEnabled()
-	authUsername, _ := h.settingsService.GetAuthUsername()
-
-	calendarToken, _ := h.settingsService.GetCalendarToken()
-
-	data := baseTemplateData(c)
-	mergeTemplateData(data, gin.H{
-		"Title":              "Settings",
-		"CurrentPage":        "settings",
-		"Currency":           h.settingsService.GetCurrency(),
-		"CurrencySymbol":     h.settingsService.GetCurrencySymbol(),
-		"Language":           h.settingsService.GetLanguage(),
-		"SupportedLanguages": service.SupportedLanguages,
-		"ShoutrrrConfig":     shoutrrrConfig,
-		"ShoutrrrConfigured": shoutrrrConfigured,
-		"HighCostThreshold":  h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
-		"MonthlyBudget":      h.settingsService.GetFloatSettingWithDefault("monthly_budget", 0),
-		"DarkMode":           h.settingsService.IsDarkModeEnabled(),
-		"Version":            version.GetVersion(),
-		"SMTPConfig":         smtpConfig,
-		"SMTPConfigured":     smtpConfigured,
-		"AuthEnabled":        authEnabled,
-		"AuthUsername":       authUsername,
-		"CalendarToken":      calendarToken,
-		"BaseURL":            "http://" + c.Request.Host,
-	})
-	c.HTML(http.StatusOK, "settings.html", data)
 }
 
 // API endpoints for HTMX

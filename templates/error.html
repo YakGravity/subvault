@@ -1,14 +1,30 @@
-{{define "content"}}
-<div class="flex items-center justify-center min-h-[400px]">
-    <div class="text-center">
-        <svg class="w-16 h-16 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-        </svg>
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{if .T}}{{.T.Tr "error_something_wrong"}}{{else}}Something went wrong{{end}}</h2>
-        <p class="text-gray-600 dark:text-gray-300 mb-4">{{.error}}</p>
-        <a href="/" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 transition-colors duration-150">
-            {{if .T}}{{.T.Tr "error_go_dashboard"}}{{else}}Back to Dashboard{{end}}
-        </a>
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+<head>
+    <script src="/static/js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#c2410c">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <title>Error - SubTrackr</title>
+    <link rel="stylesheet" href="/static/css/design-system.css">
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <script src="/static/js/themes.js"></script>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="auth-card" style="text-align: center;">
+            <svg style="width: 64px; height: 64px; color: var(--danger); margin: 0 auto 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+            </svg>
+            <h2 style="color: var(--text); margin-bottom: 8px;">{{if .T}}{{.T.Tr "error_something_wrong"}}{{else}}Something went wrong{{end}}</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 16px;">{{.error}}</p>
+            <a href="/" class="btn btn-primary" style="display: inline-flex; justify-content: center;">
+                {{if .T}}{{.T.Tr "error_go_dashboard"}}{{else}}Back to Dashboard{{end}}
+            </a>
+        </div>
     </div>
-</div>
-{{end}}
+</body>
+</html>
