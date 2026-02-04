@@ -380,6 +380,10 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 		api.GET("/backup", handler.BackupData)
 		api.DELETE("/clear-all", handler.ClearAllData)
 
+		// Calendar token management
+		api.POST("/calendar/generate", settingsHandler.GenerateCalendarToken)
+		api.POST("/calendar/revoke", settingsHandler.RevokeCalendarToken)
+
 		// Settings routes
 		api.POST("/settings/smtp", settingsHandler.SaveSMTPSettings)
 		api.POST("/settings/smtp/test", settingsHandler.TestSMTPConnection)
@@ -389,10 +393,6 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 		api.POST("/settings/notifications/:setting", settingsHandler.UpdateNotificationSetting)
 		api.GET("/settings/notifications", settingsHandler.GetNotificationSettings)
 		api.GET("/settings/smtp", settingsHandler.GetSMTPConfig)
-
-		// Calendar token management
-		api.POST("/settings/calendar/generate", settingsHandler.GenerateCalendarToken)
-		api.POST("/settings/calendar/revoke", settingsHandler.RevokeCalendarToken)
 
 		// API Key management routes
 		api.GET("/settings/apikeys", settingsHandler.ListAPIKeys)

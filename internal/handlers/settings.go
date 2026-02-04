@@ -177,6 +177,44 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 	setting := c.Param("setting")
 
 	switch setting {
+	case "renewal":
+		enabled := !h.service.GetBoolSettingWithDefault("renewal_reminders", false)
+		h.service.SetBoolSetting("renewal_reminders", enabled)
+		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
+		return
+
+	case "cancellation":
+		enabled := !h.service.GetBoolSettingWithDefault("cancellation_reminders", false)
+		h.service.SetBoolSetting("cancellation_reminders", enabled)
+		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
+		return
+
+	case "highcost":
+		enabled := !h.service.GetBoolSettingWithDefault("high_cost_alerts", true)
+		h.service.SetBoolSetting("high_cost_alerts", enabled)
+		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
+		return
+
+	case "reminder_days":
+		daysStr := c.PostForm("reminder_days")
+		if days, err := strconv.Atoi(daysStr); err == nil && days >= 1 && days <= 90 {
+			h.service.SetIntSetting("reminder_days", days)
+			c.JSON(http.StatusOK, gin.H{"days": days})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid reminder days"})
+		}
+		return
+
+	case "cancellation_reminder_days":
+		daysStr := c.PostForm("cancellation_reminder_days")
+		if days, err := strconv.Atoi(daysStr); err == nil && days >= 1 && days <= 90 {
+			h.service.SetIntSetting("cancellation_reminder_days", days)
+			c.JSON(http.StatusOK, gin.H{"days": days})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid cancellation reminder days"})
+		}
+		return
+
 	case "threshold":
 		thresholdStr := c.PostForm("high_cost_threshold")
 		if threshold, err := strconv.ParseFloat(thresholdStr, 64); err == nil && threshold >= 0 && threshold <= 10000 {

@@ -1525,7 +1525,7 @@ window.loadCategories = loadCategories;
 document.addEventListener('DOMContentLoaded', loadCategories);
 
 function generateCalendarToken() {
-    fetch('/api/settings/calendar/generate', { method: 'POST' })
+    fetch('/api/calendar/generate', { method: 'POST' })
         .then(r => r.json())
         .then(data => {
             if (data.success) {
@@ -1535,7 +1535,7 @@ function generateCalendarToken() {
 }
 
 function revokeCalendarToken() {
-    fetch('/api/settings/calendar/revoke', { method: 'POST' })
+    fetch('/api/calendar/revoke', { method: 'POST' })
         .then(r => r.json())
         .then(data => {
             if (data.success) {
