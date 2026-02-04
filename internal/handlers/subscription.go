@@ -428,14 +428,9 @@ func (h *SubscriptionHandler) Settings(c *gin.Context) {
 		"CurrencySymbol":           h.settingsService.GetCurrencySymbol(),
 		"Language":                 h.settingsService.GetLanguage(),
 		"SupportedLanguages":       service.SupportedLanguages,
-		"RenewalReminders":         h.settingsService.GetBoolSettingWithDefault("renewal_reminders", false),
-		"HighCostAlerts":           h.settingsService.GetBoolSettingWithDefault("high_cost_alerts", true),
 		"ShoutrrrConfig":           shoutrrrConfig,
 		"ShoutrrrConfigured":       shoutrrrConfigured,
 		"HighCostThreshold":        h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
-		"ReminderDays":             h.settingsService.GetIntSettingWithDefault("reminder_days", 7),
-		"CancellationReminders":    h.settingsService.GetBoolSettingWithDefault("cancellation_reminders", false),
-		"CancellationReminderDays": h.settingsService.GetIntSettingWithDefault("cancellation_reminder_days", 7),
 		"DarkMode":                 h.settingsService.IsDarkModeEnabled(),
 		"Version":                  version.GetVersion(),
 		"SMTPConfig":               smtpConfig,
@@ -538,6 +533,21 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 	subscription.RenewalDate = parseDatePtr(c.PostForm("renewal_date"))
 	subscription.CancellationDate = parseDatePtr(c.PostForm("cancellation_date"))
 
+	// Parse per-subscription notification settings
+	subscription.RenewalReminder = c.PostForm("renewal_reminder") == "on"
+	if days, err := strconv.Atoi(c.PostForm("renewal_reminder_days")); err == nil && days > 0 {
+		subscription.RenewalReminderDays = days
+	} else {
+		subscription.RenewalReminderDays = 3
+	}
+	subscription.CancellationReminder = c.PostForm("cancellation_reminder") == "on"
+	if days, err := strconv.Atoi(c.PostForm("cancellation_reminder_days")); err == nil && days > 0 {
+		subscription.CancellationReminderDays = days
+	} else {
+		subscription.CancellationReminderDays = 7
+	}
+	subscription.HighCostAlert = c.PostForm("high_cost_alert") == "on"
+
 	// Fetch logo synchronously before creation if URL is provided and icon_url is empty
 	h.fetchAndSetLogo(&subscription)
 
@@ -560,19 +570,14 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 		return
 	}
 
-	// Send high-cost alert email and Shoutrrr notification if applicable
-	if h.isHighCostWithCurrency(created) {
-		// Reload subscription with category for email template
+	// Send high-cost alert email and Shoutrrr notification if applicable (per-subscription setting)
+	if created.HighCostAlert && h.isHighCostWithCurrency(created) {
 		subscriptionWithCategory, err := h.service.GetByID(created.ID)
 		if err == nil && subscriptionWithCategory != nil {
-			// Send email notification
 			if err := h.emailService.SendHighCostAlert(subscriptionWithCategory); err != nil {
-				// Log error but don't fail the request
 				log.Printf("Failed to send high-cost alert email: %v", err)
 			}
-			// Send Shoutrrr notification
 			if err := h.shoutrrrService.SendHighCostAlert(subscriptionWithCategory); err != nil {
-				// Log error but don't fail the request
 				log.Printf("Failed to send high-cost alert Shoutrrr notification: %v", err)
 			}
 		}
@@ -663,6 +668,21 @@ func (h *SubscriptionHandler) UpdateSubscription(c *gin.Context) {
 	subscription.RenewalDate = parseDatePtr(c.PostForm("renewal_date"))
 	subscription.CancellationDate = parseDatePtr(c.PostForm("cancellation_date"))
 
+	// Parse per-subscription notification settings
+	subscription.RenewalReminder = c.PostForm("renewal_reminder") == "on"
+	if days, err := strconv.Atoi(c.PostForm("renewal_reminder_days")); err == nil && days > 0 {
+		subscription.RenewalReminderDays = days
+	} else {
+		subscription.RenewalReminderDays = 3
+	}
+	subscription.CancellationReminder = c.PostForm("cancellation_reminder") == "on"
+	if days, err := strconv.Atoi(c.PostForm("cancellation_reminder_days")); err == nil && days > 0 {
+		subscription.CancellationReminderDays = days
+	} else {
+		subscription.CancellationReminderDays = 7
+	}
+	subscription.HighCostAlert = c.PostForm("high_cost_alert") == "on"
+
 	// Get the original subscription to check if it was high-cost before update
 	original, _ := h.service.GetByID(uint(id))
 	wasHighCost := original != nil && h.isHighCostWithCurrency(original)
@@ -688,19 +708,14 @@ func (h *SubscriptionHandler) UpdateSubscription(c *gin.Context) {
 		return
 	}
 
-	// Send high-cost alert email and Shoutrrr notification if subscription became high-cost (wasn't before, but is now)
-	if updated != nil && !wasHighCost && h.isHighCostWithCurrency(updated) {
-		// Reload subscription with category for email template
+	// Send high-cost alert if subscription became high-cost (per-subscription setting)
+	if updated != nil && updated.HighCostAlert && !wasHighCost && h.isHighCostWithCurrency(updated) {
 		subscriptionWithCategory, err := h.service.GetByID(updated.ID)
 		if err == nil && subscriptionWithCategory != nil {
-			// Send email notification
 			if err := h.emailService.SendHighCostAlert(subscriptionWithCategory); err != nil {
-				// Log error but don't fail the request
 				log.Printf("Failed to send high-cost alert email: %v", err)
 			}
-			// Send Shoutrrr notification
 			if err := h.shoutrrrService.SendHighCostAlert(subscriptionWithCategory); err != nil {
-				// Log error but don't fail the request
 				log.Printf("Failed to send high-cost alert Shoutrrr notification: %v", err)
 			}
 		}
@@ -794,7 +809,7 @@ func (h *SubscriptionHandler) ExportCSV(c *gin.Context) {
 	defer writer.Flush()
 
 	// Write CSV header
-	header := []string{"ID", "Name", "Category", "Cost", "Tax Rate", "Price Type", "Net Cost", "Gross Cost", "Tax Amount", "Schedule", "Status", "Payment Method", "Login Name", "Customer Number", "Contract Number", "Start Date", "Renewal Date", "Cancellation Date", "URL", "Notes", "Usage", "Created At"}
+	header := []string{"ID", "Name", "Category", "Cost", "Tax Rate", "Price Type", "Net Cost", "Gross Cost", "Tax Amount", "Schedule", "Status", "Payment Method", "Login Name", "Customer Number", "Contract Number", "Start Date", "Renewal Date", "Cancellation Date", "URL", "Notes", "Usage", "Renewal Reminder", "Renewal Reminder Days", "Cancellation Reminder", "Cancellation Reminder Days", "High Cost Alert", "Created At"}
 	writer.Write(header)
 
 	// Write subscription data
@@ -825,6 +840,11 @@ func (h *SubscriptionHandler) ExportCSV(c *gin.Context) {
 			sub.URL,
 			sub.Notes,
 			sub.Usage,
+			fmt.Sprintf("%t", sub.RenewalReminder),
+			fmt.Sprintf("%d", sub.RenewalReminderDays),
+			fmt.Sprintf("%t", sub.CancellationReminder),
+			fmt.Sprintf("%d", sub.CancellationReminderDays),
+			fmt.Sprintf("%t", sub.HighCostAlert),
 			sub.CreatedAt.Format("2006-01-02 15:04:05"),
 		}
 		writer.Write(record)

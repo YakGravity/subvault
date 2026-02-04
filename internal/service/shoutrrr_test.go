@@ -39,13 +39,11 @@ func setupShoutrrrTestDB(t *testing.T) *gorm.DB {
 	return db
 }
 
-func TestShoutrrrService_SendHighCostAlert_Disabled(t *testing.T) {
+func TestShoutrrrService_SendHighCostAlert_NoConfig(t *testing.T) {
 	db := setupShoutrrrTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	shoutrrrService := NewShoutrrrService(settingsService)
-
-	settingsService.SetBoolSetting("high_cost_alerts", false)
 
 	subscription := &models.Subscription{
 		Name:     "Test Subscription",
@@ -56,7 +54,7 @@ func TestShoutrrrService_SendHighCostAlert_Disabled(t *testing.T) {
 	}
 
 	err := shoutrrrService.SendHighCostAlert(subscription)
-	assert.NoError(t, err, "Should return nil when high cost alerts are disabled")
+	assert.Error(t, err, "Should return error when Shoutrrr is not configured")
 }
 
 func TestShoutrrrService_SendHighCostAlert_EnabledButNoConfig(t *testing.T) {
@@ -80,13 +78,11 @@ func TestShoutrrrService_SendHighCostAlert_EnabledButNoConfig(t *testing.T) {
 	assert.Error(t, err, "Should return error when Shoutrrr is not configured")
 }
 
-func TestShoutrrrService_SendRenewalReminder_Disabled(t *testing.T) {
+func TestShoutrrrService_SendRenewalReminder_NoConfig(t *testing.T) {
 	db := setupShoutrrrTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	shoutrrrService := NewShoutrrrService(settingsService)
-
-	settingsService.SetBoolSetting("renewal_reminders", false)
 
 	subscription := &models.Subscription{
 		Name:        "Test Subscription",
@@ -98,7 +94,7 @@ func TestShoutrrrService_SendRenewalReminder_Disabled(t *testing.T) {
 	}
 
 	err := shoutrrrService.SendRenewalReminder(subscription, 3)
-	assert.NoError(t, err, "Should return nil when renewal reminders are disabled")
+	assert.Error(t, err, "Should return error when Shoutrrr is not configured")
 }
 
 func TestShoutrrrService_SendRenewalReminder_EnabledButNoConfig(t *testing.T) {
@@ -123,13 +119,11 @@ func TestShoutrrrService_SendRenewalReminder_EnabledButNoConfig(t *testing.T) {
 	assert.Error(t, err, "Should return error when Shoutrrr is not configured")
 }
 
-func TestShoutrrrService_SendCancellationReminder_Disabled(t *testing.T) {
+func TestShoutrrrService_SendCancellationReminder_NoConfig(t *testing.T) {
 	db := setupShoutrrrTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	shoutrrrService := NewShoutrrrService(settingsService)
-
-	settingsService.SetBoolSetting("cancellation_reminders", false)
 
 	subscription := &models.Subscription{
 		Name:             "Test Subscription",
@@ -141,7 +135,7 @@ func TestShoutrrrService_SendCancellationReminder_Disabled(t *testing.T) {
 	}
 
 	err := shoutrrrService.SendCancellationReminder(subscription, 3)
-	assert.NoError(t, err, "Should return nil when cancellation reminders are disabled")
+	assert.Error(t, err, "Should return error when Shoutrrr is not configured")
 }
 
 func TestShoutrrrService_SendHighCostAlert_WithInvalidURL(t *testing.T) {

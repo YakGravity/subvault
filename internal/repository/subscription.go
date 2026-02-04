@@ -171,6 +171,11 @@ func (r *SubscriptionRepository) Update(id uint, subscription *models.Subscripti
 	existing.IconURL = subscription.IconURL
 	existing.Notes = subscription.Notes
 	existing.Usage = subscription.Usage
+	existing.RenewalReminder = subscription.RenewalReminder
+	existing.RenewalReminderDays = subscription.RenewalReminderDays
+	existing.CancellationReminder = subscription.CancellationReminder
+	existing.CancellationReminderDays = subscription.CancellationReminderDays
+	existing.HighCostAlert = subscription.HighCostAlert
 
 	if columnExists && subscription.CategoryID > 0 {
 		// For legacy schema, we need to update the old category column too
@@ -264,6 +269,36 @@ func (r *SubscriptionRepository) GetUpcomingCancellations(days int) ([]models.Su
 
 	if err := r.db.Where("status = ? AND cancellation_date IS NOT NULL AND cancellation_date BETWEEN ? AND ?",
 		"Cancelled", time.Now(), endDate).Find(&subscriptions).Error; err != nil {
+		return nil, err
+	}
+	return subscriptions, nil
+}
+
+func (r *SubscriptionRepository) GetSubscriptionsWithRenewalReminder() ([]models.Subscription, error) {
+	var subscriptions []models.Subscription
+	if err := r.db.Preload("Category").
+		Where("status = ? AND renewal_reminder = ? AND renewal_date IS NOT NULL", "Active", true).
+		Find(&subscriptions).Error; err != nil {
+		return nil, err
+	}
+	return subscriptions, nil
+}
+
+func (r *SubscriptionRepository) GetSubscriptionsWithCancellationReminder() ([]models.Subscription, error) {
+	var subscriptions []models.Subscription
+	if err := r.db.Preload("Category").
+		Where("cancellation_reminder = ? AND cancellation_date IS NOT NULL", true).
+		Find(&subscriptions).Error; err != nil {
+		return nil, err
+	}
+	return subscriptions, nil
+}
+
+func (r *SubscriptionRepository) GetSubscriptionsWithHighCostAlert() ([]models.Subscription, error) {
+	var subscriptions []models.Subscription
+	if err := r.db.Preload("Category").
+		Where("high_cost_alert = ?", true).
+		Find(&subscriptions).Error; err != nil {
 		return nil, err
 	}
 	return subscriptions, nil

@@ -130,38 +130,30 @@ func (s *SubscriptionService) GetDefaultCategory() (*models.Category, error) {
 }
 
 // GetSubscriptionsNeedingReminders returns subscriptions that need renewal reminders
-// based on the reminder_days setting. It returns a map of subscription to days until renewal.
-func (s *SubscriptionService) GetSubscriptionsNeedingReminders(reminderDays int) (map[*models.Subscription]int, error) {
-	if reminderDays <= 0 {
-		return make(map[*models.Subscription]int), nil
-	}
-
-	// Get all subscriptions with renewals in the next reminderDays
-	subscriptions, err := s.repo.GetUpcomingRenewals(reminderDays)
+// based on per-subscription settings. It returns a map of subscription to days until renewal.
+func (s *SubscriptionService) GetSubscriptionsNeedingReminders() (map[*models.Subscription]int, error) {
+	subscriptions, err := s.repo.GetSubscriptionsWithRenewalReminder()
 	if err != nil {
 		return nil, err
 	}
 
 	result := make(map[*models.Subscription]int)
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 
 	for i := range subscriptions {
 		sub := &subscriptions[i]
-		if sub.RenewalDate == nil {
+		if sub.RenewalDate == nil || sub.RenewalReminderDays <= 0 {
 			continue
 		}
 
-		// Calculate days until renewal using proper date arithmetic
-		// Use time.Until for more accurate calculation (handles timezone differences better)
-		daysUntil := int(time.Until(*sub.RenewalDate).Hours() / 24)
+		renewalDay := time.Date(sub.RenewalDate.Year(), sub.RenewalDate.Month(), sub.RenewalDate.Day(), 0, 0, 0, 0, sub.RenewalDate.Location())
+		daysUntil := int(renewalDay.Sub(today).Hours() / 24)
 
-		// Only include if within the reminder window and not past due
-		if daysUntil >= 0 && daysUntil <= reminderDays {
-			// Check if we've already sent a reminder for this renewal date
-			// Skip if we've sent a reminder for the same renewal date
+		if daysUntil >= 0 && daysUntil <= sub.RenewalReminderDays {
 			if sub.LastReminderRenewalDate != nil &&
 				sub.RenewalDate != nil &&
 				sub.LastReminderRenewalDate.Equal(*sub.RenewalDate) {
-				// Already sent reminder for this renewal date, skip
 				continue
 			}
 
@@ -173,36 +165,30 @@ func (s *SubscriptionService) GetSubscriptionsNeedingReminders(reminderDays int)
 }
 
 // GetSubscriptionsNeedingCancellationReminders returns subscriptions that need cancellation reminders
-// based on the cancellation_reminder_days setting. It returns a map of subscription to days until cancellation.
-func (s *SubscriptionService) GetSubscriptionsNeedingCancellationReminders(reminderDays int) (map[*models.Subscription]int, error) {
-	if reminderDays <= 0 {
-		return make(map[*models.Subscription]int), nil
-	}
-
-	// Get all subscriptions with cancellations in the next reminderDays
-	subscriptions, err := s.repo.GetUpcomingCancellations(reminderDays)
+// based on per-subscription settings. It returns a map of subscription to days until cancellation.
+func (s *SubscriptionService) GetSubscriptionsNeedingCancellationReminders() (map[*models.Subscription]int, error) {
+	subscriptions, err := s.repo.GetSubscriptionsWithCancellationReminder()
 	if err != nil {
 		return nil, err
 	}
 
 	result := make(map[*models.Subscription]int)
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 
 	for i := range subscriptions {
 		sub := &subscriptions[i]
-		if sub.CancellationDate == nil {
+		if sub.CancellationDate == nil || sub.CancellationReminderDays <= 0 {
 			continue
 		}
 
-		// Calculate days until cancellation
-		daysUntil := int(time.Until(*sub.CancellationDate).Hours() / 24)
+		cancellationDay := time.Date(sub.CancellationDate.Year(), sub.CancellationDate.Month(), sub.CancellationDate.Day(), 0, 0, 0, 0, sub.CancellationDate.Location())
+		daysUntil := int(cancellationDay.Sub(today).Hours() / 24)
 
-		// Only include if within the reminder window and not past due
-		if daysUntil >= 0 && daysUntil <= reminderDays {
-			// Check if we've already sent a reminder for this cancellation date
+		if daysUntil >= 0 && daysUntil <= sub.CancellationReminderDays {
 			if sub.LastCancellationReminderDate != nil &&
 				sub.CancellationDate != nil &&
 				sub.LastCancellationReminderDate.Equal(*sub.CancellationDate) {
-				// Already sent reminder for this cancellation date, skip
 				continue
 			}
 

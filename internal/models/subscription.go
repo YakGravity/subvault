@@ -31,6 +31,11 @@ type Subscription struct {
 	Notes                        string     `json:"notes" gorm:""`
 	Usage                        string     `json:"usage" gorm:"" validate:"omitempty,oneof=High Medium Low None"`
 	DateCalculationVersion       int        `json:"date_calculation_version" gorm:"default:1"`
+	RenewalReminder              bool       `json:"renewal_reminder" gorm:"default:false"`
+	RenewalReminderDays          int        `json:"renewal_reminder_days" gorm:""`
+	CancellationReminder         bool       `json:"cancellation_reminder" gorm:"default:false"`
+	CancellationReminderDays     int        `json:"cancellation_reminder_days" gorm:""`
+	HighCostAlert                bool       `json:"high_cost_alert" gorm:"default:false"`
 	LastReminderSent             *time.Time `json:"last_reminder_sent" gorm:""`              // Tracks when the last reminder was sent
 	LastReminderRenewalDate      *time.Time `json:"last_reminder_renewal_date" gorm:""`      // Tracks which renewal date the last reminder was for
 	LastCancellationReminderSent *time.Time `json:"last_cancellation_reminder_sent" gorm:""` // Tracks when the last cancellation reminder was sent

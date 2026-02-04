@@ -1157,5 +1157,35 @@
   },
   "api_key_copy_warning": {
     "other": "Kopiere diesen API-Schlüssel jetzt. Du kannst ihn danach nicht mehr einsehen!"
+  },
+  "sub_form_section_notifications": {
+    "other": "Benachrichtigungen"
+  },
+  "sub_form_renewal_reminder": {
+    "other": "Verlängerungserinnerung"
+  },
+  "sub_form_renewal_reminder_desc": {
+    "other": "Vor Verlängerung dieses Abos erinnern"
+  },
+  "sub_form_renewal_reminder_days": {
+    "other": "Tage vor Verlängerung"
+  },
+  "sub_form_cancellation_reminder": {
+    "other": "Kündigungserinnerung"
+  },
+  "sub_form_cancellation_reminder_desc": {
+    "other": "Vor dem Kündigungsdatum erinnern"
+  },
+  "sub_form_cancellation_reminder_days": {
+    "other": "Tage vor Kündigung"
+  },
+  "sub_form_high_cost_alert": {
+    "other": "Kostenwarnung"
+  },
+  "sub_form_high_cost_alert_desc": {
+    "other": "Warnen wenn dieses Abo den Kostenschwellenwert überschreitet"
+  },
+  "settings_notifications_moved": {
+    "other": "Benachrichtigungs-Einstellungen wurden zu den einzelnen Abos verschoben. Konfiguriere sie beim Erstellen oder Bearbeiten eines Abos."
   }
 }
