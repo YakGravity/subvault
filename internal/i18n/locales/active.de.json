@@ -419,6 +419,9 @@
   "dashboard_all_subscriptions": {
     "other": "Alle Abonnements"
   },
+  "default_category_name": {
+    "other": "Allgemein"
+  },
   "subscriptions_title": {
     "other": "Abonnements"
   },
@@ -491,8 +494,14 @@
   "sub_form_edit_title": {
     "other": "Abonnement bearbeiten"
   },
+  "sub_form_gross_cost": {
+    "other": "Brutto"
+  },
   "sub_form_name": {
     "other": "Abonnementname"
+  },
+  "sub_form_net_cost": {
+    "other": "Netto"
   },
   "sub_form_category": {
     "other": "Kategorie"
@@ -500,20 +509,35 @@
   "sub_form_select_category": {
     "other": "Kategorie auswählen"
   },
+  "sub_form_contract_number": {
+    "other": "Vertragsnummer"
+  },
   "sub_form_cost": {
     "other": "Kosten"
   },
   "sub_form_currency": {
     "other": "Währung"
   },
+  "sub_form_customer_number": {
+    "other": "Kundennummer"
+  },
   "sub_form_schedule": {
     "other": "Abrechnungszyklus"
+  },
+  "sub_form_section_contract": {
+    "other": "Vertragsdaten"
   },
   "sub_form_status": {
     "other": "Status"
   },
   "sub_form_start_date": {
     "other": "Startdatum"
+  },
+  "sub_form_tax_amount": {
+    "other": "MwSt"
+  },
+  "sub_form_tax_rate": {
+    "other": "Steuersatz (%)"
   },
   "sub_form_renewal_date": {
     "other": "Verlängerungsdatum"
@@ -524,6 +548,9 @@
   "sub_form_payment_method": {
     "other": "Zahlungsmethode"
   },
+  "sub_form_price_type": {
+    "other": "Preisart"
+  },
   "sub_form_account": {
     "other": "Konto"
   },
@@ -533,11 +560,17 @@
   "sub_form_icon_url": {
     "other": "Symbol-URL"
   },
+  "sub_form_login_name": {
+    "other": "Login-Name"
+  },
   "sub_form_notes": {
     "other": "Notizen"
   },
   "sub_form_usage": {
     "other": "Nutzungsgrad"
+  },
+  "tooltip_original_amount": {
+    "other": "Originalbetrag vor Umrechnung (Kurse von EZB)"
   },
   "btn_save": {
     "other": "Speichern"
@@ -925,8 +958,14 @@
   "confirm_delete_api_key": {
     "other": "Möchten Sie diesen API-Schlüssel wirklich löschen?"
   },
+  "category_cannot_delete_default": {
+    "other": "Die Standardkategorie kann nicht gelöscht werden"
+  },
   "category_enter_name": {
     "other": "Bitte geben Sie einen Kategorienamen ein"
+  },
+  "category_is_default": {
+    "other": "Standard"
   },
   "btn_add": {
     "other": "Hinzufügen"
@@ -1030,11 +1069,26 @@
   "placeholder_account": {
     "other": "E-Mail-Adresse oder Benutzername"
   },
+  "placeholder_contract_number": {
+    "other": "z.B. VN-67890"
+  },
+  "placeholder_customer_number": {
+    "other": "z.B. KD-12345"
+  },
+  "placeholder_login_name": {
+    "other": "Benutzername oder E-Mail"
+  },
   "placeholder_notes": {
     "other": "Zusätzliche Notizen zu diesem Abonnement"
   },
   "placeholder_new_category": {
     "other": "Neuer Kategoriename"
+  },
+  "price_type_gross": {
+    "other": "Brutto"
+  },
+  "price_type_net": {
+    "other": "Netto"
   },
   "tooltip_renewal_date": {
     "other": "Das Verlängerungsdatum wird nach dem Klick auf Aktualisieren automatisch berechnet"
@@ -1088,6 +1142,9 @@
   },
   "category_no_categories": {
     "other": "Keine Kategorien gefunden."
+  },
+  "category_reassign_info": {
+    "other": "Abos werden in die Standardkategorie verschoben"
   },
   "analytics_projected_yearly": {
     "other": "Voraussichtliche Jahreskosten"

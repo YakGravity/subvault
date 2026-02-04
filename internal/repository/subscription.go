@@ -157,6 +157,11 @@ func (r *SubscriptionRepository) Update(id uint, subscription *models.Subscripti
 	existing.OriginalCurrency = subscription.OriginalCurrency
 	existing.PaymentMethod = subscription.PaymentMethod
 	existing.Account = subscription.Account
+	existing.LoginName = subscription.LoginName
+	existing.TaxRate = subscription.TaxRate
+	existing.PriceType = subscription.PriceType
+	existing.CustomerNumber = subscription.CustomerNumber
+	existing.ContractNumber = subscription.ContractNumber
 	existing.StartDate = subscription.StartDate
 	existing.LastReminderSent = subscription.LastReminderSent
 	existing.LastReminderRenewalDate = subscription.LastReminderRenewalDate
@@ -182,6 +187,11 @@ func (r *SubscriptionRepository) Update(id uint, subscription *models.Subscripti
 				"original_currency":          existing.OriginalCurrency,
 				"payment_method":             existing.PaymentMethod,
 				"account":                    existing.Account,
+				"login_name":                 existing.LoginName,
+				"tax_rate":                   existing.TaxRate,
+				"price_type":                 existing.PriceType,
+				"customer_number":            existing.CustomerNumber,
+				"contract_number":            existing.ContractNumber,
 				"start_date":                 existing.StartDate,
 				"renewal_date":               existing.RenewalDate,
 				"cancellation_date":          existing.CancellationDate,

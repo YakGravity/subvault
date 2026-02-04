@@ -504,7 +504,9 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 		subscription.OriginalCurrency = "USD" // Default to USD
 	}
 	subscription.PaymentMethod = c.PostForm("payment_method")
-	subscription.Account = c.PostForm("account")
+	subscription.LoginName = c.PostForm("login_name")
+	subscription.CustomerNumber = c.PostForm("customer_number")
+	subscription.ContractNumber = c.PostForm("contract_number")
 	subscription.URL = c.PostForm("url")
 	subscription.IconURL = c.PostForm("icon_url") // Allow manual icon URL override
 	subscription.Notes = c.PostForm("notes")
@@ -516,6 +518,20 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 			subscription.Cost = cost
 		}
 	}
+
+	// Parse tax rate
+	if taxRateStr := c.PostForm("tax_rate"); taxRateStr != "" {
+		if taxRate, err := strconv.ParseFloat(taxRateStr, 64); err == nil {
+			subscription.TaxRate = taxRate
+		}
+	}
+
+	// Parse price type (default to "gross")
+	priceType := c.PostForm("price_type")
+	if priceType == "" {
+		priceType = "gross"
+	}
+	subscription.PriceType = priceType
 
 	// Parse dates using helper function
 	subscription.StartDate = parseDatePtr(c.PostForm("start_date"))
@@ -612,7 +628,9 @@ func (h *SubscriptionHandler) UpdateSubscription(c *gin.Context) {
 		subscription.OriginalCurrency = "USD" // Default to USD
 	}
 	subscription.PaymentMethod = c.PostForm("payment_method")
-	subscription.Account = c.PostForm("account")
+	subscription.LoginName = c.PostForm("login_name")
+	subscription.CustomerNumber = c.PostForm("customer_number")
+	subscription.ContractNumber = c.PostForm("contract_number")
 	subscription.URL = c.PostForm("url")
 	subscription.IconURL = c.PostForm("icon_url") // Allow manual icon URL override
 	subscription.Notes = c.PostForm("notes")
@@ -624,6 +642,20 @@ func (h *SubscriptionHandler) UpdateSubscription(c *gin.Context) {
 			subscription.Cost = cost
 		}
 	}
+
+	// Parse tax rate
+	if taxRateStr := c.PostForm("tax_rate"); taxRateStr != "" {
+		if taxRate, err := strconv.ParseFloat(taxRateStr, 64); err == nil {
+			subscription.TaxRate = taxRate
+		}
+	}
+
+	// Parse price type (default to "gross")
+	priceType := c.PostForm("price_type")
+	if priceType == "" {
+		priceType = "gross"
+	}
+	subscription.PriceType = priceType
 
 	// Parse dates using helper function
 	// Always parse renewal date if provided; let service/model layer handle schedule change logic
@@ -731,12 +763,18 @@ func (h *SubscriptionHandler) GetSubscriptionForm(c *gin.Context) {
 		categories = []models.Category{}
 	}
 
+	var defaultCategoryID uint
+	if defaultCat, err := h.service.GetDefaultCategory(); err == nil {
+		defaultCategoryID = defaultCat.ID
+	}
+
 	data := baseTemplateData(c)
 	mergeTemplateData(data, gin.H{
-		"Subscription":   subscription,
-		"IsEdit":         isEdit,
-		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
-		"Categories":     categories,
+		"Subscription":      subscription,
+		"IsEdit":            isEdit,
+		"CurrencySymbol":    h.settingsService.GetCurrencySymbol(),
+		"Categories":        categories,
+		"DefaultCategoryID": defaultCategoryID,
 	})
 	c.HTML(http.StatusOK, "subscription-form.html", data)
 }
@@ -756,7 +794,7 @@ func (h *SubscriptionHandler) ExportCSV(c *gin.Context) {
 	defer writer.Flush()
 
 	// Write CSV header
-	header := []string{"ID", "Name", "Category", "Cost", "Schedule", "Status", "Payment Method", "Account", "Start Date", "Renewal Date", "Cancellation Date", "URL", "Notes", "Usage", "Created At"}
+	header := []string{"ID", "Name", "Category", "Cost", "Tax Rate", "Price Type", "Net Cost", "Gross Cost", "Tax Amount", "Schedule", "Status", "Payment Method", "Login Name", "Customer Number", "Contract Number", "Start Date", "Renewal Date", "Cancellation Date", "URL", "Notes", "Usage", "Created At"}
 	writer.Write(header)
 
 	// Write subscription data
@@ -770,10 +808,17 @@ func (h *SubscriptionHandler) ExportCSV(c *gin.Context) {
 			sub.Name,
 			categoryName,
 			fmt.Sprintf("%.2f", sub.Cost),
+			fmt.Sprintf("%.2f", sub.TaxRate),
+			sub.PriceType,
+			fmt.Sprintf("%.2f", sub.NetCost()),
+			fmt.Sprintf("%.2f", sub.GrossCost()),
+			fmt.Sprintf("%.2f", sub.TaxAmount()),
 			sub.Schedule,
 			sub.Status,
 			sub.PaymentMethod,
-			sub.Account,
+			sub.LoginName,
+			sub.CustomerNumber,
+			sub.ContractNumber,
 			formatDate(sub.StartDate),
 			formatDate(sub.RenewalDate),
 			formatDate(sub.CancellationDate),

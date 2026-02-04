@@ -20,7 +20,11 @@ type CreateSubscriptionRequest struct {
 	OriginalCurrency string     `json:"original_currency"`
 	CategoryID       uint       `json:"category_id"`
 	PaymentMethod    string     `json:"payment_method"`
-	Account          string     `json:"account"`
+	LoginName        string     `json:"login_name"`
+	TaxRate          float64    `json:"tax_rate"`
+	PriceType        string     `json:"price_type"`
+	CustomerNumber   string     `json:"customer_number"`
+	ContractNumber   string     `json:"contract_number"`
 	StartDate        *time.Time `json:"start_date"`
 	RenewalDate      *time.Time `json:"renewal_date"`
 	CancellationDate *time.Time `json:"cancellation_date"`
@@ -40,7 +44,11 @@ type UpdateSubscriptionRequest struct {
 	OriginalCurrency *string    `json:"original_currency"`
 	CategoryID       *uint      `json:"category_id"`
 	PaymentMethod    *string    `json:"payment_method"`
-	Account          *string    `json:"account"`
+	LoginName        *string    `json:"login_name"`
+	TaxRate          *float64   `json:"tax_rate"`
+	PriceType        *string    `json:"price_type"`
+	CustomerNumber   *string    `json:"customer_number"`
+	ContractNumber   *string    `json:"contract_number"`
 	StartDate        *time.Time `json:"start_date"`
 	RenewalDate      *time.Time `json:"renewal_date"`
 	CancellationDate *time.Time `json:"cancellation_date"`
@@ -58,6 +66,12 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 		return
 	}
 
+	// Default price type to "gross" if not provided
+	priceType := req.PriceType
+	if priceType == "" {
+		priceType = "gross"
+	}
+
 	subscription := models.Subscription{
 		Name:             req.Name,
 		Cost:             req.Cost,
@@ -66,7 +80,11 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 		OriginalCurrency: req.OriginalCurrency,
 		CategoryID:       req.CategoryID,
 		PaymentMethod:    req.PaymentMethod,
-		Account:          req.Account,
+		LoginName:        req.LoginName,
+		TaxRate:          req.TaxRate,
+		PriceType:        priceType,
+		CustomerNumber:   req.CustomerNumber,
+		ContractNumber:   req.ContractNumber,
 		StartDate:        req.StartDate,
 		RenewalDate:      req.RenewalDate,
 		CancellationDate: req.CancellationDate,
@@ -150,8 +168,20 @@ func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 	if req.PaymentMethod != nil {
 		subscription.PaymentMethod = *req.PaymentMethod
 	}
-	if req.Account != nil {
-		subscription.Account = *req.Account
+	if req.LoginName != nil {
+		subscription.LoginName = *req.LoginName
+	}
+	if req.TaxRate != nil {
+		subscription.TaxRate = *req.TaxRate
+	}
+	if req.PriceType != nil {
+		subscription.PriceType = *req.PriceType
+	}
+	if req.CustomerNumber != nil {
+		subscription.CustomerNumber = *req.CustomerNumber
+	}
+	if req.ContractNumber != nil {
+		subscription.ContractNumber = *req.ContractNumber
 	}
 	if req.StartDate != nil {
 		subscription.StartDate = req.StartDate

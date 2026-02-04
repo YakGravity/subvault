@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"strconv"
+	"strings"
 	"subtrackr/internal/models"
 	"subtrackr/internal/service"
 
@@ -70,6 +71,10 @@ func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 		return
 	}
 	if err := h.service.Delete(uint(id)); err != nil {
+		if strings.Contains(err.Error(), "cannot delete default category") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": tr(c, "category_cannot_delete_default", "Cannot delete the default category")})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
