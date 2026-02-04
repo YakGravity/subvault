@@ -191,3 +191,20 @@ func (s *ShoutrrrService) SendCancellationReminder(subscription *models.Subscrip
 	}
 	return nil
 }
+
+func (s *ShoutrrrService) SendBudgetExceededAlert(totalSpend, budget float64, currencySymbol string) error {
+	message := fmt.Sprintf("%s\n%s: %s%.2f\n%s: %s%.2f\n%s: %s%.2f",
+		s.t("budget_exceeded_alert"),
+		s.t("dashboard_budget"), currencySymbol, budget,
+		s.t("analytics_monthly_cost"), currencySymbol, totalSpend,
+		s.t("dashboard_budget_exceeded"), currencySymbol, totalSpend-budget,
+	)
+
+	title := s.t("shoutrrr_budget_exceeded")
+
+	if err := s.sendToAll(title, message); err != nil {
+		log.Printf("Failed to send budget exceeded alert via Shoutrrr: %v", err)
+		return err
+	}
+	return nil
+}

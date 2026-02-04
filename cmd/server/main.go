@@ -91,6 +91,7 @@ func main() {
 	settingsHandler := handlers.NewSettingsHandler(settingsService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	authHandler := handlers.NewAuthHandler(settingsService, sessionService, emailService)
+	importHandler := handlers.NewImportHandler(subscriptionService, categoryService, settingsService)
 
 	// Setup Gin router
 	if cfg.Environment == "production" {
@@ -188,7 +189,7 @@ func main() {
 	router.Use(middleware.I18nMiddleware(i18nService, settingsService))
 
 	// Routes
-	setupRoutes(router, subscriptionHandler, settingsHandler, settingsService, categoryHandler, authHandler)
+	setupRoutes(router, subscriptionHandler, settingsHandler, settingsService, categoryHandler, authHandler, importHandler)
 
 	// Seed sample data if database is empty
 	// Commented out - no sample data by default
@@ -288,6 +289,7 @@ func loadTemplates() *template.Template {
 		"templates/reset-password-error.html",
 		"templates/reset-password-success.html",
 		"templates/auth-message.html",
+		"templates/import-result.html",
 	}
 
 	var parsedCount int
@@ -337,7 +339,10 @@ func loadTemplates() *template.Template {
 	return tmpl
 }
 
-func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, settingsHandler *handlers.SettingsHandler, settingsService *service.SettingsService, categoryHandler *handlers.CategoryHandler, authHandler *handlers.AuthHandler) {
+func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, settingsHandler *handlers.SettingsHandler, settingsService *service.SettingsService, categoryHandler *handlers.CategoryHandler, authHandler *handlers.AuthHandler, importHandler *handlers.ImportHandler) {
+	// Calendar feed (public, token-based auth)
+	router.GET("/cal/:token/subscriptions.ics", handler.ServeCalendarFeed)
+
 	// Auth routes (public)
 	router.GET("/login", authHandler.ShowLoginPage)
 	router.GET("/forgot-password", authHandler.ShowForgotPasswordPage)
@@ -375,6 +380,10 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 		api.GET("/backup", handler.BackupData)
 		api.DELETE("/clear-all", handler.ClearAllData)
 
+		// Calendar token management
+		api.POST("/calendar/generate", settingsHandler.GenerateCalendarToken)
+		api.POST("/calendar/revoke", settingsHandler.RevokeCalendarToken)
+
 		// Settings routes
 		api.POST("/settings/smtp", settingsHandler.SaveSMTPSettings)
 		api.POST("/settings/smtp/test", settingsHandler.TestSMTPConnection)
@@ -398,6 +407,13 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 
 		// Dark mode setting
 		api.POST("/settings/dark-mode", settingsHandler.ToggleDarkMode)
+
+		// Import routes
+		api.POST("/import/subscriptions", importHandler.ImportSubscriptions)
+		api.POST("/import/encrypted", importHandler.ImportEncrypted)
+
+		// Encrypted export route
+		api.POST("/export/encrypted", handler.ExportEncrypted)
 
 		// Category management routes
 		api.GET("/categories", categoryHandler.ListCategories)

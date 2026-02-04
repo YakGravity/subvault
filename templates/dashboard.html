@@ -235,6 +235,30 @@
     </div>
 </div>
 
+{{if gt .Stats.MonthlyBudget 0}}
+<!-- Budget Progress -->
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8 transition-colors duration-200">
+    <div class="flex items-center justify-between mb-2">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">{{.T.Tr "dashboard_budget"}}</h3>
+        <span class="text-sm font-medium {{if gt .Stats.BudgetUtilization 100.0}}text-red-600 dark:text-red-400{{else if gt .Stats.BudgetUtilization 80.0}}text-yellow-600 dark:text-yellow-400{{else}}text-green-600 dark:text-green-400{{end}}">
+            {{printf "%.0f" .Stats.BudgetUtilization}}%
+        </span>
+    </div>
+    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-2">
+        <div class="h-2.5 rounded-full transition-all duration-300 {{if gt .Stats.BudgetUtilization 100.0}}bg-red-600{{else if gt .Stats.BudgetUtilization 80.0}}bg-yellow-500{{else}}bg-green-500{{end}}"
+             style="width: {{if gt .Stats.BudgetUtilization 100.0}}100{{else}}{{printf "%.0f" .Stats.BudgetUtilization}}{{end}}%"></div>
+    </div>
+    <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+        <span>{{.CurrencySymbol}}{{printf "%.2f" .Stats.TotalMonthlySpend}} / {{.CurrencySymbol}}{{printf "%.2f" .Stats.MonthlyBudget}}</span>
+        {{if gt .Stats.BudgetUtilization 100.0}}
+        <span class="text-red-600 dark:text-red-400 font-medium">{{.T.Tr "dashboard_budget_exceeded"}}</span>
+        {{else}}
+        <span>{{.T.Tr "dashboard_budget_remaining"}}: {{.CurrencySymbol}}{{printf "%.2f" (sub .Stats.MonthlyBudget .Stats.TotalMonthlySpend)}}</span>
+        {{end}}
+    </div>
+</div>
+{{end}}
+
 <!-- Spending by Category -->
 <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 mb-8 transition-colors duration-200">
     <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6">{{.T.Tr "dashboard_spending_by_category"}}</h2>

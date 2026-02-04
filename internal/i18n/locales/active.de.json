@@ -77,6 +77,57 @@
   "theme_ocean_desc": {
     "other": "Kühl und erfrischend"
   },
+  "settings_calendar_sub": {
+    "other": "Kalender-Abo"
+  },
+  "settings_calendar_desc": {
+    "other": "Erstelle eine URL, um deinen Verlängerungskalender in Apps wie Google Kalender, Apple Kalender oder Outlook zu abonnieren."
+  },
+  "settings_calendar_url": {
+    "other": "Kalender-URL"
+  },
+  "btn_generate_calendar": {
+    "other": "Kalender-URL generieren"
+  },
+  "btn_revoke_calendar": {
+    "other": "Kalender-URL widerrufen"
+  },
+  "calendar_token_generated": {
+    "other": "Kalender-URL erfolgreich generiert"
+  },
+  "calendar_token_revoked": {
+    "other": "Kalender-URL erfolgreich widerrufen"
+  },
+  "settings_import": {
+    "other": "Daten importieren"
+  },
+  "settings_import_desc": {
+    "other": "Importiere Abonnements aus Wallos oder einem SubTrackr JSON-Export."
+  },
+  "btn_import_json": {
+    "other": "Importieren"
+  },
+  "import_result_title": {
+    "other": "Import-Ergebnis"
+  },
+  "import_result_summary": {
+    "other": "Import abgeschlossen"
+  },
+  "import_error_parse": {
+    "other": "Import-Datei konnte nicht gelesen werden"
+  },
+  "import_error_empty": {
+    "other": "Keine Abonnements in der Datei gefunden"
+  },
+  "import_format_wallos": {
+    "other": "Wallos JSON"
+  },
+  "import_format_subtrackr": {
+    "other": "SubTrackr JSON"
+  },
+  "import_skip_duplicate": {
+    "other": "Übersprungen (Duplikat)"
+  },
   "settings_export": {
     "other": "Daten exportieren"
   },
@@ -88,6 +139,36 @@
   },
   "btn_export_json": {
     "other": "Als JSON exportieren"
+  },
+  "btn_export_encrypted": {
+    "other": "Verschlüsselter Export"
+  },
+  "export_encrypted_title": {
+    "other": "Verschlüsseltes Backup"
+  },
+  "export_encrypted_desc": {
+    "other": "Erstelle eine passwortgeschützte Backup-Datei (.stbk) mit AES-256-Verschlüsselung."
+  },
+  "export_password_placeholder": {
+    "other": "Passwort"
+  },
+  "export_password_confirm": {
+    "other": "Passwort bestätigen"
+  },
+  "export_password_mismatch": {
+    "other": "Passwörter stimmen nicht überein"
+  },
+  "btn_import_encrypted": {
+    "other": "Entschlüsseln & Importieren"
+  },
+  "import_encrypted_title": {
+    "other": "Verschlüsseltes Backup importieren"
+  },
+  "import_decrypt_error": {
+    "other": "Entschlüsselung fehlgeschlagen: falsches Passwort oder beschädigte Datei"
+  },
+  "import_decrypt_success": {
+    "other": "Datei erfolgreich entschlüsselt"
   },
   "settings_data_mgmt": {
     "other": "Datenverwaltung"
@@ -1187,5 +1268,29 @@
   },
   "settings_notifications_moved": {
     "other": "Benachrichtigungs-Einstellungen wurden zu den einzelnen Abos verschoben. Konfiguriere sie beim Erstellen oder Bearbeiten eines Abos."
+  },
+  "settings_monthly_budget": {
+    "other": "Monatsbudget"
+  },
+  "settings_monthly_budget_desc": {
+    "other": "Lege ein monatliches Ausgabenlimit fest. Auf 0 setzen zum Deaktivieren."
+  },
+  "dashboard_budget": {
+    "other": "Monatsbudget"
+  },
+  "dashboard_budget_remaining": {
+    "other": "Verbleibend"
+  },
+  "dashboard_budget_exceeded": {
+    "other": "Budget überschritten!"
+  },
+  "budget_exceeded_alert": {
+    "other": "Deine monatlichen Abo-Ausgaben haben dein Budget überschritten."
+  },
+  "shoutrrr_budget_exceeded": {
+    "other": "Budget-Alarm: Monatliche Ausgaben überschritten!"
+  },
+  "email_budget_exceeded_subject": {
+    "other": "SubTrackr: Monatsbudget überschritten"
   }
 }

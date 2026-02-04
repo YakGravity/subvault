@@ -541,3 +541,26 @@ func (s *SettingsService) GetLanguage() string {
 	}
 	return lang
 }
+
+// GenerateCalendarToken creates a new calendar feed token
+func (s *SettingsService) GenerateCalendarToken() (string, error) {
+	bytes := make([]byte, 32)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	token := fmt.Sprintf("%x", bytes)
+	if err := s.repo.Set("calendar_token", token); err != nil {
+		return "", err
+	}
+	return token, nil
+}
+
+// GetCalendarToken retrieves the calendar feed token
+func (s *SettingsService) GetCalendarToken() (string, error) {
+	return s.repo.Get("calendar_token")
+}
+
+// RevokeCalendarToken deletes the calendar feed token
+func (s *SettingsService) RevokeCalendarToken() error {
+	return s.repo.Set("calendar_token", "")
+}

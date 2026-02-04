@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"subtrackr/internal/crypto"
 	"subtrackr/internal/models"
 	"subtrackr/internal/service"
 	"subtrackr/internal/version"
@@ -327,15 +328,8 @@ func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 	c.HTML(http.StatusOK, "calendar.html", data)
 }
 
-// ExportICal generates and downloads an iCal file with all subscription renewal dates
-func (h *SubscriptionHandler) ExportICal(c *gin.Context) {
-	subscriptions, err := h.service.GetAll()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	// Generate iCal content
+// generateICal creates iCal content from subscriptions
+func (h *SubscriptionHandler) generateICal(subscriptions []models.Subscription) string {
 	icalContent := "BEGIN:VCALENDAR\r\n"
 	icalContent += "VERSION:2.0\r\n"
 	icalContent += "PRODID:-//SubTrackr//Subscription Renewals//EN\r\n"
@@ -345,13 +339,11 @@ func (h *SubscriptionHandler) ExportICal(c *gin.Context) {
 	now := time.Now()
 	for _, sub := range subscriptions {
 		if sub.RenewalDate != nil && sub.Status == "Active" {
-			// Format dates in iCal format (YYYYMMDDTHHMMSSZ)
 			dtStart := sub.RenewalDate.Format("20060102T150000Z")
 			dtEnd := sub.RenewalDate.Add(1 * time.Hour).Format("20060102T150000Z")
 			dtStamp := now.Format("20060102T150000Z")
 			uid := fmt.Sprintf("subtrackr-%d-%d@subtrackr", sub.ID, sub.RenewalDate.Unix())
 
-			// Escape text for iCal (simplified - should escape commas, semicolons, etc.)
 			summary := fmt.Sprintf("%s Renewal", sub.Name)
 			description := fmt.Sprintf("Subscription: %s\\nCost: %s%.2f\\nSchedule: %s", sub.Name, h.settingsService.GetCurrencySymbol(), sub.Cost, sub.Schedule)
 			if sub.URL != "" {
@@ -368,7 +360,6 @@ func (h *SubscriptionHandler) ExportICal(c *gin.Context) {
 			icalContent += "STATUS:CONFIRMED\r\n"
 			icalContent += "SEQUENCE:0\r\n"
 
-			// Add recurrence rule based on schedule
 			switch sub.Schedule {
 			case "Daily":
 				icalContent += "RRULE:FREQ=DAILY;INTERVAL=1\r\n"
@@ -387,10 +378,48 @@ func (h *SubscriptionHandler) ExportICal(c *gin.Context) {
 	}
 
 	icalContent += "END:VCALENDAR\r\n"
+	return icalContent
+}
 
-	// Set headers for file download
+// ExportICal generates and downloads an iCal file with all subscription renewal dates
+func (h *SubscriptionHandler) ExportICal(c *gin.Context) {
+	subscriptions, err := h.service.GetAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	icalContent := h.generateICal(subscriptions)
+
 	c.Header("Content-Type", "text/calendar; charset=utf-8")
 	c.Header("Content-Disposition", `attachment; filename="subtrackr-renewals.ics"`)
+	c.Data(http.StatusOK, "text/calendar; charset=utf-8", []byte(icalContent))
+}
+
+// ServeCalendarFeed serves iCal data for calendar subscription via token
+func (h *SubscriptionHandler) ServeCalendarFeed(c *gin.Context) {
+	token := c.Param("token")
+	if token == "" {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	storedToken, err := h.settingsService.GetCalendarToken()
+	if err != nil || storedToken == "" || storedToken != token {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	subscriptions, err := h.service.GetAll()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	icalContent := h.generateICal(subscriptions)
+
+	c.Header("Content-Type", "text/calendar; charset=utf-8")
+	c.Header("Cache-Control", "no-cache, no-store, must-revalidate")
 	c.Data(http.StatusOK, "text/calendar; charset=utf-8", []byte(icalContent))
 }
 
@@ -420,23 +449,28 @@ func (h *SubscriptionHandler) Settings(c *gin.Context) {
 	authEnabled := h.settingsService.IsAuthEnabled()
 	authUsername, _ := h.settingsService.GetAuthUsername()
 
+	calendarToken, _ := h.settingsService.GetCalendarToken()
+
 	data := baseTemplateData(c)
 	mergeTemplateData(data, gin.H{
-		"Title":                    "Settings",
-		"CurrentPage":              "settings",
-		"Currency":                 h.settingsService.GetCurrency(),
-		"CurrencySymbol":           h.settingsService.GetCurrencySymbol(),
-		"Language":                 h.settingsService.GetLanguage(),
-		"SupportedLanguages":       service.SupportedLanguages,
-		"ShoutrrrConfig":           shoutrrrConfig,
-		"ShoutrrrConfigured":       shoutrrrConfigured,
-		"HighCostThreshold":        h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
-		"DarkMode":                 h.settingsService.IsDarkModeEnabled(),
-		"Version":                  version.GetVersion(),
-		"SMTPConfig":               smtpConfig,
-		"SMTPConfigured":           smtpConfigured,
-		"AuthEnabled":              authEnabled,
-		"AuthUsername":             authUsername,
+		"Title":              "Settings",
+		"CurrentPage":        "settings",
+		"Currency":           h.settingsService.GetCurrency(),
+		"CurrencySymbol":     h.settingsService.GetCurrencySymbol(),
+		"Language":           h.settingsService.GetLanguage(),
+		"SupportedLanguages": service.SupportedLanguages,
+		"ShoutrrrConfig":     shoutrrrConfig,
+		"ShoutrrrConfigured": shoutrrrConfigured,
+		"HighCostThreshold":  h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
+		"MonthlyBudget":      h.settingsService.GetFloatSettingWithDefault("monthly_budget", 0),
+		"DarkMode":           h.settingsService.IsDarkModeEnabled(),
+		"Version":            version.GetVersion(),
+		"SMTPConfig":         smtpConfig,
+		"SMTPConfigured":     smtpConfigured,
+		"AuthEnabled":        authEnabled,
+		"AuthUsername":       authUsername,
+		"CalendarToken":      calendarToken,
+		"BaseURL":            "http://" + c.Request.Host,
 	})
 	c.HTML(http.StatusOK, "settings.html", data)
 }
@@ -583,6 +617,9 @@ func (h *SubscriptionHandler) CreateSubscription(c *gin.Context) {
 		}
 	}
 
+	// Check budget after creating subscription
+	h.checkBudgetExceeded()
+
 	if c.GetHeader("HX-Request") != "" {
 		c.Header("HX-Refresh", "true")
 		c.Status(http.StatusCreated)
@@ -721,12 +758,37 @@ func (h *SubscriptionHandler) UpdateSubscription(c *gin.Context) {
 		}
 	}
 
+	// Check budget after updating subscription
+	h.checkBudgetExceeded()
+
 	// Return success response that triggers a page refresh
 	c.Header("HX-Refresh", "true")
 	c.Status(http.StatusOK)
 }
 
 // DeleteSubscription handles deleting a subscription
+func (h *SubscriptionHandler) checkBudgetExceeded() {
+	budget := h.settingsService.GetFloatSettingWithDefault("monthly_budget", 0)
+	if budget <= 0 {
+		return
+	}
+
+	stats, err := h.service.GetStats()
+	if err != nil {
+		return
+	}
+
+	if stats.TotalMonthlySpend > budget {
+		currencySymbol := h.settingsService.GetCurrencySymbol()
+		if h.emailService != nil {
+			go h.emailService.SendBudgetExceededAlert(stats.TotalMonthlySpend, budget, currencySymbol)
+		}
+		if h.shoutrrrService != nil {
+			go h.shoutrrrService.SendBudgetExceededAlert(stats.TotalMonthlySpend, budget, currencySymbol)
+		}
+	}
+}
+
 func (h *SubscriptionHandler) DeleteSubscription(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
@@ -894,6 +956,50 @@ func (h *SubscriptionHandler) BackupData(c *gin.Context) {
 	c.Header("Content-Type", "application/json")
 	c.Header("Content-Disposition", "attachment; filename=subtrackr-backup.json")
 	c.JSON(http.StatusOK, backup)
+}
+
+// ExportEncrypted creates an AES-256-GCM encrypted backup file (.stbk)
+func (h *SubscriptionHandler) ExportEncrypted(c *gin.Context) {
+	password := c.PostForm("password")
+	if password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Password required"})
+		return
+	}
+
+	subscriptions, err := h.service.GetAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	categories, err := h.service.GetAllCategories()
+	if err != nil {
+		categories = nil
+	}
+
+	backupData := gin.H{
+		"subscriptions": subscriptions,
+		"categories":    categories,
+		"exported_at":   time.Now(),
+		"total_count":   len(subscriptions),
+		"version":       "2.0",
+	}
+
+	jsonData, err := json.Marshal(backupData)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to serialize data"})
+		return
+	}
+
+	encrypted, err := crypto.Encrypt(jsonData, password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Encryption failed"})
+		return
+	}
+
+	c.Header("Content-Type", "application/octet-stream")
+	c.Header("Content-Disposition", `attachment; filename="subtrackr-backup.stbk"`)
+	c.Data(http.StatusOK, "application/octet-stream", encrypted)
 }
 
 // ClearAllData removes all subscription data

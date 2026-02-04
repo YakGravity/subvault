@@ -118,6 +118,13 @@ func (s *SubscriptionService) GetStats() (*models.Stats, error) {
 		}
 	}
 
+	// Budget calculation
+	budget := s.settingsService.GetFloatSettingWithDefault("monthly_budget", 0)
+	stats.MonthlyBudget = budget
+	if budget > 0 {
+		stats.BudgetUtilization = stats.TotalMonthlySpend / budget * 100
+	}
+
 	return stats, nil
 }
 

@@ -177,6 +177,44 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 	setting := c.Param("setting")
 
 	switch setting {
+	case "renewal":
+		enabled := !h.service.GetBoolSettingWithDefault("renewal_reminders", false)
+		h.service.SetBoolSetting("renewal_reminders", enabled)
+		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
+		return
+
+	case "cancellation":
+		enabled := !h.service.GetBoolSettingWithDefault("cancellation_reminders", false)
+		h.service.SetBoolSetting("cancellation_reminders", enabled)
+		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
+		return
+
+	case "highcost":
+		enabled := !h.service.GetBoolSettingWithDefault("high_cost_alerts", true)
+		h.service.SetBoolSetting("high_cost_alerts", enabled)
+		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
+		return
+
+	case "reminder_days":
+		daysStr := c.PostForm("reminder_days")
+		if days, err := strconv.Atoi(daysStr); err == nil && days >= 1 && days <= 90 {
+			h.service.SetIntSetting("reminder_days", days)
+			c.JSON(http.StatusOK, gin.H{"days": days})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid reminder days"})
+		}
+		return
+
+	case "cancellation_reminder_days":
+		daysStr := c.PostForm("cancellation_reminder_days")
+		if days, err := strconv.Atoi(daysStr); err == nil && days >= 1 && days <= 90 {
+			h.service.SetIntSetting("cancellation_reminder_days", days)
+			c.JSON(http.StatusOK, gin.H{"days": days})
+		} else {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid cancellation reminder days"})
+		}
+		return
+
 	case "threshold":
 		thresholdStr := c.PostForm("high_cost_threshold")
 		if threshold, err := strconv.ParseFloat(thresholdStr, 64); err == nil && threshold >= 0 && threshold <= 10000 {
@@ -189,6 +227,23 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid threshold value (must be between 0 and 10000)"})
 		}
+
+	case "budget":
+		value := c.PostForm("value")
+		if value == "" {
+			value = "0"
+		}
+		floatVal, err := strconv.ParseFloat(value, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid budget value"})
+			return
+		}
+		if err := h.service.SetFloatSetting("monthly_budget", floatVal); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"success": true})
+		return
 
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Unknown setting"})
@@ -540,6 +595,28 @@ func (h *SettingsHandler) GetShoutrrrConfig(c *gin.Context) {
 		"configured": true,
 		"url_count":  len(config.URLs),
 	})
+}
+
+// GenerateCalendarToken creates a new calendar feed token
+func (h *SettingsHandler) GenerateCalendarToken(c *gin.Context) {
+	token, err := h.service.GenerateCalendarToken()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"token":   token,
+	})
+}
+
+// RevokeCalendarToken deletes the calendar feed token
+func (h *SettingsHandler) RevokeCalendarToken(c *gin.Context) {
+	if err := h.service.RevokeCalendarToken(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"success": true})
 }
 
 // UpdateLanguage updates the language preference
