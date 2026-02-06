@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+<head>
+    <script src="/static/js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#c2410c">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <title>{{.Title}} - SubTrackr</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/css/design-system.css">
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <script src="/static/js/themes.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <span>SubTrackr</span>
+        </div>
+        <a href="/" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"/></svg>
+            {{.T.Tr "nav_dashboard"}}
+        </a>
+        <a href="/subscriptions" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            {{.T.Tr "nav_subscriptions"}}
+        </a>
+        <a href="/calendar" class="nav-item">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            {{.T.Tr "nav_calendar"}}
+        </a>
+        <div class="nav-section">{{.T.Tr "nav_system"}}</div>
+        <a href="/settings" class="nav-item active">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            {{.T.Tr "nav_settings"}}
+        </a>
+        <div class="theme-switch">
+            <button class="theme-switch-btn" data-mode="light" onclick="setThemeMode('light')" title="Light">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            </button>
+            <button class="theme-switch-btn" data-mode="dark" onclick="setThemeMode('dark')" title="Dark">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            </button>
+            <button class="theme-switch-btn" data-mode="system" onclick="setThemeMode('system')" title="System">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </button>
+        </div>
+        <div class="sidebar-footer">
+            <a class="nav-item" style="font-size: 12px; color: var(--text-muted);">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                v0.11.0
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="fab" id="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>{{.T.Tr "nav_settings"}}</h1>
+                <div class="page-header-sub">{{.T.Tr "settings_notifications_subtitle"}}</div>
+            </div>
+        </div>
+
+        <div class="tab-bar">
+            <a href="/settings" class="tab-item">{{.T.Tr "settings_tab_general"}}</a>
+            <a href="/settings/notifications" class="tab-item active">{{.T.Tr "settings_tab_notifications"}}</a>
+            <a href="/settings/data" class="tab-item">{{.T.Tr "settings_tab_data"}}</a>
+            <a href="/settings/appearance" class="tab-item{{if eq .CurrentTab "appearance"}} active{{end}}">{{.T.Tr "settings_tab_appearance"}}</a>
+            <a href="/settings/security" class="tab-item">{{.T.Tr "settings_tab_security"}}</a>
+            <a href="/api-docs" class="tab-item">{{.T.Tr "settings_tab_api"}}</a>
+        </div>
+
+<div style="max-width:56rem;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+
+    <!-- Email Notifications (SMTP) -->
+    <div>
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_email_notifications"}}</h3>
+
+        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;margin-bottom:16px;">
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_smtp_config"}}</h4>
+            <form id="smtp-form" hx-post="/api/settings/smtp" hx-trigger="submit" hx-target="#smtp-message" hx-swap="innerHTML">
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px;">
+                    <div>
+                        <label for="smtp_host" class="form-label">{{.T.Tr "smtp_host"}}</label>
+                        <input type="text" id="smtp_host" name="smtp_host" placeholder="smtp.gmail.com" value="{{if .SMTPConfig}}{{.SMTPConfig.Host}}{{end}}"
+                               class="form-input">
+                    </div>
+                    <div>
+                        <label for="smtp_port" class="form-label">{{.T.Tr "smtp_port"}}</label>
+                        <input type="number" id="smtp_port" name="smtp_port" placeholder="587" value="{{if .SMTPConfig}}{{.SMTPConfig.Port}}{{end}}"
+                               class="form-input">
+                    </div>
+                    <div>
+                        <label for="smtp_username" class="form-label">{{.T.Tr "smtp_username"}}</label>
+                        <input type="text" id="smtp_username" name="smtp_username" placeholder="username or email" value="{{if .SMTPConfig}}{{.SMTPConfig.Username}}{{end}}"
+                               class="form-input">
+                    </div>
+                    <div>
+                        <label for="smtp_password" class="form-label">{{.T.Tr "smtp_password"}}</label>
+                        <input type="password" id="smtp_password" name="smtp_password" placeholder="********"
+                               class="form-input">
+                    </div>
+                    <div>
+                        <label for="smtp_from" class="form-label">{{.T.Tr "smtp_from_email"}}</label>
+                        <input type="email" id="smtp_from" name="smtp_from" placeholder="noreply@example.com" value="{{if .SMTPConfig}}{{.SMTPConfig.From}}{{end}}"
+                               class="form-input">
+                    </div>
+                    <div>
+                        <label for="smtp_from_name" class="form-label">{{.T.Tr "smtp_from_name"}}</label>
+                        <input type="text" id="smtp_from_name" name="smtp_from_name" placeholder="SubTrackr" value="{{if .SMTPConfig}}{{.SMTPConfig.FromName}}{{end}}"
+                               class="form-input">
+                    </div>
+                    <div style="grid-column:span 2;">
+                        <label for="smtp_to" class="form-label">{{.T.Tr "smtp_to_email"}}</label>
+                        <input type="email" id="smtp_to" name="smtp_to" placeholder="your-email@example.com" value="{{if .SMTPConfig}}{{.SMTPConfig.To}}{{end}}"
+                               class="form-input">
+                        <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">{{.T.Tr "smtp_to_email_hint"}}</p>
+                    </div>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <div id="smtp-message"></div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:flex-end;">
+                    <div style="display:flex;gap:8px;">
+                        <button type="button"
+                                id="test-smtp-btn"
+                                hx-post="/api/settings/smtp/test"
+                                hx-include="#smtp-form"
+                                hx-target="#smtp-message"
+                                hx-indicator="#smtp-spinner"
+                                class="btn btn-ghost" style="display:inline-flex;align-items:center;">
+                            <svg id="smtp-spinner" class="htmx-indicator" style="width:16px;height:16px;margin-right:8px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            {{.T.Tr "btn_test_connection"}}
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            {{.T.Tr "btn_save_smtp"}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Shoutrrr Notifications -->
+    <div style="border-top:1px solid var(--border);padding-top:32px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr"}}</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_desc"}}</p>
+
+        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;margin-bottom:16px;">
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_config"}}</h4>
+            <form id="shoutrrr-form" hx-post="/api/settings/shoutrrr" hx-trigger="submit" hx-target="#shoutrrr-message" hx-swap="innerHTML">
+                <div style="margin-bottom:16px;">
+                    <label for="shoutrrr_urls" class="form-label">{{.T.Tr "shoutrrr_urls_label"}}</label>
+                    <textarea id="shoutrrr_urls" name="shoutrrr_urls" rows="4" placeholder="pushover://shoutrrr:token@userkey/&#10;telegram://token@telegram?channels=@channel&#10;discord://token@id"
+                              class="form-input" style="font-family:var(--mono);">{{if .ShoutrrrConfig}}{{range $i, $url := .ShoutrrrConfig.URLs}}{{if $i}}&#10;{{end}}{{$url}}{{end}}{{end}}</textarea>
+                    <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">{{.T.Tr "shoutrrr_urls_hint"}} <a href="https://containrrr.dev/shoutrrr/latest/services/overview/" target="_blank" style="color:var(--accent);text-decoration:underline;">containrrr.dev/shoutrrr</a></p>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <div id="shoutrrr-message"></div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:flex-end;">
+                    <div style="display:flex;gap:8px;">
+                        <button type="button"
+                                id="test-shoutrrr-btn"
+                                hx-post="/api/settings/shoutrrr/test"
+                                hx-include="#shoutrrr-form"
+                                hx-target="#shoutrrr-message"
+                                hx-indicator="#shoutrrr-spinner"
+                                class="btn btn-ghost" style="display:inline-flex;align-items:center;">
+                            <svg id="shoutrrr-spinner" class="htmx-indicator" style="width:16px;height:16px;margin-right:8px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            {{.T.Tr "btn_test_connection"}}
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            {{.T.Tr "btn_save_shoutrrr"}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Preferences -->
+    <div style="border-top:1px solid var(--border);padding-top:32px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_high_cost_threshold"}}</h3>
+
+        <div style="background:var(--info-light);border:1px solid var(--info);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;">
+            <p style="font-size:13px;color:var(--info);">{{.T.Tr "settings_notifications_moved"}}</p>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div>
+                    <h4 style="font-size:13px;font-weight:600;color:var(--text);">{{.T.Tr "settings_high_cost_threshold"}}</h4>
+                    <p style="font-size:13px;color:var(--text-secondary);">{{.T.TrData "settings_high_cost_threshold_desc" (dict "Symbol" .CurrencySymbol)}}</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:13px;color:var(--text-secondary);">{{.CurrencySymbol}}</span>
+                    <input type="number"
+                           name="high_cost_threshold"
+                           value="{{printf "%.2f" .HighCostThreshold}}"
+                           min="0"
+                           max="10000"
+                           step="0.01"
+                           hx-post="/api/settings/notifications/threshold"
+                           hx-trigger="change"
+                           hx-swap="none"
+                           class="form-input" style="width:6rem;padding:4px 8px;">
+                </div>
+            </div>
+
+            <!-- Monthly Budget -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+                <div style="flex:1;">
+                    <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "settings_monthly_budget"}}</span>
+                    <p style="font-size:12px;color:var(--text-muted);">{{.T.Tr "settings_monthly_budget_desc"}}</p>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <input type="number"
+                           id="monthly-budget"
+                           step="0.01"
+                           min="0"
+                           value="{{printf "%.2f" .MonthlyBudget}}"
+                           placeholder="0.00"
+                           class="form-input" style="width:7rem;padding:6px 12px;">
+                    <button hx-post="/api/settings/notifications/budget"
+                            hx-include="#monthly-budget"
+                            hx-vals='js:{"value": document.getElementById("monthly-budget").value}'
+                            hx-swap="none"
+                            class="btn btn-primary">
+                        {{.T.Tr "btn_save"}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    </div><!-- /.main -->
+</body>
+</html>

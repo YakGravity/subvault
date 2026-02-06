@@ -1057,6 +1057,24 @@
   "sub_list_category": {
     "other": "Category"
   },
+  "sub_list_renewal": {
+    "other": "Renewal"
+  },
+  "sort_name": {
+    "other": "Name"
+  },
+  "sort_cost": {
+    "other": "Cost"
+  },
+  "sort_date": {
+    "other": "Date"
+  },
+  "sort_status": {
+    "other": "Status"
+  },
+  "sort_category": {
+    "other": "Category"
+  },
   "sub_list_uncategorized": {
     "other": "Uncategorized"
   },
@@ -1292,5 +1310,101 @@
   },
   "email_budget_exceeded_subject": {
     "other": "SubTrackr: Monthly Budget Exceeded"
+  },
+  "dashboard_subtitle": {
+    "other": "Overview of your subscriptions"
+  },
+  "dashboard_upcoming_renewals": {
+    "other": "Upcoming Renewals"
+  },
+  "dashboard_view_all": {
+    "other": "View all"
+  },
+  "dashboard_no_upcoming": {
+    "other": "No upcoming renewals"
+  },
+  "dashboard_cancelled": {
+    "other": "cancelled"
+  },
+  "nav_main_menu": {
+    "other": "Main Menu"
+  },
+  "nav_system": {
+    "other": "System"
+  },
+  "nav_settings": {
+    "other": "Settings"
+  },
+  "settings_tab_api": {
+    "other": "API"
+  },
+  "analytics_subtitle": {
+    "other": "Insights into your spending"
+  },
+  "calendar_subtitle": {
+    "other": "Upcoming renewal dates"
+  },
+  "subscriptions_subtitle": {
+    "other": "Manage your subscriptions"
+  },
+  "sub_card_renewal": {
+    "other": "Renewal:"
+  },
+  "sub_card_ends": {
+    "other": "Ends:"
+  },
+  "filter_all": {
+    "other": "All"
+  },
+  "settings_tab_general": {
+    "other": "General"
+  },
+  "settings_tab_notifications": {
+    "other": "Notifications"
+  },
+  "settings_tab_data": {
+    "other": "Data"
+  },
+  "settings_tab_security": {
+    "other": "Security"
+  },
+  "settings_general_subtitle": {
+    "other": "Appearance, language, and display preferences"
+  },
+  "settings_notifications_subtitle": {
+    "other": "Email, push notifications, and alerts"
+  },
+  "settings_data_subtitle": {
+    "other": "Import, export, backup, and categories"
+  },
+  "settings_security_subtitle": {
+    "other": "Authentication and API access"
+  },
+  "api_docs_subtitle": {
+    "other": "REST API reference and examples"
+  },
+  "settings_tab_appearance": {
+    "other": "Appearance"
+  },
+  "settings_appearance_title": {
+    "other": "Appearance"
+  },
+  "settings_appearance_desc": {
+    "other": "Choose your preferred color scheme"
+  },
+  "settings_appearance_subtitle": {
+    "other": "Customize the look of SubTrackr"
+  },
+  "theme_light": {
+    "other": "Light"
+  },
+  "theme_light_desc": {
+    "other": "Bright and clear"
+  },
+  "theme_system": {
+    "other": "System"
+  },
+  "theme_system_desc": {
+    "other": "Follow your device settings"
   }
 }

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+<head>
+    <script src="/static/js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#c2410c">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <title>{{.Title}} - SubTrackr</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/css/design-system.css">
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <script src="/static/js/themes.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <span>SubTrackr</span>
+        </div>
+        <a href="/" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"/></svg>{{.T.Tr "nav_dashboard"}}</a>
+        <a href="/subscriptions" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>{{.T.Tr "nav_subscriptions"}}</a>
+        <a href="/calendar" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{{.T.Tr "nav_calendar"}}</a>
+        <div class="nav-section">{{.T.Tr "nav_system"}}</div>
+        <a href="/settings" class="nav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>{{.T.Tr "nav_settings"}}</a>
+        <div class="theme-switch">
+            <button class="theme-switch-btn" data-mode="light" onclick="setThemeMode('light')" title="Light">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            </button>
+            <button class="theme-switch-btn" data-mode="dark" onclick="setThemeMode('dark')" title="Dark">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            </button>
+            <button class="theme-switch-btn" data-mode="system" onclick="setThemeMode('system')" title="System">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </button>
+        </div>
+        <div class="sidebar-footer">
+            <a class="nav-item" style="font-size: 12px; color: var(--text-muted);">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                v0.11.0
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="fab" id="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>{{.T.Tr "nav_settings"}}</h1>
+                <div class="page-header-sub">{{.T.Tr "settings_data_subtitle"}}</div>
+            </div>
+        </div>
+
+        <div class="tab-bar">
+            <a href="/settings" class="tab-item">{{.T.Tr "settings_tab_general"}}</a>
+            <a href="/settings/notifications" class="tab-item">{{.T.Tr "settings_tab_notifications"}}</a>
+            <a href="/settings/data" class="tab-item active">{{.T.Tr "settings_tab_data"}}</a>
+            <a href="/settings/appearance" class="tab-item{{if eq .CurrentTab "appearance"}} active{{end}}">{{.T.Tr "settings_tab_appearance"}}</a>
+            <a href="/settings/security" class="tab-item">{{.T.Tr "settings_tab_security"}}</a>
+            <a href="/api-docs" class="tab-item">{{.T.Tr "settings_tab_api"}}</a>
+        </div>
+
+<div style="max-width:56rem;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+
+    <!-- Export Data -->
+    <div>
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_export"}}</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_export_desc"}}</p>
+        <div style="display:flex;gap:12px;">
+            <a href="/api/export/csv" class="btn btn-primary" style="display:inline-block;">
+                {{.T.Tr "btn_export_csv"}}
+            </a>
+            <a href="/api/export/json" class="btn btn-ghost" style="display:inline-block;">
+                {{.T.Tr "btn_export_json"}}
+            </a>
+        </div>
+        <div style="margin-top:16px;padding:16px;background:var(--bg-hover);border-radius:var(--radius);">
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "export_encrypted_title"}}</h4>
+            <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">{{.T.Tr "export_encrypted_desc"}}</p>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <input type="password" id="export-password" placeholder="{{.T.Tr "export_password_placeholder"}}"
+                       class="form-input" style="flex:1;">
+                <input type="password" id="export-password-confirm" placeholder="{{.T.Tr "export_password_confirm"}}"
+                       class="form-input" style="flex:1;">
+                <button onclick="exportEncrypted()" class="btn btn-primary" style="white-space:nowrap;">
+                    {{.T.Tr "btn_export_encrypted"}}
+                </button>
+            </div>
+            <div id="export-encrypted-message" style="margin-top:8px;font-size:13px;"></div>
+        </div>
+    </div>
+
+    <!-- Import Data -->
+    <div style="border-top:1px solid var(--border);padding-top:32px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_import"}}</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_import_desc"}}</p>
+        <form id="import-form" enctype="multipart/form-data">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                <select id="import-format" name="format" class="form-input" style="width:auto;">
+                    <option value="">Auto-detect</option>
+                    <option value="wallos">{{.T.Tr "import_format_wallos"}}</option>
+                    <option value="subtrackr">{{.T.Tr "import_format_subtrackr"}}</option>
+                </select>
+                <input type="file" id="import-file" name="file" accept=".json"
+                       style="font-size:13px;color:var(--text-secondary);cursor:pointer;">
+            </div>
+            <button type="button" onclick="importSubscriptions()" class="btn btn-primary">
+                {{.T.Tr "btn_import_json"}}
+            </button>
+        </form>
+        <div id="import-result" style="margin-top:16px;"></div>
+        <div style="margin-top:16px;padding:16px;background:var(--bg-hover);border-radius:var(--radius);">
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "import_encrypted_title"}}</h4>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                <input type="file" id="import-encrypted-file" accept=".stbk"
+                       style="font-size:13px;color:var(--text-secondary);cursor:pointer;">
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <input type="password" id="import-encrypted-password" placeholder="{{.T.Tr "export_password_placeholder"}}"
+                       class="form-input" style="flex:1;">
+                <button onclick="importEncrypted()" class="btn btn-primary" style="white-space:nowrap;">
+                    {{.T.Tr "btn_import_encrypted"}}
+                </button>
+            </div>
+            <div id="import-encrypted-result" style="margin-top:8px;"></div>
+        </div>
+    </div>
+
+    <!-- Data Management -->
+    <div style="border-top:1px solid var(--border);padding-top:32px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_data_mgmt"}}</h3>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--warning-light);border:1px solid var(--warning);border-radius:var(--radius);">
+                <div>
+                    <h4 style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "settings_backup"}}</h4>
+                    <p style="font-size:13px;color:var(--text-secondary);">{{.T.Tr "settings_backup_desc"}}</p>
+                </div>
+                <a href="/api/backup" class="btn" style="background:var(--warning);color:white;white-space:nowrap;">
+                    {{.T.Tr "btn_create_backup"}}
+                </a>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--danger-light);border:1px solid var(--danger);border-radius:var(--radius);">
+                <div>
+                    <h4 style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "settings_clear_data"}}</h4>
+                    <p style="font-size:13px;color:var(--text-secondary);">{{.T.Tr "settings_clear_data_desc"}}</p>
+                </div>
+                <button
+                    hx-delete="/api/clear-all"
+                    hx-confirm="{{.T.Tr "confirm_clear_data"}}"
+                    hx-target="body"
+                    hx-swap="none"
+                    class="btn" style="background:var(--danger);color:white;white-space:nowrap;">
+                    {{.T.Tr "btn_clear_data"}}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Subscription -->
+    <div style="border-top:1px solid var(--border);padding-top:32px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_calendar_sub"}}</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_calendar_desc"}}</p>
+        <div id="calendar-token-section">
+            {{if .CalendarToken}}
+            <div style="margin-bottom:12px;">
+                <label class="form-label">{{.T.Tr "settings_calendar_url"}}</label>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <input type="text" readonly value="{{.BaseURL}}/cal/{{.CalendarToken}}/subscriptions.ics"
+                           class="form-input" style="flex:1;font-family:monospace;"
+                           id="calendar-url-input">
+                    <button onclick="navigator.clipboard.writeText(document.getElementById('calendar-url-input').value)"
+                            class="btn btn-ghost">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <button onclick="revokeCalendarToken()"
+                    class="btn" style="background:var(--danger);color:white;">
+                {{.T.Tr "btn_revoke_calendar"}}
+            </button>
+            {{else}}
+            <button onclick="generateCalendarToken()"
+                    class="btn btn-primary">
+                {{.T.Tr "btn_generate_calendar"}}
+            </button>
+            {{end}}
+        </div>
+        <div id="calendar-message" style="margin-top:8px;"></div>
+    </div>
+
+    <!-- Category Management -->
+    <div style="border-top:1px solid var(--border);padding-top:32px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_categories"}}</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_categories_desc"}}</p>
+        <div id="categories-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
+        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;">
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">{{.T.Tr "settings_add_category"}}</h4>
+            <form id="add-category-form">
+                <div style="display:flex;align-items:flex-end;gap:12px;">
+                    <div style="flex:1;">
+                        <label for="category_name" class="form-label">{{.T.Tr "category_name_label"}}</label>
+                        <input type="text" id="category_name" name="name" required placeholder="e.g., Streaming" class="form-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{.T.Tr "btn_add_category"}}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+    <script>
+// --- Category Management ---
+const categoryIsDefaultText = '{{.T.Tr "category_is_default"}}';
+const categoryReassignText = '{{.T.Tr "category_reassign_info"}}';
+
+function renderCategories(categories) {
+    const list = document.getElementById('categories-list');
+    if (!categories.length) {
+        list.innerHTML = '<div style="text-align:center;padding:16px 0;color:var(--text-muted);">{{.T.Tr "no_categories"}}</div>';
+        return;
+    }
+    list.innerHTML = categories.map(cat => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);">
+            <div style="flex:1;display:flex;align-items:center;">
+                <span class="category-name" style="font-size:13px;font-weight:500;color:var(--text);" id="category-name-${cat.id}">${cat.name}</span>
+                ${cat.is_default ? `<span style="font-size:12px;background:var(--accent-light);color:var(--accent);padding:2px 8px;border-radius:9999px;margin-left:8px;">${categoryIsDefaultText}</span>` : ''}
+                <form id="edit-category-form-${cat.id}" class="hidden" style="display:none;">
+                    <input type="text" name="name" value="${cat.name}" class="form-input" style="width:auto;display:inline-block;">
+                    <button type="submit" style="color:var(--accent);font-size:13px;font-weight:500;margin-left:8px;background:none;border:none;cursor:pointer;">{{.T.Tr "btn_save"}}</button>
+                    <button type="button" onclick="cancelEdit(${cat.id})" style="color:var(--text-muted);font-size:13px;margin-left:4px;background:none;border:none;cursor:pointer;">{{.T.Tr "btn_cancel"}}</button>
+                </form>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <button onclick="startEdit(${cat.id})" style="color:var(--accent);font-size:13px;font-weight:500;background:none;border:none;cursor:pointer;">{{.T.Tr "btn_edit"}}</button>
+                ${!cat.is_default ? `<button onclick="deleteCategory(${cat.id})" style="color:var(--danger);font-size:13px;font-weight:500;background:none;border:none;cursor:pointer;">{{.T.Tr "btn_delete"}}</button>` : ''}
+            </div>
+        </div>
+    `).join('');
+    categories.forEach(cat => {
+        const form = document.getElementById(`edit-category-form-${cat.id}`);
+        if (form) {
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                const name = form.elements['name'].value;
+                fetch(`/api/categories/${cat.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                }).then(r => r.json()).then(loadCategories);
+            };
+        }
+    });
+}
+function loadCategories() {
+    fetch('/api/categories').then(r => r.json()).then(renderCategories);
+}
+function addCategory(e) {
+    e.preventDefault();
+    const name = document.getElementById('category_name').value;
+    fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+    }).then(r => r.json()).then(() => {
+        document.getElementById('add-category-form').reset();
+        loadCategories();
+    });
+}
+function deleteCategory(id) {
+    if (!confirm('{{.T.Tr "confirm_delete_category"}}' + '\n\n' + categoryReassignText)) return;
+    fetch(`/api/categories/${id}`, { method: 'DELETE' })
+        .then(async response => {
+            if (!response.ok) {
+                const data = await response.json();
+                alert(data.error || "Failed to delete category.");
+            } else {
+                loadCategories();
+            }
+        });
+}
+function startEdit(id) {
+    document.getElementById(`category-name-${id}`).style.display = 'none';
+    const form = document.getElementById(`edit-category-form-${id}`);
+    form.classList.remove('hidden');
+    form.style.display = 'inline';
+}
+function cancelEdit(id) {
+    const form = document.getElementById(`edit-category-form-${id}`);
+    form.classList.add('hidden');
+    form.style.display = 'none';
+    document.getElementById(`category-name-${id}`).style.display = '';
+}
+document.getElementById('add-category-form').onsubmit = addCategory;
+window.loadCategories = loadCategories;
+document.addEventListener('DOMContentLoaded', loadCategories);
+
+// --- Calendar Token ---
+function generateCalendarToken() {
+    fetch('/api/calendar/generate', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => { if (data.success) location.reload(); });
+}
+function revokeCalendarToken() {
+    fetch('/api/calendar/revoke', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => { if (data.success) location.reload(); });
+}
+
+// --- Import/Export ---
+function importSubscriptions() {
+    const fileInput = document.getElementById('import-file');
+    const formatSelect = document.getElementById('import-format');
+    if (!fileInput.files.length) return;
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('format', formatSelect.value);
+    fetch('/api/import/subscriptions', { method: 'POST', body: formData })
+        .then(r => r.text())
+        .then(html => { document.getElementById('import-result').innerHTML = html; });
+}
+
+function exportEncrypted() {
+    const password = document.getElementById('export-password').value;
+    const confirm = document.getElementById('export-password-confirm').value;
+    const msgDiv = document.getElementById('export-encrypted-message');
+    if (!password) return;
+    if (password !== confirm) {
+        msgDiv.innerHTML = '<span style="color:var(--danger);">{{.T.Tr "export_password_mismatch"}}</span>';
+        return;
+    }
+    const formData = new FormData();
+    formData.append('password', password);
+    fetch('/api/export/encrypted', { method: 'POST', body: formData })
+        .then(r => { if (!r.ok) throw new Error('Export failed'); return r.blob(); })
+        .then(blob => {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'subtrackr-backup.stbk'; a.click();
+            URL.revokeObjectURL(url);
+            document.getElementById('export-password').value = '';
+            document.getElementById('export-password-confirm').value = '';
+            msgDiv.innerHTML = '';
+        })
+        .catch(() => { msgDiv.innerHTML = '<span style="color:var(--danger);">Export failed</span>'; });
+}
+
+function importEncrypted() {
+    const fileInput = document.getElementById('import-encrypted-file');
+    const password = document.getElementById('import-encrypted-password').value;
+    if (!fileInput.files.length || !password) return;
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
+    formData.append('password', password);
+    fetch('/api/import/encrypted', { method: 'POST', body: formData })
+        .then(r => r.text())
+        .then(html => { document.getElementById('import-encrypted-result').innerHTML = html; });
+}
+    </script>
+    </div><!-- /.main -->
+</body>
+</html>

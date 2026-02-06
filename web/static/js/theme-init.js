@@ -1,10 +1,10 @@
-// Theme initialization - runs immediately to prevent flash
 (function() {
-    const theme = localStorage.getItem('subtrackr-theme') || 'dark-classic';
-    document.documentElement.setAttribute('data-theme', theme);
-
-    // Handle Tailwind dark mode for dark-classic theme
-    if (theme === 'dark-classic') {
-        document.documentElement.classList.add('dark');
+    var saved = localStorage.getItem('subtrackr-theme') || 'system';
+    var theme;
+    if (saved === 'system') {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default';
+    } else {
+        theme = saved === 'light' ? 'default' : 'dark';
     }
+    document.documentElement.setAttribute('data-theme', theme);
 })();

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="{{.Lang}}">
+<head>
+    <script src="/static/js/theme-init.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#c2410c">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <title>{{.Title}} - SubTrackr</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="/static/css/design-system.css">
+    <link rel="stylesheet" href="/static/css/themes.css">
+    <script src="/static/js/themes.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <span>SubTrackr</span>
+        </div>
+        <a href="/" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z"/></svg>{{.T.Tr "nav_dashboard"}}</a>
+        <a href="/subscriptions" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>{{.T.Tr "nav_subscriptions"}}</a>
+        <a href="/calendar" class="nav-item"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>{{.T.Tr "nav_calendar"}}</a>
+        <div class="nav-section">{{.T.Tr "nav_system"}}</div>
+        <a href="/settings" class="nav-item active"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>{{.T.Tr "nav_settings"}}</a>
+        <div class="theme-switch">
+            <button class="theme-switch-btn" data-mode="light" onclick="setThemeMode('light')" title="Light">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            </button>
+            <button class="theme-switch-btn" data-mode="dark" onclick="setThemeMode('dark')" title="Dark">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            </button>
+            <button class="theme-switch-btn" data-mode="system" onclick="setThemeMode('system')" title="System">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </button>
+        </div>
+        <div class="sidebar-footer">
+            <a class="nav-item" style="font-size: 12px; color: var(--text-muted);">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                v0.11.0
+            </a>
+        </div>
+    </nav>
+
+    <!-- Mobile Sidebar Toggle -->
+    <button class="fab" id="mobile-menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('mobile-open')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1>{{.T.Tr "nav_settings"}}</h1>
+                <div class="page-header-sub">{{.T.Tr "settings_security_subtitle"}}</div>
+            </div>
+        </div>
+
+        <div class="tab-bar">
+            <a href="/settings" class="tab-item">{{.T.Tr "settings_tab_general"}}</a>
+            <a href="/settings/notifications" class="tab-item">{{.T.Tr "settings_tab_notifications"}}</a>
+            <a href="/settings/data" class="tab-item">{{.T.Tr "settings_tab_data"}}</a>
+            <a href="/settings/appearance" class="tab-item{{if eq .CurrentTab "appearance"}} active{{end}}">{{.T.Tr "settings_tab_appearance"}}</a>
+            <a href="/settings/security" class="tab-item active">{{.T.Tr "settings_tab_security"}}</a>
+            <a href="/api-docs" class="tab-item">{{.T.Tr "settings_tab_api"}}</a>
+        </div>
+
+<div style="max-width:896px;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+
+    <!-- Authentication -->
+    <div>
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_security"}}</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_security_desc"}}</p>
+
+        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div>
+                    <h4 style="font-size:13px;font-weight:600;color:var(--text);">{{.T.Tr "settings_require_login"}}</h4>
+                    <p style="font-size:13px;color:var(--text-secondary);">{{.T.Tr "settings_require_login_desc"}}</p>
+                </div>
+                <label style="position:relative;display:inline-flex;align-items:center;cursor:pointer;">
+                    <input type="checkbox"
+                           id="auth-toggle"
+                           value=""
+                           style="position:absolute;opacity:0;width:0;height:0;"
+                           {{if .AuthEnabled}}checked{{end}}
+                           onchange="toggleAuthForm(); var t=this.nextElementSibling; t.style.background=this.checked?'var(--accent)':'var(--border)'; t.children[0].style.left=this.checked?'22px':'2px';">
+                    <span style="width:44px;height:24px;background:{{if .AuthEnabled}}var(--accent){{else}}var(--border){{end}};border-radius:12px;position:relative;transition:background 0.2s;display:block;">
+                        <span style="position:absolute;top:2px;left:{{if .AuthEnabled}}22px{{else}}2px{{end}};width:20px;height:20px;background:white;border-radius:50%;transition:left 0.2s;"></span>
+                    </span>
+                </label>
+            </div>
+
+            <!-- Auth Setup Form -->
+            <div id="auth-form-container" class="{{if not .AuthEnabled}}hidden{{end}}" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+                {{if .AuthEnabled}}
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <p style="font-size:13px;color:var(--success);">{{.T.Tr "auth_enabled_msg"}}</p>
+                    <p style="font-size:13px;color:var(--text-secondary);">Username: <span style="font-weight:500;">{{.AuthUsername}}</span></p>
+                    <button
+                        hx-post="/api/settings/auth/disable"
+                        hx-target="#auth-message"
+                        hx-swap="innerHTML"
+                        onclick="document.getElementById('auth-toggle').checked = false; toggleAuthForm();"
+                        class="btn" style="background:var(--danger);color:white;font-size:13px;font-weight:500;">
+                        {{.T.Tr "btn_disable_auth"}}
+                    </button>
+                </div>
+                {{else}}
+                <form id="auth-setup-form" hx-post="/api/settings/auth/setup" hx-target="#auth-message" hx-swap="innerHTML">
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+                        <div>
+                            <label for="auth_username" class="form-label">{{.T.Tr "auth_username_label"}}</label>
+                            <input type="text" id="auth_username" name="username" placeholder="admin" required
+                                   class="form-input">
+                        </div>
+                        <div>
+                            <label for="auth_password" class="form-label">{{.T.Tr "auth_password_label"}}</label>
+                            <input type="password" id="auth_password" name="password" placeholder="********" required minlength="8"
+                                   class="form-input">
+                            <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">{{.T.Tr "auth_min_chars"}}</p>
+                        </div>
+                        <div>
+                            <label for="auth_confirm_password" class="form-label">{{.T.Tr "auth_confirm_password"}}</label>
+                            <input type="password" id="auth_confirm_password" name="confirm_password" placeholder="********" required minlength="8"
+                                   class="form-input">
+                        </div>
+                        <button type="submit"
+                            class="btn btn-primary">
+                            {{.T.Tr "btn_enable_auth"}}
+                        </button>
+                    </div>
+                </form>
+                {{end}}
+            </div>
+            <div id="auth-message" style="margin-top:16px;"></div>
+        </div>
+    </div>
+
+    <!-- API Keys -->
+    <div style="border-top:1px solid var(--border);padding-top:32px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_api_keys"}}</h3>
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_api_keys_desc"}}</p>
+
+        <!-- API Key List -->
+        <div id="api-keys-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+            <div hx-get="/api/settings/apikeys" hx-trigger="load" hx-swap="innerHTML">
+                <div style="text-align:center;padding:16px 0;color:var(--text-muted);">
+                    {{.T.Tr "loading_api_keys"}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Create New API Key -->
+        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;">
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">{{.T.Tr "settings_create_api_key"}}</h4>
+            <form hx-post="/api/settings/apikeys" hx-target="#api-keys-list" hx-swap="innerHTML">
+                <div style="display:flex;align-items:flex-end;gap:12px;">
+                    <div style="flex:1;">
+                        <label for="api_key_name" class="form-label">{{.T.Tr "api_key_name_label"}}</label>
+                        <input type="text"
+                               id="api_key_name"
+                               name="name"
+                               required
+                               placeholder="e.g., Home Assistant Integration"
+                               class="form-input">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        {{.T.Tr "btn_generate_api_key"}}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+    <script>
+function toggleAuthForm() {
+    const toggle = document.getElementById('auth-toggle');
+    const container = document.getElementById('auth-form-container');
+    if (toggle.checked) {
+        container.classList.remove('hidden');
+    } else {
+        container.classList.add('hidden');
+    }
+}
+    </script>
+    </div><!-- /.main -->
+</body>
+</html>

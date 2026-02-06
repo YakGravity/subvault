@@ -1057,6 +1057,24 @@
   "sub_list_category": {
     "other": "Kategorie"
   },
+  "sub_list_renewal": {
+    "other": "Verlängerung"
+  },
+  "sort_name": {
+    "other": "Name"
+  },
+  "sort_cost": {
+    "other": "Kosten"
+  },
+  "sort_date": {
+    "other": "Datum"
+  },
+  "sort_status": {
+    "other": "Status"
+  },
+  "sort_category": {
+    "other": "Kategorie"
+  },
   "sub_list_uncategorized": {
     "other": "Ohne Kategorie"
   },
@@ -1292,5 +1310,101 @@
   },
   "email_budget_exceeded_subject": {
     "other": "SubTrackr: Monatsbudget überschritten"
+  },
+  "dashboard_subtitle": {
+    "other": "Überblick über deine Abonnements"
+  },
+  "dashboard_upcoming_renewals": {
+    "other": "Nächste Verlängerungen"
+  },
+  "dashboard_view_all": {
+    "other": "Alle anzeigen"
+  },
+  "dashboard_no_upcoming": {
+    "other": "Keine anstehenden Verlängerungen"
+  },
+  "dashboard_cancelled": {
+    "other": "gekündigt"
+  },
+  "nav_main_menu": {
+    "other": "Hauptmenü"
+  },
+  "nav_system": {
+    "other": "System"
+  },
+  "nav_settings": {
+    "other": "Einstellungen"
+  },
+  "settings_tab_api": {
+    "other": "API"
+  },
+  "analytics_subtitle": {
+    "other": "Einblicke in deine Ausgaben"
+  },
+  "calendar_subtitle": {
+    "other": "Anstehende Verlängerungstermine"
+  },
+  "subscriptions_subtitle": {
+    "other": "Verwalte deine Abonnements"
+  },
+  "sub_card_renewal": {
+    "other": "Verlängerung:"
+  },
+  "sub_card_ends": {
+    "other": "Endet:"
+  },
+  "filter_all": {
+    "other": "Alle"
+  },
+  "settings_tab_general": {
+    "other": "Allgemein"
+  },
+  "settings_tab_notifications": {
+    "other": "Benachrichtigungen"
+  },
+  "settings_tab_data": {
+    "other": "Daten"
+  },
+  "settings_tab_security": {
+    "other": "Sicherheit"
+  },
+  "settings_general_subtitle": {
+    "other": "Darstellung, Sprache und Anzeigeeinstellungen"
+  },
+  "settings_notifications_subtitle": {
+    "other": "E-Mail, Push-Benachrichtigungen und Warnungen"
+  },
+  "settings_data_subtitle": {
+    "other": "Import, Export, Backup und Kategorien"
+  },
+  "settings_security_subtitle": {
+    "other": "Authentifizierung und API-Zugang"
+  },
+  "api_docs_subtitle": {
+    "other": "REST-API-Referenz und Beispiele"
+  },
+  "settings_tab_appearance": {
+    "other": "Darstellung"
+  },
+  "settings_appearance_title": {
+    "other": "Darstellung"
+  },
+  "settings_appearance_desc": {
+    "other": "Wähle dein bevorzugtes Farbschema"
+  },
+  "settings_appearance_subtitle": {
+    "other": "Passe das Erscheinungsbild von SubTrackr an"
+  },
+  "theme_light": {
+    "other": "Hell"
+  },
+  "theme_light_desc": {
+    "other": "Klar und professionell"
+  },
+  "theme_system": {
+    "other": "System"
+  },
+  "theme_system_desc": {
+    "other": "Folgt den Geräteeinstellungen"
   }
 }
