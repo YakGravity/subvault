@@ -112,6 +112,7 @@
                     <button class="sort-btn" data-sort="cost" data-order="desc" onclick="toggleSort(this)">{{.T.Tr "sort_cost"}}</button>
                     <button class="sort-btn" data-sort="date" data-order="asc" onclick="toggleSort(this)">{{.T.Tr "sort_date"}}</button>
                     <button class="sort-btn" data-sort="category" data-order="asc" onclick="toggleSort(this)">{{.T.Tr "sort_category"}}</button>
+                    <button class="sort-btn" data-sort="status" data-order="asc" onclick="toggleSort(this)">{{.T.Tr "sort_status"}}</button>
                 </div>
                 <div class="view-toggle">
                     <button class="active" id="view-grid" onclick="setView('grid')" title="Grid">
@@ -179,12 +180,12 @@
             <table class="sub-table">
                 <thead>
                     <tr>
-                        <th>{{.T.Tr "sub_list_name"}}</th>
-                        <th>{{.T.Tr "sub_list_category"}}</th>
-                        <th style="text-align:right;">{{.T.Tr "sub_list_cost"}}</th>
+                        <th class="sortable" data-sort="name" onclick="sortByColumn(this)">{{.T.Tr "sub_list_name"}} <span class="sort-arrow"></span></th>
+                        <th class="sortable" data-sort="category" onclick="sortByColumn(this)">{{.T.Tr "sub_list_category"}} <span class="sort-arrow"></span></th>
+                        <th class="sortable" data-sort="cost" style="text-align:right;" onclick="sortByColumn(this)">{{.T.Tr "sub_list_cost"}} <span class="sort-arrow"></span></th>
                         <th>{{.T.Tr "sub_list_schedule"}}</th>
-                        <th>{{.T.Tr "sub_list_status"}}</th>
-                        <th>{{.T.Tr "sub_list_renewal"}}</th>
+                        <th class="sortable" data-sort="status" onclick="sortByColumn(this)">{{.T.Tr "sub_list_status"}} <span class="sort-arrow"></span></th>
+                        <th class="sortable" data-sort="date" onclick="sortByColumn(this)">{{.T.Tr "sub_list_renewal"}} <span class="sort-arrow"></span></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -202,10 +203,10 @@
                             </div>
                         </td>
                         <td>{{if .Category.Name}}{{.Category.Name}}{{else}}—{{end}}</td>
-                        <td style="text-align:right;font-family:var(--mono);"{{if eq .Status "Cancelled"}} class="text-muted" style="text-decoration:line-through;"{{end}}>
+                        <td style="text-align:right;font-family:var(--mono);{{if eq .Status "Cancelled"}}text-decoration:line-through;{{end}}"{{if eq .Status "Cancelled"}} class="text-muted"{{end}}>
                             {{if .ShowConversion}}{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}} <span class="text-muted" style="font-size:11px;">({{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}})</span>{{else}}{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}{{end}}
                         </td>
-                        <td>/{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</td>
+                        <td>{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</td>
                         <td>
                             <span class="sub-card-status {{if eq .Status "Active"}}status-active{{else if eq .Status "Cancelled"}}status-cancelled{{else if eq .Status "Trial"}}status-trial{{else if eq .Status "Paused"}}status-paused{{end}}">
                                 <span class="dot"></span>
@@ -287,6 +288,33 @@
             sortContainer(document.getElementById('sub-grid'), '.sub-card', field, order);
             sortContainer(document.querySelector('.sub-table tbody'), 'tr', field, order);
             saveSortPreference(field, order);
+            updateColumnArrows();
+        }
+
+        // Column header sorting
+        function sortByColumn(th) {
+            var field = th.dataset.sort;
+            var btn = document.querySelector('.sort-btn[data-sort="' + field + '"]');
+            if (btn) {
+                toggleSort(btn);
+            } else {
+                sortContainer(document.getElementById('sub-grid'), '.sub-card', field, th._order || 'asc');
+                sortContainer(document.querySelector('.sub-table tbody'), 'tr', field, th._order || 'asc');
+                th._order = th._order === 'asc' ? 'desc' : 'asc';
+                updateColumnArrows();
+            }
+        }
+
+        function updateColumnArrows() {
+            var activeBtn = document.querySelector('.sort-btn.active');
+            document.querySelectorAll('.sub-table th .sort-arrow').forEach(function(a) { a.textContent = ''; });
+            if (activeBtn) {
+                var th = document.querySelector('.sub-table th[data-sort="' + activeBtn.dataset.sort + '"]');
+                if (th) {
+                    var arrow = th.querySelector('.sort-arrow');
+                    if (arrow) arrow.textContent = activeBtn.dataset.order === 'asc' ? ' ↑' : ' ↓';
+                }
+            }
         }
 
         function sortContainer(container, selector, field, order) {
