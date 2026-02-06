@@ -113,6 +113,21 @@
   "import_result_summary": {
     "other": "Import abgeschlossen"
   },
+  "import_imported": {
+    "other": "Importiert"
+  },
+  "import_skipped": {
+    "other": "Übersprungen"
+  },
+  "import_errors": {
+    "other": "Fehler"
+  },
+  "import_details": {
+    "other": "Details"
+  },
+  "import_go_dashboard": {
+    "other": "Zum Dashboard"
+  },
   "import_error_parse": {
     "other": "Import-Datei konnte nicht gelesen werden"
   },
@@ -1406,5 +1421,83 @@
   },
   "theme_system_desc": {
     "other": "Folgt den Geräteeinstellungen"
+  },
+  "settings_accent_title": {
+    "other": "Akzentfarbe"
+  },
+  "settings_accent_desc": {
+    "other": "Wähle eine Akzentfarbe für Buttons und Highlights"
+  },
+  "accent_green": {
+    "other": "Grün"
+  },
+  "accent_purple": {
+    "other": "Violett"
+  },
+  "accent_red": {
+    "other": "Rot"
+  },
+  "settings_display_title": {
+    "other": "Darstellung"
+  },
+  "settings_compact_label": {
+    "other": "Kompakte Ansicht"
+  },
+  "settings_compact_desc": {
+    "other": "Reduziert Abstände und Schriftgrößen für mehr Inhalt"
+  },
+  "settings_sidebar_label": {
+    "other": "Sidebar einklappen"
+  },
+  "settings_sidebar_desc": {
+    "other": "Zeigt nur Icons in der Seitenleiste"
+  },
+  "settings_view_label": {
+    "other": "Standard-Ansicht"
+  },
+  "settings_view_desc": {
+    "other": "Bevorzugte Ansicht auf der Abonnement-Seite"
+  },
+  "view_table": {
+    "other": "Tabelle"
+  },
+  "settings_fontsize_label": {
+    "other": "Schriftgröße"
+  },
+  "settings_fontsize_desc": {
+    "other": "Passe die Textgröße der Anwendung an"
+  },
+  "fontsize_small": {
+    "other": "Klein"
+  },
+  "fontsize_normal": {
+    "other": "Normal"
+  },
+  "fontsize_large": {
+    "other": "Groß"
+  },
+  "settings_dateformat_title": {
+    "other": "Datumsformat"
+  },
+  "settings_dateformat_desc": {
+    "other": "Wie Datumsangaben in der Anwendung angezeigt werden"
+  },
+  "theme_nord_desc": {
+    "other": "Kühle arktische Blautöne"
+  },
+  "theme_catppuccin_desc": {
+    "other": "Sanfte Pastellfarben"
+  },
+  "theme_dracula_desc": {
+    "other": "Kräftig und kontrastreich"
+  },
+  "theme_rosepine_name": {
+    "other": "Rosé Pine"
+  },
+  "theme_rosepine_desc": {
+    "other": "Elegant und gedämpft"
+  },
+  "theme_gruvbox_desc": {
+    "other": "Warme Retro-Erdtöne"
   }
 }

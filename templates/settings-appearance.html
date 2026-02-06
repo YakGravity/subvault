@@ -83,46 +83,261 @@
         </div>
 
 <div style="max-width:56rem;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+
+    <!-- Mode + Theme Palette -->
+    <div class="card">
+        <div class="card-header" style="flex-direction:column;align-items:flex-start;gap:12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+                <div>
+                    <h2 class="card-title">{{.T.Tr "settings_appearance_title"}}</h2>
+                    <p style="font-size:13px;color:var(--text-muted);margin-top:2px;">{{.T.Tr "settings_appearance_desc"}}</p>
+                </div>
+                <div class="setting-btn-group" id="mode-group">
+                    <button data-val="light" onclick="setThemeMode('light')">{{.T.Tr "theme_light"}}</button>
+                    <button data-val="dark" onclick="setThemeMode('dark')">{{.T.Tr "theme_dark"}}</button>
+                    <button data-val="system" onclick="setThemeMode('system')">{{.T.Tr "theme_system"}}</button>
+                </div>
+            </div>
+        </div>
+        <div style="padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+            <!-- Default -->
+            <div class="theme-option" data-palette="default" onclick="setPalette('default')">
+                <div class="theme-palette">
+                    <span style="background:#f5f3ef;"></span>
+                    <span style="background:#ffffff;"></span>
+                    <span style="background:#c2410c;"></span>
+                    <span style="background:#1c1917;"></span>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Default</div>
+                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_default_desc"}}</div>
+            </div>
+            <!-- Nord -->
+            <div class="theme-option" data-palette="nord" onclick="setPalette('nord')">
+                <div class="theme-palette">
+                    <span style="background:#eceff4;"></span>
+                    <span style="background:#3b4252;"></span>
+                    <span style="background:#5e81ac;"></span>
+                    <span style="background:#88c0d0;"></span>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Nord</div>
+                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_nord_desc"}}</div>
+            </div>
+            <!-- Catppuccin -->
+            <div class="theme-option" data-palette="catppuccin" onclick="setPalette('catppuccin')">
+                <div class="theme-palette">
+                    <span style="background:#eff1f5;"></span>
+                    <span style="background:#1e1e2e;"></span>
+                    <span style="background:#8839ef;"></span>
+                    <span style="background:#cba6f7;"></span>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Catppuccin</div>
+                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_catppuccin_desc"}}</div>
+            </div>
+            <!-- Dracula -->
+            <div class="theme-option" data-palette="dracula" onclick="setPalette('dracula')">
+                <div class="theme-palette">
+                    <span style="background:#f8f8f2;"></span>
+                    <span style="background:#282a36;"></span>
+                    <span style="background:#bd93f9;"></span>
+                    <span style="background:#6272a4;"></span>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Dracula</div>
+                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_dracula_desc"}}</div>
+            </div>
+            <!-- Rosé Pine -->
+            <div class="theme-option" data-palette="rosepine" onclick="setPalette('rosepine')">
+                <div class="theme-palette">
+                    <span style="background:#faf4ed;"></span>
+                    <span style="background:#191724;"></span>
+                    <span style="background:#eb6f92;"></span>
+                    <span style="background:#9ccfd8;"></span>
+                </div>
+                <div style="font-weight:600;font-size:14px;">{{.T.Tr "theme_rosepine_name"}}</div>
+                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_rosepine_desc"}}</div>
+            </div>
+            <!-- Gruvbox -->
+            <div class="theme-option" data-palette="gruvbox" onclick="setPalette('gruvbox')">
+                <div class="theme-palette">
+                    <span style="background:#fbf1c7;"></span>
+                    <span style="background:#282828;"></span>
+                    <span style="background:#fe8019;"></span>
+                    <span style="background:#b8bb26;"></span>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Gruvbox</div>
+                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_gruvbox_desc"}}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accent Color -->
     <div class="card">
         <div class="card-header">
-            <h2 class="card-title">{{.T.Tr "settings_appearance_title"}}</h2>
-            <p style="font-size:13px;color:var(--text-muted);">{{.T.Tr "settings_appearance_desc"}}</p>
+            <h2 class="card-title">{{.T.Tr "settings_accent_title"}}</h2>
+            <p style="font-size:13px;color:var(--text-muted);">{{.T.Tr "settings_accent_desc"}}</p>
         </div>
-        <div style="padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-            <div class="theme-option" data-mode="light" onclick="setThemeMode('light')">
-                <div style="height:80px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:var(--radius-sm);margin-bottom:12px;display:flex;align-items:center;justify-content:center;">
-                    <svg style="width:32px;height:32px;color:#f59e0b;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                </div>
-                <div style="font-weight:600;font-size:14px;">{{.T.Tr "theme_light"}}</div>
-                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_light_desc"}}</div>
+        <div style="padding:20px;display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="accent-option" data-accent="orange" onclick="setAccentColor('orange')" title="Orange" style="width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:#c2410c;cursor:pointer;transition:border-color .2s,transform .2s;"></button>
+            <button class="accent-option" data-accent="blue" onclick="setAccentColor('blue')" title="Blau" style="width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:#2563eb;cursor:pointer;transition:border-color .2s,transform .2s;"></button>
+            <button class="accent-option" data-accent="green" onclick="setAccentColor('green')" title="{{.T.Tr "accent_green"}}" style="width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:#16a34a;cursor:pointer;transition:border-color .2s,transform .2s;"></button>
+            <button class="accent-option" data-accent="purple" onclick="setAccentColor('purple')" title="{{.T.Tr "accent_purple"}}" style="width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:#7c3aed;cursor:pointer;transition:border-color .2s,transform .2s;"></button>
+            <button class="accent-option" data-accent="red" onclick="setAccentColor('red')" title="{{.T.Tr "accent_red"}}" style="width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:#dc2626;cursor:pointer;transition:border-color .2s,transform .2s;"></button>
+            <button class="accent-option" data-accent="teal" onclick="setAccentColor('teal')" title="Teal" style="width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:#0d9488;cursor:pointer;transition:border-color .2s,transform .2s;"></button>
+        </div>
+    </div>
+
+    <!-- Display Settings -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{.T.Tr "settings_display_title"}}</h2>
+        </div>
+        <!-- Compact Mode -->
+        <div class="setting-row">
+            <div>
+                <div class="setting-row-label">{{.T.Tr "settings_compact_label"}}</div>
+                <div class="setting-row-desc">{{.T.Tr "settings_compact_desc"}}</div>
             </div>
-            <div class="theme-option" data-mode="dark" onclick="setThemeMode('dark')">
-                <div style="height:80px;background:#1c1917;border:1px solid #44403c;border-radius:var(--radius-sm);margin-bottom:12px;display:flex;align-items:center;justify-content:center;">
-                    <svg style="width:32px;height:32px;color:#fbbf24;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                </div>
-                <div style="font-weight:600;font-size:14px;">{{.T.Tr "theme_dark"}}</div>
-                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_dark_desc"}}</div>
+            <button class="setting-toggle" id="compact-toggle" onclick="this.classList.toggle('active'); setCompactMode(this.classList.contains('active'))"></button>
+        </div>
+        <!-- Sidebar Collapsed -->
+        <div class="setting-row">
+            <div>
+                <div class="setting-row-label">{{.T.Tr "settings_sidebar_label"}}</div>
+                <div class="setting-row-desc">{{.T.Tr "settings_sidebar_desc"}}</div>
             </div>
-            <div class="theme-option" data-mode="system" onclick="setThemeMode('system')">
-                <div style="height:80px;background:linear-gradient(135deg,#f9fafb 50%,#1c1917 50%);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;display:flex;align-items:center;justify-content:center;">
-                    <svg style="width:32px;height:32px;color:var(--text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </div>
-                <div style="font-weight:600;font-size:14px;">{{.T.Tr "theme_system"}}</div>
-                <div style="font-size:12px;color:var(--text-muted);">{{.T.Tr "theme_system_desc"}}</div>
+            <button class="setting-toggle" id="sidebar-toggle" onclick="this.classList.toggle('active'); setSidebarCollapsed(this.classList.contains('active'))"></button>
+        </div>
+        <!-- Default View -->
+        <div class="setting-row">
+            <div>
+                <div class="setting-row-label">{{.T.Tr "settings_view_label"}}</div>
+                <div class="setting-row-desc">{{.T.Tr "settings_view_desc"}}</div>
             </div>
+            <div class="setting-btn-group" id="view-group">
+                <button data-val="grid" onclick="setDefaultView('grid')">
+                    <svg style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>Grid
+                </button>
+                <button data-val="table" onclick="setDefaultView('table')">
+                    <svg style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>{{.T.Tr "view_table"}}
+                </button>
+            </div>
+        </div>
+        <!-- Font Size -->
+        <div class="setting-row">
+            <div>
+                <div class="setting-row-label">{{.T.Tr "settings_fontsize_label"}}</div>
+                <div class="setting-row-desc">{{.T.Tr "settings_fontsize_desc"}}</div>
+            </div>
+            <div class="setting-btn-group" id="fontsize-group">
+                <button data-val="small" onclick="setFontSize('small')">{{.T.Tr "fontsize_small"}}</button>
+                <button data-val="normal" onclick="setFontSize('normal')">{{.T.Tr "fontsize_normal"}}</button>
+                <button data-val="large" onclick="setFontSize('large')">{{.T.Tr "fontsize_large"}}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Date Format -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{.T.Tr "settings_dateformat_title"}}</h2>
+            <p style="font-size:13px;color:var(--text-muted);">{{.T.Tr "settings_dateformat_desc"}}</p>
+        </div>
+        <div style="padding:20px;display:flex;flex-direction:column;gap:10px;" id="dateformat-options">
+            <label class="setting-row" style="cursor:pointer;margin:0;border-bottom:1px solid var(--border-light);">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <input type="radio" name="dateformat" value="DD.MM.YYYY" style="accent-color:var(--accent);">
+                    <div>
+                        <div class="setting-row-label">DD.MM.YYYY</div>
+                        <div class="setting-row-desc" data-preview="DD.MM.YYYY"></div>
+                    </div>
+                </div>
+            </label>
+            <label class="setting-row" style="cursor:pointer;margin:0;border-bottom:1px solid var(--border-light);">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <input type="radio" name="dateformat" value="MM/DD/YYYY" style="accent-color:var(--accent);">
+                    <div>
+                        <div class="setting-row-label">MM/DD/YYYY</div>
+                        <div class="setting-row-desc" data-preview="MM/DD/YYYY"></div>
+                    </div>
+                </div>
+            </label>
+            <label class="setting-row" style="cursor:pointer;margin:0;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <input type="radio" name="dateformat" value="YYYY-MM-DD" style="accent-color:var(--accent);">
+                    <div>
+                        <div class="setting-row-label">YYYY-MM-DD</div>
+                        <div class="setting-row-desc" data-preview="YYYY-MM-DD"></div>
+                    </div>
+                </div>
+            </label>
         </div>
     </div>
 </div>
 
     </div><!-- /.main -->
 <script>
-    // Mark active theme option
+    // Mode button group
     var mode = localStorage.getItem('subtrackr-theme') || 'system';
+    document.querySelectorAll('#mode-group button').forEach(function(btn) {
+        if (btn.dataset.val === mode) btn.classList.add('active');
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#mode-group button').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+        });
+    });
+    // Theme palette
+    var palette = localStorage.getItem('subtrackr-palette') || 'default';
     document.querySelectorAll('.theme-option').forEach(function(opt) {
-        if (opt.dataset.mode === mode) opt.classList.add('active');
+        if (opt.dataset.palette === palette) opt.classList.add('active');
         opt.addEventListener('click', function() {
             document.querySelectorAll('.theme-option').forEach(function(o) { o.classList.remove('active'); });
             opt.classList.add('active');
+        });
+    });
+    // Accent
+    var accent = localStorage.getItem('subtrackr-accent') || 'orange';
+    document.querySelectorAll('.accent-option').forEach(function(btn) {
+        if (btn.dataset.accent === accent) btn.classList.add('active');
+    });
+    // Compact toggle
+    if (localStorage.getItem('subtrackr-compact') === 'true') {
+        document.getElementById('compact-toggle').classList.add('active');
+    }
+    // Sidebar toggle
+    if (localStorage.getItem('subtrackr-sidebar') === 'collapsed') {
+        document.getElementById('sidebar-toggle').classList.add('active');
+    }
+    // Default view
+    var view = localStorage.getItem('subtrackr-view') || 'grid';
+    document.querySelectorAll('#view-group button').forEach(function(btn) {
+        if (btn.dataset.val === view) btn.classList.add('active');
+    });
+    // Font size
+    var fs = localStorage.getItem('subtrackr-fontsize') || 'normal';
+    document.querySelectorAll('#fontsize-group button').forEach(function(btn) {
+        if (btn.dataset.val === fs) btn.classList.add('active');
+    });
+    // Date format
+    var savedFormat = '{{.DateFormat}}';
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2,'0');
+    var mm = String(today.getMonth()+1).padStart(2,'0');
+    var yyyy = today.getFullYear();
+    var previews = {
+        'DD.MM.YYYY': dd+'.'+mm+'.'+yyyy,
+        'MM/DD/YYYY': mm+'/'+dd+'/'+yyyy,
+        'YYYY-MM-DD': yyyy+'-'+mm+'-'+dd
+    };
+    document.querySelectorAll('[data-preview]').forEach(function(el) {
+        el.textContent = previews[el.dataset.preview] || '';
+    });
+    document.querySelectorAll('input[name="dateformat"]').forEach(function(radio) {
+        if (radio.value === savedFormat) radio.checked = true;
+        radio.addEventListener('change', function() {
+            fetch('/api/settings/date-format', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'format=' + encodeURIComponent(this.value)
+            });
         });
     });
 </script>

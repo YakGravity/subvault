@@ -1329,6 +1329,70 @@ a { color: inherit; text-decoration: none; }
     }
 }
 
+/* ═══════════════════════════════════════════
+   COMPACT MODE
+   ═══════════════════════════════════════════ */
+[data-compact] .main { padding: 20px 28px; }
+[data-compact] .page-header { margin-bottom: 16px; }
+[data-compact] .page-header h1 { font-size: 20px; }
+[data-compact] .stats-grid { gap: 10px; }
+[data-compact] .stat-card { padding: 12px 14px; }
+[data-compact] .stat-label { font-size: 11px; }
+[data-compact] .stat-value { font-size: 20px; }
+[data-compact] .card { margin-bottom: 0; }
+[data-compact] .card-header { padding: 14px 18px; }
+[data-compact] .card-title { font-size: 15px; }
+[data-compact] .sub-grid { gap: 10px; }
+[data-compact] .sub-card { padding: 12px 14px; }
+[data-compact] .content-grid { gap: 16px; }
+[data-compact] .tab-bar { gap: 2px; margin-bottom: 16px; }
+[data-compact] .tab-item { padding: 6px 14px; font-size: 13px; }
+
+/* ═══════════════════════════════════════════
+   COLLAPSED SIDEBAR
+   ═══════════════════════════════════════════ */
+[data-sidebar="collapsed"] .sidebar {
+    width: 60px;
+    padding: 16px 6px;
+    overflow: hidden;
+}
+[data-sidebar="collapsed"] .nav-section,
+[data-sidebar="collapsed"] .theme-switch {
+    display: none;
+}
+[data-sidebar="collapsed"] .sidebar-brand {
+    justify-content: center;
+    padding: 0 0 20px;
+    font-size: 0;
+}
+[data-sidebar="collapsed"] .sidebar-brand-icon { margin: 0; }
+[data-sidebar="collapsed"] .nav-item {
+    justify-content: center;
+    padding: 10px 0;
+    border-radius: var(--radius-sm);
+    font-size: 0;
+    gap: 0;
+}
+[data-sidebar="collapsed"] .nav-item svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+[data-sidebar="collapsed"] .nav-item .badge {
+    display: none;
+}
+[data-sidebar="collapsed"] .sidebar-footer {
+    padding-top: 4px;
+}
+[data-sidebar="collapsed"] .sidebar-footer a {
+    justify-content: center;
+    font-size: 0;
+}
+[data-sidebar="collapsed"] .main {
+    margin-left: 60px;
+    max-width: calc(100vw - 60px);
+}
+
 @media (max-width: 768px) {
     .sidebar {
         display: none;

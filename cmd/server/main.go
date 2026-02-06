@@ -455,6 +455,10 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 		// Theme settings routes
 		api.GET("/settings/theme", settingsHandler.GetTheme)
 		api.POST("/settings/theme", settingsHandler.SetTheme)
+
+		// Date format settings routes
+		api.GET("/settings/date-format", settingsHandler.GetDateFormat)
+		api.POST("/settings/date-format", settingsHandler.SetDateFormat)
 	}
 
 	// Public API routes (require API key authentication)

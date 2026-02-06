@@ -1,28 +1,26 @@
 /*
  * SubTrackr Theme System
- * v0.11.0
+ * v0.12.0
  *
- * Overrides design-system.css CSS custom properties per theme.
- * Legacy Tailwind overrides are kept for backward compatibility
- * during template migration and will be removed in a future release.
+ * Themes: Default, Nord, Catppuccin, Dracula, Rosé Pine, Gruvbox
+ * Each theme has a Light and Dark variant.
+ * Accent color overrides work across all themes via [data-mode].
  */
 
 /* ═══════════════════════════════════════════
-   DEFAULT THEME (Warm Utility — Light)
-   Already defined in design-system.css :root.
-   Explicit data-theme selector for JS toggle.
+   DEFAULT LIGHT (Warm Utility)
    ═══════════════════════════════════════════ */
 [data-theme="default"] {
     --bg: #f5f3ef;
     --bg-card: #ffffff;
-    --bg-nav: #1c1917;
-    --bg-nav-hover: #292524;
-    --bg-nav-active: #44403c;
+    --bg-nav: #ffffff;
+    --bg-nav-hover: #f5f3ef;
+    --bg-nav-active: #fff7ed;
     --text: #1c1917;
     --text-secondary: #78716c;
     --text-muted: #a8a29e;
-    --text-nav: #d6d3d1;
-    --text-nav-active: #ffffff;
+    --text-nav: #78716c;
+    --text-nav-active: #1c1917;
     --border: #e7e5e4;
     --border-light: #f5f5f4;
     --accent: #c2410c;
@@ -37,12 +35,12 @@
     --danger-light: #fee2e2;
     --info: #1d4ed8;
     --info-light: #dbeafe;
-    --shadow: 0 1px 2px rgba(28, 25, 23, .04), 0 1px 3px rgba(28, 25, 23, .06);
-    --shadow-md: 0 2px 8px rgba(28, 25, 23, .06), 0 1px 2px rgba(28, 25, 23, .04);
+    --shadow: 0 1px 2px rgba(28,25,23,.04), 0 1px 3px rgba(28,25,23,.06);
+    --shadow-md: 0 2px 8px rgba(28,25,23,.06), 0 1px 2px rgba(28,25,23,.04);
 }
 
 /* ═══════════════════════════════════════════
-   DARK THEME
+   DEFAULT DARK
    ═══════════════════════════════════════════ */
 [data-theme="dark"] {
     --bg: #121212;
@@ -69,8 +67,381 @@
     --danger-light: #450a0a;
     --info: #60a5fa;
     --info-light: #172554;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 1px 3px rgba(0, 0, 0, .2);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, .3), 0 1px 2px rgba(0, 0, 0, .2);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.2);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+}
+
+/* ═══════════════════════════════════════════
+   NORD LIGHT
+   ═══════════════════════════════════════════ */
+[data-theme="nord-light"] {
+    --bg: #eceff4;
+    --bg-card: #ffffff;
+    --bg-nav: #e5e9f0;
+    --bg-nav-hover: #d8dee9;
+    --bg-nav-active: #d0d6e1;
+    --text: #2e3440;
+    --text-secondary: #4c566a;
+    --text-muted: #7b88a1;
+    --text-nav: #4c566a;
+    --text-nav-active: #2e3440;
+    --border: #d8dee9;
+    --border-light: #e5e9f0;
+    --accent: #5e81ac;
+    --accent-hover: #4c6e96;
+    --accent-light: #d0dded;
+    --accent-surface: #e8edf4;
+    --success: #a3be8c;
+    --success-light: #e4eede;
+    --warning: #ebcb8b;
+    --warning-light: #f5ecd4;
+    --danger: #bf616a;
+    --danger-light: #f0dde0;
+    --info: #88c0d0;
+    --info-light: #daeef3;
+    --shadow: 0 1px 2px rgba(46,52,64,.05), 0 1px 3px rgba(46,52,64,.07);
+    --shadow-md: 0 2px 8px rgba(46,52,64,.07), 0 1px 2px rgba(46,52,64,.05);
+}
+
+/* ═══════════════════════════════════════════
+   NORD DARK
+   ═══════════════════════════════════════════ */
+[data-theme="nord-dark"] {
+    --bg: #2e3440;
+    --bg-card: #3b4252;
+    --bg-nav: #242933;
+    --bg-nav-hover: #3b4252;
+    --bg-nav-active: #434c5e;
+    --text: #eceff4;
+    --text-secondary: #d8dee9;
+    --text-muted: #7b88a1;
+    --text-nav: #d8dee9;
+    --text-nav-active: #eceff4;
+    --border: #4c566a;
+    --border-light: #434c5e;
+    --accent: #88c0d0;
+    --accent-hover: #8fbcbb;
+    --accent-light: #2e3e45;
+    --accent-surface: #2a3540;
+    --success: #a3be8c;
+    --success-light: #2e3a2e;
+    --warning: #ebcb8b;
+    --warning-light: #3a3528;
+    --danger: #bf616a;
+    --danger-light: #3a2e30;
+    --info: #81a1c1;
+    --info-light: #2e3540;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.2);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+}
+
+/* ═══════════════════════════════════════════
+   CATPPUCCIN LIGHT (Latte)
+   ═══════════════════════════════════════════ */
+[data-theme="catppuccin-light"] {
+    --bg: #eff1f5;
+    --bg-card: #ffffff;
+    --bg-nav: #e6e9ef;
+    --bg-nav-hover: #ccd0da;
+    --bg-nav-active: #bcc0cc;
+    --text: #4c4f69;
+    --text-secondary: #5c5f77;
+    --text-muted: #9ca0b0;
+    --text-nav: #5c5f77;
+    --text-nav-active: #4c4f69;
+    --border: #ccd0da;
+    --border-light: #e6e9ef;
+    --accent: #8839ef;
+    --accent-hover: #7227d9;
+    --accent-light: #dcc8fc;
+    --accent-surface: #f0e8fd;
+    --success: #40a02b;
+    --success-light: #d8f0d0;
+    --warning: #df8e1d;
+    --warning-light: #f8e8cc;
+    --danger: #d20f39;
+    --danger-light: #f8d0d8;
+    --info: #1e66f5;
+    --info-light: #ccdcfc;
+    --shadow: 0 1px 2px rgba(76,79,105,.05), 0 1px 3px rgba(76,79,105,.07);
+    --shadow-md: 0 2px 8px rgba(76,79,105,.07), 0 1px 2px rgba(76,79,105,.05);
+}
+
+/* ═══════════════════════════════════════════
+   CATPPUCCIN DARK (Mocha)
+   ═══════════════════════════════════════════ */
+[data-theme="catppuccin-dark"] {
+    --bg: #1e1e2e;
+    --bg-card: #313244;
+    --bg-nav: #181825;
+    --bg-nav-hover: #313244;
+    --bg-nav-active: #45475a;
+    --text: #cdd6f4;
+    --text-secondary: #bac2de;
+    --text-muted: #6c7086;
+    --text-nav: #bac2de;
+    --text-nav-active: #cdd6f4;
+    --border: #585b70;
+    --border-light: #45475a;
+    --accent: #cba6f7;
+    --accent-hover: #b491e0;
+    --accent-light: #2e2545;
+    --accent-surface: #231e35;
+    --success: #a6e3a1;
+    --success-light: #1e2e1e;
+    --warning: #f9e2af;
+    --warning-light: #2e2a1e;
+    --danger: #f38ba8;
+    --danger-light: #2e1e23;
+    --info: #89b4fa;
+    --info-light: #1e2535;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.2);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+}
+
+/* ═══════════════════════════════════════════
+   DRACULA LIGHT
+   ═══════════════════════════════════════════ */
+[data-theme="dracula-light"] {
+    --bg: #f8f8f2;
+    --bg-card: #ffffff;
+    --bg-nav: #f0f0ea;
+    --bg-nav-hover: #e8e8e0;
+    --bg-nav-active: #dcdcd4;
+    --text: #282a36;
+    --text-secondary: #44475a;
+    --text-muted: #8085a0;
+    --text-nav: #44475a;
+    --text-nav-active: #282a36;
+    --border: #d8d8d0;
+    --border-light: #e8e8e0;
+    --accent: #9854c0;
+    --accent-hover: #7e3faa;
+    --accent-light: #e4d4f4;
+    --accent-surface: #f2ecf8;
+    --success: #2d8f4e;
+    --success-light: #d4f0de;
+    --warning: #d4a020;
+    --warning-light: #f8ecc8;
+    --danger: #d03030;
+    --danger-light: #f8d0d0;
+    --info: #6272a4;
+    --info-light: #dce0ec;
+    --shadow: 0 1px 2px rgba(40,42,54,.06), 0 1px 3px rgba(40,42,54,.08);
+    --shadow-md: 0 2px 8px rgba(40,42,54,.08), 0 1px 2px rgba(40,42,54,.06);
+}
+
+/* ═══════════════════════════════════════════
+   DRACULA DARK
+   ═══════════════════════════════════════════ */
+[data-theme="dracula-dark"] {
+    --bg: #282a36;
+    --bg-card: #44475a;
+    --bg-nav: #21222c;
+    --bg-nav-hover: #343746;
+    --bg-nav-active: #44475a;
+    --text: #f8f8f2;
+    --text-secondary: #c8c8c0;
+    --text-muted: #6272a4;
+    --text-nav: #c8c8c0;
+    --text-nav-active: #f8f8f2;
+    --border: #6272a4;
+    --border-light: #44475a;
+    --accent: #bd93f9;
+    --accent-hover: #d4b4fc;
+    --accent-light: #2e2545;
+    --accent-surface: #282040;
+    --success: #50fa7b;
+    --success-light: #1a3028;
+    --warning: #f1fa8c;
+    --warning-light: #303020;
+    --danger: #ff5555;
+    --danger-light: #3a1a1a;
+    --info: #8be9fd;
+    --info-light: #1a2a30;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.3);
+}
+
+/* ═══════════════════════════════════════════
+   ROSÉ PINE LIGHT (Dawn)
+   ═══════════════════════════════════════════ */
+[data-theme="rosepine-light"] {
+    --bg: #faf4ed;
+    --bg-card: #fffaf3;
+    --bg-nav: #f2e9e1;
+    --bg-nav-hover: #e4d7cf;
+    --bg-nav-active: #d7cbc4;
+    --text: #575279;
+    --text-secondary: #797593;
+    --text-muted: #9893a5;
+    --text-nav: #797593;
+    --text-nav-active: #575279;
+    --border: #dfdad9;
+    --border-light: #f2e9e1;
+    --accent: #b4637a;
+    --accent-hover: #9e4f68;
+    --accent-light: #f0d4dc;
+    --accent-surface: #faf0f3;
+    --success: #56949f;
+    --success-light: #d4e8ec;
+    --warning: #ea9d34;
+    --warning-light: #fae8cc;
+    --danger: #b4637a;
+    --danger-light: #f0d4dc;
+    --info: #286983;
+    --info-light: #c8dce4;
+    --shadow: 0 1px 2px rgba(87,82,121,.05), 0 1px 3px rgba(87,82,121,.07);
+    --shadow-md: 0 2px 8px rgba(87,82,121,.07), 0 1px 2px rgba(87,82,121,.05);
+}
+
+/* ═══════════════════════════════════════════
+   ROSÉ PINE DARK (Main)
+   ═══════════════════════════════════════════ */
+[data-theme="rosepine-dark"] {
+    --bg: #191724;
+    --bg-card: #26233a;
+    --bg-nav: #13111e;
+    --bg-nav-hover: #26233a;
+    --bg-nav-active: #403d52;
+    --text: #e0def4;
+    --text-secondary: #c5c3db;
+    --text-muted: #6e6a86;
+    --text-nav: #c5c3db;
+    --text-nav-active: #e0def4;
+    --border: #403d52;
+    --border-light: #2a2738;
+    --accent: #eb6f92;
+    --accent-hover: #f09dae;
+    --accent-light: #2e1e28;
+    --accent-surface: #231a22;
+    --success: #9ccfd8;
+    --success-light: #1a252a;
+    --warning: #f6c177;
+    --warning-light: #2a2218;
+    --danger: #eb6f92;
+    --danger-light: #2e1e28;
+    --info: #3e8fb0;
+    --info-light: #1a2530;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 3px rgba(0,0,0,.3);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.3);
+}
+
+/* ═══════════════════════════════════════════
+   GRUVBOX LIGHT
+   ═══════════════════════════════════════════ */
+[data-theme="gruvbox-light"] {
+    --bg: #fbf1c7;
+    --bg-card: #f9f5d7;
+    --bg-nav: #f2e5bc;
+    --bg-nav-hover: #ebdbb2;
+    --bg-nav-active: #d5c4a1;
+    --text: #3c3836;
+    --text-secondary: #504945;
+    --text-muted: #7c6f64;
+    --text-nav: #504945;
+    --text-nav-active: #3c3836;
+    --border: #d5c4a1;
+    --border-light: #ebdbb2;
+    --accent: #af3a03;
+    --accent-hover: #9d3303;
+    --accent-light: #f0d8c0;
+    --accent-surface: #fae8d4;
+    --success: #79740e;
+    --success-light: #e8e4c0;
+    --warning: #b57614;
+    --warning-light: #f0e0c0;
+    --danger: #9d0006;
+    --danger-light: #f0c8c8;
+    --info: #076678;
+    --info-light: #c0dce0;
+    --shadow: 0 1px 2px rgba(60,56,54,.06), 0 1px 3px rgba(60,56,54,.08);
+    --shadow-md: 0 2px 8px rgba(60,56,54,.08), 0 1px 2px rgba(60,56,54,.06);
+}
+
+/* ═══════════════════════════════════════════
+   GRUVBOX DARK
+   ═══════════════════════════════════════════ */
+[data-theme="gruvbox-dark"] {
+    --bg: #282828;
+    --bg-card: #3c3836;
+    --bg-nav: #1d2021;
+    --bg-nav-hover: #3c3836;
+    --bg-nav-active: #504945;
+    --text: #ebdbb2;
+    --text-secondary: #d5c4a1;
+    --text-muted: #7c6f64;
+    --text-nav: #d5c4a1;
+    --text-nav-active: #ebdbb2;
+    --border: #504945;
+    --border-light: #3c3836;
+    --accent: #fe8019;
+    --accent-hover: #fabd2f;
+    --accent-light: #3c2e1a;
+    --accent-surface: #302418;
+    --success: #b8bb26;
+    --success-light: #2e2e1a;
+    --warning: #fabd2f;
+    --warning-light: #3a3018;
+    --danger: #fb4934;
+    --danger-light: #3a1a1a;
+    --info: #83a598;
+    --info-light: #1a2e28;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px rgba(0,0,0,.2);
+    --shadow-md: 0 2px 8px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
+}
+
+/* ═══════════════════════════════════════════
+   ACCENT COLOR OVERRIDES
+   Uses data-mode so accents work across all themes.
+   "orange" = no override = theme's native accent.
+   ═══════════════════════════════════════════ */
+
+/* Blue */
+[data-mode="light"][data-accent="blue"] {
+    --accent: #2563eb; --accent-hover: #1d4ed8; --accent-light: #bfdbfe; --accent-surface: #eff6ff;
+}
+[data-mode="dark"][data-accent="blue"] {
+    --accent: #3b82f6; --accent-hover: #60a5fa; --accent-light: #1e3a5f; --accent-surface: #0c1929;
+}
+
+/* Green */
+[data-mode="light"][data-accent="green"] {
+    --accent: #16a34a; --accent-hover: #15803d; --accent-light: #bbf7d0; --accent-surface: #f0fdf4;
+}
+[data-mode="dark"][data-accent="green"] {
+    --accent: #22c55e; --accent-hover: #4ade80; --accent-light: #052e16; --accent-surface: #021a0b;
+}
+
+/* Purple */
+[data-mode="light"][data-accent="purple"] {
+    --accent: #7c3aed; --accent-hover: #6d28d9; --accent-light: #ddd6fe; --accent-surface: #f5f3ff;
+}
+[data-mode="dark"][data-accent="purple"] {
+    --accent: #8b5cf6; --accent-hover: #a78bfa; --accent-light: #2e1065; --accent-surface: #1a0738;
+}
+
+/* Red */
+[data-mode="light"][data-accent="red"] {
+    --accent: #dc2626; --accent-hover: #b91c1c; --accent-light: #fecaca; --accent-surface: #fef2f2;
+}
+[data-mode="dark"][data-accent="red"] {
+    --accent: #ef4444; --accent-hover: #f87171; --accent-light: #450a0a; --accent-surface: #2a0505;
+}
+
+/* Teal */
+[data-mode="light"][data-accent="teal"] {
+    --accent: #0d9488; --accent-hover: #0f766e; --accent-light: #99f6e4; --accent-surface: #f0fdfa;
+}
+[data-mode="dark"][data-accent="teal"] {
+    --accent: #14b8a6; --accent-hover: #2dd4bf; --accent-light: #042f2e; --accent-surface: #021c1b;
+}
+
+/* ═══════════════════════════════════════════
+   LIGHT SIDEBAR BORDER
+   ═══════════════════════════════════════════ */
+[data-mode="light"] .sidebar {
+    border-right: 1px solid var(--border);
 }
 
 /* ═══════════════════════════════════════════
@@ -93,13 +464,6 @@ body,
 /* ═══════════════════════════════════════════
    THEME SELECTOR (Settings Page)
    ═══════════════════════════════════════════ */
-.theme-selector {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
 .theme-option {
     padding: 1rem;
     border: 2px solid var(--border);
@@ -116,30 +480,101 @@ body,
 
 .theme-option.active {
     border-color: var(--accent);
+}
+
+/* Theme palette preview */
+.theme-palette {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 10px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+.theme-palette span {
+    flex: 1;
+}
+
+/* Settings toggle switch */
+.setting-toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: var(--border);
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: background .2s;
+    flex-shrink: 0;
+}
+.setting-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: var(--bg-card);
+    border-radius: 50%;
+    transition: transform .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+.setting-toggle.active {
+    background: var(--accent);
+}
+.setting-toggle.active::after {
+    transform: translateX(20px);
+}
+
+/* Settings row */
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light);
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-row-label { font-weight: 500; font-size: 14px; }
+.setting-row-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Settings button group */
+.setting-btn-group {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+.setting-btn-group button {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .15s;
+    border-right: 1px solid var(--border);
+    font-family: inherit;
+}
+.setting-btn-group button:last-child { border-right: none; }
+.setting-btn-group button:hover:not(.active) { background: var(--accent-surface); }
+.setting-btn-group button.active {
     background: var(--accent);
     color: white;
 }
 
-.theme-preview {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    height: 40px;
+/* Accent color picker */
+.accent-option.active {
+    border-color: var(--text) !important;
+    transform: scale(1.15);
+    box-shadow: 0 0 0 2px var(--bg-card), 0 0 0 4px var(--text);
 }
-
-.theme-preview-color {
-    flex: 1;
-    border-radius: var(--radius-sm);
-}
-
-.theme-name {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-.theme-description {
-    font-size: 0.875rem;
-    opacity: 0.8;
+.accent-option:hover:not(.active) {
+    transform: scale(1.1);
+    opacity: 0.85;
 }
 
 /* ═══════════════════════════════════════════
@@ -154,44 +589,3 @@ body,
         transition-duration: 0.01ms !important;
     }
 }
-
-/* ═══════════════════════════════════════════
-   LEGACY: Tailwind Class Overrides
-   TODO: Remove after template migration
-   ═══════════════════════════════════════════ */
-
-/* --- Default (legacy) --- */
-[data-theme="default"] body {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
-    color: #0f172a !important;
-}
-[data-theme="default"] .bg-white,
-[data-theme="default"] header {
-    background-color: #ffffff !important;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
-}
-[data-theme="default"] .bg-gray-50 { background-color: #f8fafc !important; }
-[data-theme="default"] .border-gray-200 { border-color: #e2e8f0 !important; }
-
-/* --- Dark (legacy) --- */
-[data-theme="dark"] body {
-    background-color: #121212 !important;
-    color: #E4E4E7 !important;
-}
-[data-theme="dark"] .bg-white,
-[data-theme="dark"] header { background-color: #1e1e1e !important; }
-[data-theme="dark"] .bg-gray-50 { background-color: #2a2a2a !important; }
-[data-theme="dark"] .text-gray-900 { color: #E4E4E7 !important; }
-[data-theme="dark"] .text-gray-600,
-[data-theme="dark"] .text-gray-700 { color: #a1a1aa !important; }
-[data-theme="dark"] .border-gray-200 { border-color: #3f3f46 !important; }
-[data-theme="dark"] .bg-primary,
-[data-theme="dark"] button.bg-primary { background-color: #60a5fa !important; }
-[data-theme="dark"] .bg-primary:hover { background-color: #3b82f6 !important; }
-[data-theme="dark"] .hover\:bg-gray-50:hover,
-[data-theme="dark"] .hover\:bg-gray-100:hover { background-color: #3f3f46 !important; }
-[data-theme="dark"] .hover\:bg-white:hover { background-color: #2a2a2a !important; }
-[data-theme="dark"] .bg-blue-50 { background-color: #1e293b !important; }
-[data-theme="dark"] .bg-blue-100 { background-color: #374151 !important; }
-[data-theme="dark"] .text-blue-700 { color: #93c5fd !important; }
-[data-theme="dark"] .hover\:bg-blue-200:hover { background-color: #4b5563 !important; }

@@ -1,195 +1,202 @@
-<div id="subscription-list" class="overflow-x-auto">
+<div id="subscription-list" style="overflow-x:auto;">
     {{if .Subscriptions}}
-    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-        <thead class="bg-gray-50 dark:bg-gray-800">
+    <div class="sub-table-wrap">
+    <table class="sub-table">
+        <thead>
             <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    <button 
+                <th class="sortable">
+                    <button
                         hx-get="/api/subscriptions?sort=name&order={{if and (eq .SortBy "name") (eq .Order "asc")}}desc{{else}}asc{{end}}"
                         hx-target="#subscription-list"
                         hx-swap="outerHTML"
-                        class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                        style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;">
                         <span>{{.T.Tr "sub_list_name"}}</span>
                         {{if eq .SortBy "name"}}
-                        <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;{{if eq .Order "asc"}}transform:rotate(180deg);{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{else}}
-                        <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;opacity:0.3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{end}}
                     </button>
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    <button 
+                <th class="sortable">
+                    <button
                         hx-get="/api/subscriptions?sort=category&order={{if and (eq .SortBy "category") (eq .Order "asc")}}desc{{else}}asc{{end}}"
                         hx-target="#subscription-list"
                         hx-swap="outerHTML"
-                        class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                        style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;">
                         <span>{{.T.Tr "sub_form_category"}}</span>
                         {{if eq .SortBy "category"}}
-                        <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;{{if eq .Order "asc"}}transform:rotate(180deg);{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{else}}
-                        <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;opacity:0.3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{end}}
                     </button>
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    <button 
+                <th class="sortable">
+                    <button
                         hx-get="/api/subscriptions?sort=cost&order={{if and (eq .SortBy "cost") (eq .Order "asc")}}desc{{else}}asc{{end}}"
                         hx-target="#subscription-list"
                         hx-swap="outerHTML"
-                        class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                        style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;">
                         <span>{{.T.Tr "sub_list_cost"}}</span>
                         {{if eq .SortBy "cost"}}
-                        <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;{{if eq .Order "asc"}}transform:rotate(180deg);{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{else}}
-                        <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;opacity:0.3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{end}}
                     </button>
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    <button 
+                <th class="sortable">
+                    <button
                         hx-get="/api/subscriptions?sort=schedule&order={{if and (eq .SortBy "schedule") (eq .Order "asc")}}desc{{else}}asc{{end}}"
                         hx-target="#subscription-list"
                         hx-swap="outerHTML"
-                        class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                        style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;">
                         <span>{{.T.Tr "sub_list_schedule"}}</span>
                         {{if eq .SortBy "schedule"}}
-                        <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;{{if eq .Order "asc"}}transform:rotate(180deg);{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{else}}
-                        <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;opacity:0.3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{end}}
                     </button>
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    <button 
+                <th class="sortable">
+                    <button
                         hx-get="/api/subscriptions?sort=status&order={{if and (eq .SortBy "status") (eq .Order "asc")}}desc{{else}}asc{{end}}"
                         hx-target="#subscription-list"
                         hx-swap="outerHTML"
-                        class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                        style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;">
                         <span>{{.T.Tr "sub_list_status"}}</span>
                         {{if eq .SortBy "status"}}
-                        <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;{{if eq .Order "asc"}}transform:rotate(180deg);{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{else}}
-                        <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;opacity:0.3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{end}}
                     </button>
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    <button 
+                <th class="sortable">
+                    <button
                         hx-get="/api/subscriptions?sort=renewal_date&order={{if and (eq .SortBy "renewal_date") (eq .Order "asc")}}desc{{else}}asc{{end}}"
                         hx-target="#subscription-list"
                         hx-swap="outerHTML"
-                        class="flex items-center space-x-1 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">
+                        style="display:inline-flex;align-items:center;gap:4px;background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;">
                         <span>{{.T.Tr "sub_form_renewal_date"}}</span>
                         {{if eq .SortBy "renewal_date"}}
-                        <svg class="w-4 h-4 {{if eq .Order "asc"}}transform rotate-180{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;{{if eq .Order "asc"}}transform:rotate(180deg);{{end}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{else}}
-                        <svg class="w-4 h-4 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:14px;height:14px;opacity:0.3;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
                         </svg>
                         {{end}}
                     </button>
                 </th>
-                <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <th style="text-align:right;">
                     {{.T.Tr "btn_actions"}}
                 </th>
             </tr>
         </thead>
-        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        <tbody>
             {{range .Subscriptions}}
-            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 cursor-pointer"
+            <tr style="cursor:pointer;"
                 onclick="htmx.ajax('GET', '/form/subscription/{{.ID}}', {target:'#modal-content', swap:'innerHTML'}); document.getElementById('modal').classList.remove('hidden');">
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="flex items-center">
+                <td style="white-space:nowrap;">
+                    <div style="display:flex;align-items:center;gap:10px;">
                         {{if .IconURL}}
-                        <img src="{{.IconURL}}" alt="{{.Name}}" class="w-8 h-8 rounded mr-3 flex-shrink-0" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="object-fit: contain;">
-                        <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else if eq .Status "Trial"}}bg-info{{else}}bg-warning{{end}} rounded-full mr-3" style="display:none;"></div>
+                        <img src="{{.IconURL}}" alt="{{.Name}}" style="width:28px;height:28px;border-radius:var(--radius-sm);object-fit:contain;flex-shrink:0;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div style="display:none;width:10px;height:10px;border-radius:50%;flex-shrink:0;background:{{if eq .Status "Active"}}var(--success){{else if eq .Status "Cancelled"}}var(--danger){{else if eq .Status "Trial"}}var(--info){{else}}var(--warning){{end}};"></div>
                         {{else}}
-                        <div class="w-3 h-3 {{if eq .Status "Active"}}bg-success{{else if eq .Status "Cancelled"}}bg-danger{{else if eq .Status "Trial"}}bg-info{{else}}bg-warning{{end}} rounded-full mr-3"></div>
+                        <div style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:{{if eq .Status "Active"}}var(--success){{else if eq .Status "Cancelled"}}var(--danger){{else if eq .Status "Trial"}}var(--info){{else}}var(--warning){{end}};"></div>
                         {{end}}
                         <div>
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{.Name}}</div>
+                            <div style="font-size:13px;font-weight:500;color:var(--text);">{{.Name}}</div>
                             {{if .URL}}
-                            <a href="{{.URL}}" target="_blank" onclick="event.stopPropagation()" class="text-xs text-primary hover:text-primary/80 dark:text-primary-light">{{.URL}}</a>
+                            <a href="{{.URL}}" target="_blank" onclick="event.stopPropagation()" style="font-size:12px;color:var(--accent);text-decoration:none;">{{.URL}}</a>
                             {{end}}
                         </div>
                     </div>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900 dark:text-white">{{.Category.Name}}</div>
+                <td style="white-space:nowrap;">
+                    <span style="font-size:13px;color:var(--text);">{{.Category.Name}}</span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
+                <td style="white-space:nowrap;">
                     {{if .ShowConversion}}
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}}</div>
-                    <span class="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1"
+                    <div style="font-size:13px;font-weight:500;color:var(--text);">{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}}</div>
+                    <span style="font-size:12px;color:var(--text-muted);display:inline-flex;align-items:center;gap:4px;"
                           title="{{$.T.Tr "tooltip_original_amount"}}">
                         {{.OriginalCurrency}} {{printf "%.2f" .Cost}}
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </span>
                     {{else}}
-                    <div class="text-sm font-medium text-gray-900 dark:text-white">{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}</div>
+                    <div style="font-size:13px;font-weight:500;color:var(--text);">{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}</div>
                     {{end}}
                     {{if gt .TaxRate 0.0}}
-                    <span class="text-xs text-gray-400 dark:text-gray-500">
+                    <span style="font-size:11px;color:var(--text-muted);">
                         {{if eq .PriceType "net"}}{{$.T.Tr "price_type_net"}}{{else}}{{$.T.Tr "price_type_gross"}}{{end}} + {{printf "%.0f" .TaxRate}}% {{$.T.Tr "sub_form_tax_amount"}}
                     </span>
                     {{end}}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900 dark:text-white">{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</div>
+                <td style="white-space:nowrap;">
+                    <span style="font-size:13px;color:var(--text);">{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{if eq .Status "Active"}}bg-success/20 text-success{{else if eq .Status "Cancelled"}}bg-danger/20 text-danger{{else if eq .Status "Trial"}}bg-info/20 text-info{{else}}bg-warning/20 text-warning{{end}}">
+                <td style="white-space:nowrap;">
+                    <span class="sub-card-status {{if eq .Status "Active"}}status-active{{else if eq .Status "Cancelled"}}status-cancelled{{else if eq .Status "Trial"}}status-trial{{else if eq .Status "Paused"}}status-paused{{end}}">
+                        <span class="dot"></span>
                         {{if eq .Status "Active"}}{{$.T.Tr "status_active"}}{{else if eq .Status "Cancelled"}}{{$.T.Tr "status_cancelled"}}{{else if eq .Status "Paused"}}{{$.T.Tr "status_paused"}}{{else if eq .Status "Trial"}}{{$.T.Tr "status_trial"}}{{else}}{{.Status}}{{end}}
                     </span>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                <td style="white-space:nowrap;color:var(--text-muted);font-size:13px;">
                     {{if .RenewalDate}}
                     {{$.T.FormatDate .RenewalDate}}
                     {{else}}
-                    <span class="text-gray-400 dark:text-gray-500">—</span>
+                    <span style="color:var(--text-muted);">—</span>
                     {{end}}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div class="flex items-center justify-end space-x-2">
+                <td style="white-space:nowrap;text-align:right;">
+                    <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;">
                         {{if .Notes}}
-                        <div class="relative group" onclick="event.stopPropagation()">
+                        <div style="position:relative;" onclick="event.stopPropagation()">
                             <button
-                                class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-150"
+                                style="background:none;border:none;padding:2px;cursor:pointer;color:var(--text-muted);transition:color .15s;"
+                                onmouseenter="this.style.color='var(--text)';this.parentElement.querySelector('.note-tooltip').style.opacity='1';this.parentElement.querySelector('.note-tooltip').style.visibility='visible'"
+                                onmouseleave="this.style.color='var(--text-muted)';this.parentElement.querySelector('.note-tooltip').style.opacity='0';this.parentElement.querySelector('.note-tooltip').style.visibility='hidden'"
+                                onfocus="this.parentElement.querySelector('.note-tooltip').style.opacity='1';this.parentElement.querySelector('.note-tooltip').style.visibility='visible'"
+                                onblur="this.parentElement.querySelector('.note-tooltip').style.opacity='0';this.parentElement.querySelector('.note-tooltip').style.visibility='hidden'"
                                 aria-label="View note"
                                 aria-describedby="note-tooltip-{{.ID}}"
                                 title="View note">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                 </svg>
                             </button>
-                            <div id="note-tooltip-{{.ID}}" class="absolute right-0 bottom-full mb-2 w-auto min-w-0 p-1.5 bg-gray-900 dark:bg-gray-700 text-white dark:text-gray-100 text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-10 whitespace-nowrap">
-                                <p>{{.Notes}}</p>
-                                <div class="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900 dark:border-t-gray-700"></div>
+                            <div id="note-tooltip-{{.ID}}" class="note-tooltip"
+                                 style="position:absolute;right:0;bottom:100%;margin-bottom:8px;padding:6px 10px;background:var(--text);color:var(--bg);font-size:12px;border-radius:var(--radius-sm);box-shadow:0 4px 12px rgba(0,0,0,.15);opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s;z-index:10;white-space:nowrap;pointer-events:none;">
+                                <p style="margin:0;">{{.Notes}}</p>
+                                <div style="position:absolute;top:100%;right:16px;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:4px solid var(--text);"></div>
                             </div>
                         </div>
                         {{end}}
@@ -199,9 +206,11 @@
                             hx-confirm="{{$.T.Tr "confirm_delete_subscription"}}"
                             hx-target="#subscription-list"
                             hx-swap="outerHTML"
-                            class="text-gray-400 dark:text-gray-500 hover:text-danger dark:hover:text-red-400 transition-colors duration-150"
+                            style="background:none;border:none;padding:2px;cursor:pointer;color:var(--text-muted);transition:color .15s;"
+                            onmouseenter="this.style.color='var(--danger)'"
+                            onmouseleave="this.style.color='var(--text-muted)'"
                             title="{{$.T.Tr "btn_delete"}}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                             </svg>
                         </button>
@@ -211,18 +220,18 @@
             {{end}}
         </tbody>
     </table>
+    </div>
     {{else}}
-    <div class="p-12 text-center">
-        <svg class="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="empty-row" style="padding:60px 20px;">
+        <svg style="width:48px;height:48px;color:var(--text-muted);margin:0 auto 16px;display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
         </svg>
-        <p class="text-gray-500 dark:text-gray-400 text-sm mb-4">{{.T.Tr "sub_list_empty"}}</p>
-        <button 
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:16px;">{{.T.Tr "sub_list_empty"}}</p>
+        <button class="btn btn-primary"
             hx-get="/form/subscription"
             hx-target="#modal-content"
             hx-trigger="click"
-            onclick="document.getElementById('modal').classList.remove('hidden')"
-            class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 transition-colors duration-150">
+            onclick="document.getElementById('modal').classList.remove('hidden')">
             {{.T.Tr "sub_list_empty_hint"}}
         </button>
     </div>

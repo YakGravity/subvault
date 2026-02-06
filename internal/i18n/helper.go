@@ -8,9 +8,10 @@ import (
 
 // TranslationHelper provides template-friendly translation methods
 type TranslationHelper struct {
-	localizer *i18n.Localizer
-	service   *I18nService
-	lang      string
+	localizer  *i18n.Localizer
+	service    *I18nService
+	lang       string
+	dateFormat string // Go format string, e.g. "02.01.2006"
 }
 
 // NewTranslationHelper creates a new TranslationHelper for use in templates
@@ -20,6 +21,11 @@ func NewTranslationHelper(service *I18nService, localizer *i18n.Localizer, lang 
 		service:   service,
 		lang:      lang,
 	}
+}
+
+// SetDateFormat overrides the locale-based date format with a custom Go format string
+func (h *TranslationHelper) SetDateFormat(format string) {
+	h.dateFormat = format
 }
 
 // FormatDate formats a date according to the current locale.
@@ -36,6 +42,9 @@ func (h *TranslationHelper) FormatDate(v any) string {
 		t = *val
 	default:
 		return ""
+	}
+	if h.dateFormat != "" {
+		return t.Format(h.dateFormat)
 	}
 	switch h.lang {
 	case "de":

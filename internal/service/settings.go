@@ -606,6 +606,22 @@ func (s *SettingsService) GetLanguage() string {
 	return lang
 }
 
+// SetDateFormat saves the date format preference
+func (s *SettingsService) SetDateFormat(format string) error {
+	s.invalidateCache()
+	return s.repo.Set("date_format", format)
+}
+
+// GetDateFormat retrieves the date format preference (Go format string).
+// Returns empty string if not set (locale default will be used).
+func (s *SettingsService) GetDateFormat() string {
+	val, ok := s.getCached("date_format")
+	if !ok || val == "" {
+		return ""
+	}
+	return val
+}
+
 // GenerateCalendarToken creates a new calendar feed token
 func (s *SettingsService) GenerateCalendarToken() (string, error) {
 	bytes := make([]byte, 32)

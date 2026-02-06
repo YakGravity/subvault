@@ -13,6 +13,9 @@ func I18nMiddleware(i18nService *i18n.I18nService, settingsService *service.Sett
 		lang := settingsService.GetLanguage()
 		localizer := i18nService.NewLocalizer(lang)
 		helper := i18n.NewTranslationHelper(i18nService, localizer, lang)
+		if df := settingsService.GetDateFormat(); df != "" {
+			helper.SetDateFormat(df)
+		}
 
 		c.Set("lang", lang)
 		c.Set("localizer", localizer)

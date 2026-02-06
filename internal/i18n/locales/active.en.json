@@ -113,6 +113,21 @@
   "import_result_summary": {
     "other": "Import completed"
   },
+  "import_imported": {
+    "other": "Imported"
+  },
+  "import_skipped": {
+    "other": "Skipped"
+  },
+  "import_errors": {
+    "other": "Errors"
+  },
+  "import_details": {
+    "other": "Details"
+  },
+  "import_go_dashboard": {
+    "other": "Go to Dashboard"
+  },
   "import_error_parse": {
     "other": "Failed to parse import file"
   },
@@ -1406,5 +1421,83 @@
   },
   "theme_system_desc": {
     "other": "Follow your device settings"
+  },
+  "settings_accent_title": {
+    "other": "Accent Color"
+  },
+  "settings_accent_desc": {
+    "other": "Choose an accent color for buttons and highlights"
+  },
+  "accent_green": {
+    "other": "Green"
+  },
+  "accent_purple": {
+    "other": "Purple"
+  },
+  "accent_red": {
+    "other": "Red"
+  },
+  "settings_display_title": {
+    "other": "Display"
+  },
+  "settings_compact_label": {
+    "other": "Compact View"
+  },
+  "settings_compact_desc": {
+    "other": "Reduce spacing and font sizes to show more content"
+  },
+  "settings_sidebar_label": {
+    "other": "Collapse Sidebar"
+  },
+  "settings_sidebar_desc": {
+    "other": "Show only icons in the sidebar"
+  },
+  "settings_view_label": {
+    "other": "Default View"
+  },
+  "settings_view_desc": {
+    "other": "Preferred view on the subscriptions page"
+  },
+  "view_table": {
+    "other": "Table"
+  },
+  "settings_fontsize_label": {
+    "other": "Font Size"
+  },
+  "settings_fontsize_desc": {
+    "other": "Adjust the text size of the application"
+  },
+  "fontsize_small": {
+    "other": "Small"
+  },
+  "fontsize_normal": {
+    "other": "Normal"
+  },
+  "fontsize_large": {
+    "other": "Large"
+  },
+  "settings_dateformat_title": {
+    "other": "Date Format"
+  },
+  "settings_dateformat_desc": {
+    "other": "How dates are displayed throughout the application"
+  },
+  "theme_nord_desc": {
+    "other": "Cool arctic blue tones"
+  },
+  "theme_catppuccin_desc": {
+    "other": "Soft pastel colors"
+  },
+  "theme_dracula_desc": {
+    "other": "Bold and high contrast"
+  },
+  "theme_rosepine_name": {
+    "other": "Rosé Pine"
+  },
+  "theme_rosepine_desc": {
+    "other": "Elegant and muted"
+  },
+  "theme_gruvbox_desc": {
+    "other": "Warm retro earth tones"
   }
 }
