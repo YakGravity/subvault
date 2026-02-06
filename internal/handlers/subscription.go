@@ -235,25 +235,6 @@ func (h *SubscriptionHandler) SubscriptionsList(c *gin.Context) {
 	c.HTML(http.StatusOK, "subscriptions.html", data)
 }
 
-// Analytics renders the analytics page
-func (h *SubscriptionHandler) Analytics(c *gin.Context) {
-	stats, err := h.service.GetStats()
-	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.html", gin.H{"error": err.Error()})
-		return
-	}
-
-	data := baseTemplateData(c)
-	mergeTemplateData(data, gin.H{
-		"Title":          "Analytics",
-		"CurrentPage":    "analytics",
-		"Stats":          stats,
-		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
-		"DarkMode":       h.settingsService.IsDarkModeEnabled(),
-	})
-	c.HTML(http.StatusOK, "analytics.html", data)
-}
-
 // Calendar renders the calendar page with subscription renewal dates
 func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 	// Get all subscriptions with renewal dates

@@ -1,32 +1,32 @@
 {{if .Keys}}
     {{range .Keys}}
-    <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg">
-        <div class="flex-1">
-            <div class="flex items-center space-x-3">
-                <h5 class="text-sm font-medium text-gray-900">{{.Name}}</h5>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);">
+        <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:13px;font-weight:600;color:var(--text);">{{.Name}}</span>
                 {{if .IsNew}}
-                <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded">{{$.T.Tr "api_key_new_badge"}}</span>
+                <span style="padding:2px 8px;font-size:11px;font-weight:500;background:var(--success-light);color:var(--success);border-radius:var(--radius-sm);">{{$.T.Tr "api_key_new_badge"}}</span>
                 {{end}}
             </div>
             {{if .IsNew}}
-            <div class="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
-                <p class="text-xs text-yellow-800 mb-1">
+            <div style="margin-top:8px;padding:10px 12px;background:var(--warning-light);border:1px solid var(--border);border-radius:var(--radius-sm);">
+                <p style="font-size:12px;color:var(--warning);margin-bottom:6px;">
                     <strong>{{$.T.Tr "api_key_important"}}</strong> {{$.T.Tr "api_key_copy_warning"}}
                 </p>
-                <div class="flex items-center space-x-2">
-                    <code class="flex-1 text-xs bg-yellow-100 px-2 py-1 rounded font-mono">{{.Key}}</code>
-                    <button onclick="navigator.clipboard.writeText('{{.Key}}')" 
-                            class="text-yellow-700 hover:text-yellow-900">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <code style="flex:1;font-size:12px;font-family:var(--mono);background:var(--bg-hover);padding:4px 8px;border-radius:var(--radius-sm);word-break:break-all;color:var(--text);">{{.Key}}</code>
+                    <button onclick="navigator.clipboard.writeText('{{.Key}}')"
+                            style="padding:6px;color:var(--text-secondary);cursor:pointer;background:none;border:none;" title="Copy">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                         </svg>
                     </button>
                 </div>
             </div>
             {{else}}
-            <div class="text-xs text-gray-500 mt-1">
-                {{$.T.Tr "api_key_created"}}: {{$.T.FormatDate .CreatedAt}} •
-                {{if .LastUsed}}{{$.T.Tr "api_key_last_used"}}: {{$.T.FormatDate .LastUsed}}{{else}}{{$.T.Tr "api_key_never_used"}}{{end}} •
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">
+                {{$.T.Tr "api_key_created"}}: {{$.T.FormatDate .CreatedAt}} &middot;
+                {{if .LastUsed}}{{$.T.Tr "api_key_last_used"}}: {{$.T.FormatDate .LastUsed}}{{else}}{{$.T.Tr "api_key_never_used"}}{{end}} &middot;
                 {{$.T.Tr "api_key_usage"}}: {{.UsageCount}} {{$.T.Tr "api_key_requests"}}
             </div>
             {{end}}
@@ -35,15 +35,16 @@
                 hx-confirm="{{$.T.Tr "confirm_delete_api_key"}}"
                 hx-target="#api-keys-list"
                 hx-swap="innerHTML"
-                class="ml-4 text-gray-400 hover:text-danger">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                style="margin-left:12px;padding:6px;color:var(--text-muted);cursor:pointer;background:none;border:none;"
+                title="{{$.T.Tr "btn_delete"}}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:16px;height:16px;">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
             </svg>
         </button>
     </div>
     {{end}}
 {{else}}
-    <div class="text-center py-4 text-gray-500 bg-gray-50 rounded-lg">
+    <div style="text-align:center;padding:16px 0;color:var(--text-muted);font-size:13px;background:var(--bg-hover);border-radius:var(--radius);">
         {{if .T}}{{.T.Tr "no_api_keys_yet"}}{{else}}No API keys created yet{{end}}
     </div>
 {{end}}

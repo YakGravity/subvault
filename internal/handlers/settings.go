@@ -46,6 +46,15 @@ func (h *SettingsHandler) SettingsGeneral(c *gin.Context) {
 	c.HTML(http.StatusOK, "settings-general.html", data)
 }
 
+// SettingsAppearance renders the Appearance settings page (Light/Dark/System)
+func (h *SettingsHandler) SettingsAppearance(c *gin.Context) {
+	data := h.settingsBaseData(c, "appearance")
+	mergeTemplateData(data, gin.H{
+		"Title": "Appearance",
+	})
+	c.HTML(http.StatusOK, "settings-appearance.html", data)
+}
+
 // SettingsNotifications renders the Notifications settings page (SMTP, Shoutrrr, Preferences)
 func (h *SettingsHandler) SettingsNotifications(c *gin.Context) {
 	var smtpConfig *models.SMTPConfig
@@ -541,18 +550,8 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 		return
 	}
 
-	// Check if SMTP is configured (required for password reset)
-	_, err := h.service.GetSMTPConfig()
-	if err != nil {
-		c.HTML(http.StatusBadRequest, "auth-message.html", gin.H{
-			"Error": tr(c, "settings_error_email_first", "Please configure email settings first (required for password recovery)"),
-			"Type":  "error",
-		})
-		return
-	}
-
 	// Setup authentication
-	err = h.service.SetupAuth(username, password)
+	err := h.service.SetupAuth(username, password)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "auth-message.html", gin.H{
 			"Error": err.Error(),

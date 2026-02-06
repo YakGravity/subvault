@@ -1057,6 +1057,24 @@
   "sub_list_category": {
     "other": "Category"
   },
+  "sub_list_renewal": {
+    "other": "Renewal"
+  },
+  "sort_name": {
+    "other": "Name"
+  },
+  "sort_cost": {
+    "other": "Cost"
+  },
+  "sort_date": {
+    "other": "Date"
+  },
+  "sort_status": {
+    "other": "Status"
+  },
+  "sort_category": {
+    "other": "Category"
+  },
   "sub_list_uncategorized": {
     "other": "Uncategorized"
   },
@@ -1364,5 +1382,29 @@
   },
   "api_docs_subtitle": {
     "other": "REST API reference and examples"
+  },
+  "settings_tab_appearance": {
+    "other": "Appearance"
+  },
+  "settings_appearance_title": {
+    "other": "Appearance"
+  },
+  "settings_appearance_desc": {
+    "other": "Choose your preferred color scheme"
+  },
+  "settings_appearance_subtitle": {
+    "other": "Customize the look of SubTrackr"
+  },
+  "theme_light": {
+    "other": "Light"
+  },
+  "theme_light_desc": {
+    "other": "Bright and clear"
+  },
+  "theme_system": {
+    "other": "System"
+  },
+  "theme_system_desc": {
+    "other": "Follow your device settings"
   }
 }

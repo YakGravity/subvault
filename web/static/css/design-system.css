@@ -267,9 +267,42 @@ a { color: inherit; text-decoration: none; }
 }
 
 .sidebar-footer {
+    padding-top: 8px;
+}
+
+.theme-switch {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    padding: 12px 16px;
     margin-top: auto;
-    padding-top: 16px;
     border-top: 1px solid rgba(255, 255, 255, .08);
+}
+
+.theme-switch-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s;
+    padding: 0;
+}
+
+.theme-switch-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+}
+
+.theme-switch-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
 }
 
 /* ═══════════════════════════════════════════
@@ -546,11 +579,13 @@ a { color: inherit; text-decoration: none; }
     border-radius: 8px;
 }
 
-.renewal-icon .fallback {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--text-muted);
+.renewal-icon .icon-fallback {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    line-height: 1;
+    user-select: none;
 }
 
 .renewal-info {
@@ -699,6 +734,8 @@ a { color: inherit; text-decoration: none; }
     cursor: pointer;
     transition: all .2s;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .sub-card:hover {
@@ -731,6 +768,15 @@ a { color: inherit; text-decoration: none; }
     height: 100%;
     object-fit: cover;
     border-radius: 10px;
+}
+
+.sub-card-icon .icon-fallback {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    line-height: 1;
+    user-select: none;
 }
 
 .sub-card-name {
@@ -768,6 +814,7 @@ a { color: inherit; text-decoration: none; }
     justify-content: space-between;
     padding-top: 12px;
     border-top: 1px solid var(--border-light);
+    margin-top: auto;
 }
 
 .sub-card-status {
@@ -800,49 +847,176 @@ a { color: inherit; text-decoration: none; }
     color: var(--text-muted);
 }
 
-.sub-card-actions {
+.sub-card-close {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    display: flex;
-    gap: 4px;
-    opacity: 0;
-    transition: opacity .15s;
-}
-
-.sub-card:hover .sub-card-actions {
-    opacity: 1;
-}
-
-.sub-card-actions button {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
+    top: -1px;
+    right: -1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
     border: 1px solid var(--border);
-    background: var(--bg-card);
+    background: var(--bg);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-secondary);
-    transition: all .1s;
+    color: var(--text-muted);
+    transition: all .15s;
+    padding: 0;
+    z-index: 2;
 }
 
-.sub-card-actions button:hover {
-    background: var(--border-light);
-    color: var(--accent);
-    border-color: transparent;
-}
-
-.sub-card-actions button:last-child:hover {
+.sub-card-close:hover {
     background: var(--danger-light);
     color: var(--danger);
-    border-color: transparent;
+    border-color: var(--danger);
 }
 
-.sub-card-actions button svg {
-    width: 14px;
-    height: 14px;
+.sub-card-close svg {
+    width: 10px;
+    height: 10px;
+}
+
+.sub-card-original-cost {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    text-align: right;
+}
+
+/* ═══════════════════════════════════════════
+   SUB TOOLBAR
+   ═══════════════════════════════════════════ */
+.sub-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.filter-toggles {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .15s;
+    opacity: .5;
+}
+
+.filter-btn .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.filter-btn.active {
+    opacity: 1;
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.filter-btn:hover {
+    opacity: 1;
+}
+
+.sort-buttons {
+    display: flex;
+    gap: 2px;
+    background: var(--border-light);
+    border-radius: 6px;
+    padding: 2px;
+}
+
+.sort-btn {
+    padding: 5px 10px;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    transition: all .15s;
+    white-space: nowrap;
+}
+
+.sort-btn.active {
+    background: var(--bg-card);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+
+.sort-btn:hover {
+    color: var(--text);
+}
+
+.sort-arrow {
+    font-size: 11px;
+    color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════
+   SUB TABLE
+   ═══════════════════════════════════════════ */
+.sub-table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.sub-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.sub-table thead {
+    background: var(--border-light);
+}
+
+.sub-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid var(--border);
+}
+
+.sub-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+.sub-table tbody tr {
+    transition: background .1s;
+}
+
+.sub-table tbody tr:hover {
+    background: var(--border-light);
+}
+
+.sub-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 /* ═══════════════════════════════════════════
