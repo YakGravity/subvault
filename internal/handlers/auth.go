@@ -13,28 +13,26 @@ import (
 )
 
 type AuthHandler struct {
-	settingsService service.SettingsServiceInterface
-	sessionService  *service.SessionService
-	emailService    service.EmailServiceInterface
+	authService    service.AuthServiceInterface
+	sessionService *service.SessionService
+	emailService   service.EmailServiceInterface
+	notifConfig    service.NotificationConfigServiceInterface
 }
 
-func NewAuthHandler(settingsService service.SettingsServiceInterface, sessionService *service.SessionService, emailService service.EmailServiceInterface) *AuthHandler {
+func NewAuthHandler(authService service.AuthServiceInterface, sessionService *service.SessionService, emailService service.EmailServiceInterface, notifConfig service.NotificationConfigServiceInterface) *AuthHandler {
 	return &AuthHandler{
-		settingsService: settingsService,
-		sessionService:  sessionService,
-		emailService:    emailService,
+		authService:    authService,
+		sessionService: sessionService,
+		emailService:   emailService,
+		notifConfig:    notifConfig,
 	}
 }
 
 // isValidRedirect validates that a redirect URL is safe (relative URL only)
 func isValidRedirect(redirect string) bool {
-	// Check URL length to prevent DoS or log injection
 	if len(redirect) > 2048 {
 		return false
 	}
-
-	// Only allow relative URLs starting with / but not //
-	// This prevents open redirect vulnerabilities
 	if strings.HasPrefix(redirect, "/") && !strings.HasPrefix(redirect, "//") {
 		return true
 	}
@@ -43,7 +41,6 @@ func isValidRedirect(redirect string) bool {
 
 // ShowLoginPage displays the login page
 func (h *AuthHandler) ShowLoginPage(c *gin.Context) {
-	// If already authenticated, redirect to dashboard
 	if h.sessionService.IsAuthenticated(c.Request) {
 		c.Redirect(http.StatusFound, "/")
 		return
@@ -73,8 +70,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		redirect = "/"
 	}
 
-	// Validate credentials using constant-time comparison to prevent timing attacks
-	storedUsername, err := h.settingsService.GetAuthUsername()
+	storedUsername, err := h.authService.GetAuthUsername()
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "login-error.html", gin.H{
 			"Error": tr(c, "auth_error_system", "Authentication system error"),
@@ -82,15 +78,13 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// Always validate password even for invalid usernames (constant time)
 	validUsername := subtle.ConstantTimeCompare([]byte(storedUsername), []byte(username)) == 1
 
 	var validPassword bool
-	if err := h.settingsService.ValidatePassword(password); err == nil {
+	if err := h.authService.ValidatePassword(password); err == nil {
 		validPassword = true
 	}
 
-	// Only fail after both checks to prevent username enumeration via timing
 	if !validUsername || !validPassword {
 		c.HTML(http.StatusUnauthorized, "login-error.html", gin.H{
 			"Error": tr(c, "auth_error_invalid_credentials", "Invalid username or password"),
@@ -98,7 +92,6 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// Create session
 	if err := h.sessionService.CreateSession(c.Writer, c.Request, rememberMe); err != nil {
 		c.HTML(http.StatusInternalServerError, "login-error.html", gin.H{
 			"Error": tr(c, "auth_error_session", "Failed to create session"),
@@ -106,7 +99,6 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// Redirect to original destination or dashboard
 	c.Header("HX-Redirect", redirect)
 	c.Status(http.StatusOK)
 }
@@ -117,7 +109,6 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to logout"})
 		return
 	}
-
 	c.Redirect(http.StatusFound, "/login")
 }
 
@@ -129,8 +120,7 @@ func (h *AuthHandler) ShowForgotPasswordPage(c *gin.Context) {
 
 // ForgotPassword handles forgot password request
 func (h *AuthHandler) ForgotPassword(c *gin.Context) {
-	// Generate reset token
-	token, err := h.settingsService.GenerateResetToken()
+	token, err := h.authService.GenerateResetToken()
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": tr(c, "auth_error_generate_token", "Failed to generate reset token"),
@@ -138,8 +128,7 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 		return
 	}
 
-	// Check if SMTP is configured
-	_, err = h.settingsService.GetSMTPConfig()
+	_, err = h.notifConfig.GetSMTPConfig()
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": tr(c, "auth_error_email_not_configured", "Email is not configured. Please contact administrator."),
@@ -147,14 +136,12 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 		return
 	}
 
-	// Build reset URL
 	scheme := "http"
 	if c.Request.TLS != nil {
 		scheme = "https"
 	}
 	resetURL := fmt.Sprintf("%s://%s/reset-password?token=%s", scheme, c.Request.Host, url.QueryEscape(token))
 
-	// Send reset email
 	subject := "SubTrackr Password Reset"
 	body := fmt.Sprintf(`
 		<h2>Password Reset Request</h2>
@@ -183,24 +170,17 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 func (h *AuthHandler) ShowResetPasswordPage(c *gin.Context) {
 	token := c.Query("token")
 	if token == "" {
-		c.HTML(http.StatusBadRequest, "reset-password.html", gin.H{
-			"Error": "Invalid reset token",
-		})
+		c.HTML(http.StatusBadRequest, "reset-password.html", gin.H{"Error": "Invalid reset token"})
 		return
 	}
 
-	// Validate token
-	if err := h.settingsService.ValidateResetToken(token); err != nil {
-		c.HTML(http.StatusBadRequest, "reset-password.html", gin.H{
-			"Error": "Invalid or expired reset token",
-		})
+	if err := h.authService.ValidateResetToken(token); err != nil {
+		c.HTML(http.StatusBadRequest, "reset-password.html", gin.H{"Error": "Invalid or expired reset token"})
 		return
 	}
 
 	data := baseTemplateData(c)
-	mergeTemplateData(data, gin.H{
-		"Token": token,
-	})
+	mergeTemplateData(data, gin.H{"Token": token})
 	c.HTML(http.StatusOK, "reset-password.html", data)
 }
 
@@ -210,7 +190,6 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	newPassword := c.PostForm("new_password")
 	confirmPassword := c.PostForm("confirm_password")
 
-	// Validate password length FIRST (before checking if they match)
 	if len(newPassword) < 8 {
 		c.HTML(http.StatusBadRequest, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": tr(c, "auth_error_password_short", "Password must be at least 8 characters long"),
@@ -218,7 +197,6 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 		return
 	}
 
-	// Then validate passwords match
 	if newPassword != confirmPassword {
 		c.HTML(http.StatusBadRequest, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": tr(c, "auth_error_password_mismatch", ErrPasswordsDoNotMatch),
@@ -226,24 +204,21 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 		return
 	}
 
-	// Validate token
-	if err := h.settingsService.ValidateResetToken(token); err != nil {
+	if err := h.authService.ValidateResetToken(token); err != nil {
 		c.HTML(http.StatusBadRequest, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": tr(c, "auth_error_invalid_token", "Invalid or expired reset token"),
 		}))
 		return
 	}
 
-	// Update password
-	if err := h.settingsService.SetAuthPassword(newPassword); err != nil {
+	if err := h.authService.SetAuthPassword(newPassword); err != nil {
 		c.HTML(http.StatusInternalServerError, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
 			"Error": tr(c, "auth_error_update_password", "Failed to update password"),
 		}))
 		return
 	}
 
-	// Clear reset token
-	h.settingsService.ClearResetToken()
+	h.authService.ClearResetToken()
 
 	c.HTML(http.StatusOK, "reset-password-success.html", mergeTemplateData(baseTemplateData(c), gin.H{
 		"Message": tr(c, "auth_success_password_reset", "Password reset successfully. You can now login with your new password."),

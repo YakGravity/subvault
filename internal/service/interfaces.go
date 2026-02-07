@@ -18,10 +18,8 @@ type SubscriptionServiceInterface interface {
 	GetSubscriptionsNeedingCancellationReminders() (map[*models.Subscription]int, error)
 }
 
-// SettingsServiceInterface defines the contract for application settings operations.
+// SettingsServiceInterface defines the contract for base settings operations (cache + typed get/set).
 type SettingsServiceInterface interface {
-	SaveSMTPConfig(config *models.SMTPConfig) error
-	GetSMTPConfig() (*models.SMTPConfig, error)
 	SetBoolSetting(key string, value bool) error
 	GetBoolSetting(key string, defaultValue bool) (bool, error)
 	GetBoolSettingWithDefault(key string, defaultValue bool) bool
@@ -31,17 +29,10 @@ type SettingsServiceInterface interface {
 	SetFloatSetting(key string, value float64) error
 	GetFloatSetting(key string, defaultValue float64) (float64, error)
 	GetFloatSettingWithDefault(key string, defaultValue float64) float64
-	GetTheme() (string, error)
-	SetTheme(theme string) error
-	CreateAPIKey(name, key string) (*models.APIKey, error)
-	GetAllAPIKeys() ([]models.APIKey, error)
-	DeleteAPIKey(id uint) error
-	ValidateAPIKey(key string) (*models.APIKey, error)
-	SetCurrency(currency string) error
-	GetCurrency() string
-	GetCurrencySymbol() string
-	SetDarkMode(enabled bool) error
-	IsDarkModeEnabled() bool
+}
+
+// AuthServiceInterface defines the contract for authentication operations.
+type AuthServiceInterface interface {
 	IsAuthEnabled() bool
 	SetAuthEnabled(enabled bool) error
 	GetAuthUsername() (string, error)
@@ -56,13 +47,42 @@ type SettingsServiceInterface interface {
 	GenerateResetToken() (string, error)
 	ValidateResetToken(token string) error
 	ClearResetToken() error
-	SaveShoutrrrConfig(config *models.ShoutrrrConfig) error
-	GetShoutrrrConfig() (*models.ShoutrrrConfig, error)
-	MigratePushoverToShoutrrr() error
+}
+
+// APIKeyServiceInterface defines the contract for API key operations.
+type APIKeyServiceInterface interface {
+	CreateAPIKey(name, key string) (*models.APIKey, error)
+	GetAllAPIKeys() ([]models.APIKey, error)
+	DeleteAPIKey(id uint) error
+	ValidateAPIKey(key string) (*models.APIKey, error)
+}
+
+// PreferencesServiceInterface defines the contract for user preference operations.
+type PreferencesServiceInterface interface {
+	GetTheme() (string, error)
+	SetTheme(theme string) error
+	IsDarkModeEnabled() bool
+	SetDarkMode(enabled bool) error
+	SetCurrency(currency string) error
+	GetCurrency() string
+	GetCurrencySymbol() string
 	SetLanguage(lang string) error
 	GetLanguage() string
 	SetDateFormat(format string) error
 	GetDateFormat() string
+}
+
+// NotificationConfigServiceInterface defines the contract for notification configuration operations.
+type NotificationConfigServiceInterface interface {
+	SaveSMTPConfig(config *models.SMTPConfig) error
+	GetSMTPConfig() (*models.SMTPConfig, error)
+	SaveShoutrrrConfig(config *models.ShoutrrrConfig) error
+	GetShoutrrrConfig() (*models.ShoutrrrConfig, error)
+	MigratePushoverToShoutrrr() error
+}
+
+// CalendarServiceInterface defines the contract for calendar token operations.
+type CalendarServiceInterface interface {
 	GenerateCalendarToken() (string, error)
 	GetCalendarToken() (string, error)
 	RevokeCalendarToken() error
@@ -116,6 +136,11 @@ type LogoServiceInterface interface {
 // Compile-time interface satisfaction checks.
 var _ SubscriptionServiceInterface = (*SubscriptionService)(nil)
 var _ SettingsServiceInterface = (*SettingsService)(nil)
+var _ AuthServiceInterface = (*AuthService)(nil)
+var _ APIKeyServiceInterface = (*APIKeyService)(nil)
+var _ PreferencesServiceInterface = (*PreferencesService)(nil)
+var _ NotificationConfigServiceInterface = (*NotificationConfigService)(nil)
+var _ CalendarServiceInterface = (*CalendarService)(nil)
 var _ CurrencyServiceInterface = (*CurrencyService)(nil)
 var _ CategoryServiceInterface = (*CategoryService)(nil)
 var _ EmailServiceInterface = (*EmailService)(nil)

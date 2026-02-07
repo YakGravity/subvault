@@ -11,7 +11,7 @@ import (
 func (h *SettingsHandler) UpdateCurrency(c *gin.Context) {
 	currency := c.PostForm("currency")
 
-	err := h.service.SetCurrency(currency)
+	err := h.preferences.SetCurrency(currency)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -19,7 +19,7 @@ func (h *SettingsHandler) UpdateCurrency(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"currency": currency,
-		"symbol":   h.service.GetCurrencySymbol(),
+		"symbol":   h.preferences.GetCurrencySymbol(),
 	})
 }
 
@@ -27,7 +27,7 @@ func (h *SettingsHandler) UpdateCurrency(c *gin.Context) {
 func (h *SettingsHandler) UpdateLanguage(c *gin.Context) {
 	lang := c.PostForm("language")
 
-	err := h.service.SetLanguage(lang)
+	err := h.preferences.SetLanguage(lang)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -39,7 +39,7 @@ func (h *SettingsHandler) UpdateLanguage(c *gin.Context) {
 
 // GenerateCalendarToken creates a new calendar feed token
 func (h *SettingsHandler) GenerateCalendarToken(c *gin.Context) {
-	token, err := h.service.GenerateCalendarToken()
+	token, err := h.calendar.GenerateCalendarToken()
 	if err != nil {
 		slog.Error("failed to generate calendar token", "error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
@@ -53,7 +53,7 @@ func (h *SettingsHandler) GenerateCalendarToken(c *gin.Context) {
 
 // RevokeCalendarToken deletes the calendar feed token
 func (h *SettingsHandler) RevokeCalendarToken(c *gin.Context) {
-	if err := h.service.RevokeCalendarToken(); err != nil {
+	if err := h.calendar.RevokeCalendarToken(); err != nil {
 		slog.Error("failed to revoke calendar token", "error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return

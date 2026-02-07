@@ -63,45 +63,50 @@ func main() {
 	categoryService := service.NewCategoryService(categoryRepo)
 	currencyService := service.NewCurrencyService(exchangeRateRepo)
 	settingsService := service.NewSettingsService(settingsRepo)
-	subscriptionService := service.NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
-	emailService := service.NewEmailService(settingsService, i18nService)
-	shoutrrrService := service.NewShoutrrrService(settingsService, i18nService)
+	preferencesService := service.NewPreferencesService(settingsService)
+	authService := service.NewAuthService(settingsService, settingsRepo)
+	apiKeyService := service.NewAPIKeyService(settingsRepo)
+	notifConfigService := service.NewNotificationConfigService(settingsService, settingsRepo)
+	calendarService := service.NewCalendarService(settingsService, settingsRepo)
+	subscriptionService := service.NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
+	emailService := service.NewEmailService(preferencesService, notifConfigService, i18nService)
+	shoutrrrService := service.NewShoutrrrService(preferencesService, notifConfigService, i18nService)
 
 	// Migrate existing Pushover config to Shoutrrr format (one-time migration)
-	if err := settingsService.MigratePushoverToShoutrrr(); err != nil {
+	if err := notifConfigService.MigratePushoverToShoutrrr(); err != nil {
 		slog.Warn("pushover to shoutrrr migration failed", "error", err)
 	}
 	logoService := service.NewLogoService()
 
 	// Handle CLI commands (run before starting HTTP server)
 	if *disableAuth {
-		handleDisableAuth(settingsService)
+		handleDisableAuth(authService)
 		return
 	}
 
 	if *resetPassword {
-		handleResetPassword(settingsService, *newPassword)
+		handleResetPassword(authService, *newPassword)
 		return
 	}
 
 	// Initialize session service (get or generate session secret)
-	sessionSecret, err := settingsService.GetOrGenerateSessionSecret()
+	sessionSecret, err := authService.GetOrGenerateSessionSecret()
 	if err != nil {
 		log.Fatal("Failed to initialize session secret:", err)
 	}
 	sessionService := service.NewSessionService(sessionSecret)
 
 	// Initialize CSRF secret
-	csrfSecret, err := settingsService.GetOrGenerateCSRFSecret()
+	csrfSecret, err := authService.GetOrGenerateCSRFSecret()
 	if err != nil {
 		log.Fatal("Failed to initialize CSRF secret:", err)
 	}
 
 	// Initialize handlers
-	subscriptionHandler := handlers.NewSubscriptionHandler(subscriptionService, settingsService, currencyService, emailService, shoutrrrService, logoService)
-	settingsHandler := handlers.NewSettingsHandler(settingsService)
+	subscriptionHandler := handlers.NewSubscriptionHandler(subscriptionService, preferencesService, settingsService, calendarService, currencyService, emailService, shoutrrrService, logoService)
+	settingsHandler := handlers.NewSettingsHandler(settingsService, authService, apiKeyService, preferencesService, notifConfigService, calendarService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
-	authHandler := handlers.NewAuthHandler(settingsService, sessionService, emailService)
+	authHandler := handlers.NewAuthHandler(authService, sessionService, emailService, notifConfigService)
 	importHandler := handlers.NewImportHandler(subscriptionService, categoryService, settingsService)
 
 	// Setup Gin router
@@ -166,13 +171,13 @@ func main() {
 	router.Use(middleware.CSRFMiddleware(csrfSecret, csrfSecure))
 
 	// Apply auth middleware
-	router.Use(middleware.AuthMiddleware(settingsService, sessionService))
+	router.Use(middleware.AuthMiddleware(authService, sessionService))
 
 	// Apply i18n middleware
-	router.Use(middleware.I18nMiddleware(i18nService, settingsService))
+	router.Use(middleware.I18nMiddleware(i18nService, preferencesService))
 
 	// Routes
-	setupRoutes(router, subscriptionHandler, settingsHandler, settingsService, categoryHandler, authHandler, importHandler)
+	setupRoutes(router, subscriptionHandler, settingsHandler, apiKeyService, categoryHandler, authHandler, importHandler)
 
 	// Seed sample data if database is empty
 	// Commented out - no sample data by default
@@ -337,7 +342,7 @@ func loadTemplates() *template.Template {
 	return tmpl
 }
 
-func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, settingsHandler *handlers.SettingsHandler, settingsService *service.SettingsService, categoryHandler *handlers.CategoryHandler, authHandler *handlers.AuthHandler, importHandler *handlers.ImportHandler) {
+func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, settingsHandler *handlers.SettingsHandler, apiKeyService *service.APIKeyService, categoryHandler *handlers.CategoryHandler, authHandler *handlers.AuthHandler, importHandler *handlers.ImportHandler) {
 	// Calendar feed (public, token-based auth)
 	router.GET("/cal/:token/subscriptions.ics", handler.ServeCalendarFeed)
 
@@ -448,7 +453,7 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 
 	// Public API routes (require API key authentication)
 	v1 := router.Group("/api/v1")
-	v1.Use(middleware.APIKeyAuth(settingsService))
+	v1.Use(middleware.APIKeyAuth(apiKeyService))
 	{
 		// Subscription endpoints
 		v1.GET("/subscriptions", handler.GetSubscriptionsAPI)
@@ -635,7 +640,7 @@ func checkAndSendCancellationReminders(subscriptionService *service.Subscription
 }
 
 // handleResetPassword handles the --reset-password CLI command
-func handleResetPassword(settingsService *service.SettingsService, newPassword string) {
+func handleResetPassword(authService *service.AuthService, newPassword string) {
 	var password string
 
 	if newPassword != "" {
@@ -671,7 +676,7 @@ func handleResetPassword(settingsService *service.SettingsService, newPassword s
 	}
 
 	// Update password
-	if err := settingsService.SetAuthPassword(password); err != nil {
+	if err := authService.SetAuthPassword(password); err != nil {
 		log.Fatal("Failed to update password:", err)
 	}
 
@@ -680,8 +685,8 @@ func handleResetPassword(settingsService *service.SettingsService, newPassword s
 }
 
 // handleDisableAuth handles the --disable-auth CLI command
-func handleDisableAuth(settingsService *service.SettingsService) {
-	if err := settingsService.DisableAuth(); err != nil {
+func handleDisableAuth(authService *service.AuthService) {
+	if err := authService.DisableAuth(); err != nil {
 		log.Fatal("Failed to disable authentication:", err)
 	}
 

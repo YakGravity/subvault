@@ -9,7 +9,7 @@ import (
 
 // SettingsGeneral renders the General settings page (Language, Currency, Date Format)
 func (h *SettingsHandler) SettingsGeneral(c *gin.Context) {
-	goFormat := h.service.GetDateFormat()
+	goFormat := h.preferences.GetDateFormat()
 	displayFormat := ""
 	switch goFormat {
 	case "02.01.2006":
@@ -23,8 +23,8 @@ func (h *SettingsHandler) SettingsGeneral(c *gin.Context) {
 	data := h.settingsBaseData(c, "general")
 	mergeTemplateData(data, gin.H{
 		"Title":      "Settings",
-		"Currency":   h.service.GetCurrency(),
-		"Language":   h.service.GetLanguage(),
+		"Currency":   h.preferences.GetCurrency(),
+		"Language":   h.preferences.GetLanguage(),
 		"DateFormat": displayFormat,
 	})
 	c.HTML(http.StatusOK, "settings-general.html", data)
@@ -43,7 +43,7 @@ func (h *SettingsHandler) SettingsAppearance(c *gin.Context) {
 func (h *SettingsHandler) SettingsNotifications(c *gin.Context) {
 	var smtpConfig *models.SMTPConfig
 	smtpConfigured := false
-	config, err := h.service.GetSMTPConfig()
+	config, err := h.notifConfig.GetSMTPConfig()
 	if err == nil && config != nil {
 		config.Password = ""
 		smtpConfig = config
@@ -52,7 +52,7 @@ func (h *SettingsHandler) SettingsNotifications(c *gin.Context) {
 
 	var shoutrrrConfig *models.ShoutrrrConfig
 	shoutrrrConfigured := false
-	shoutrrrCfg, err := h.service.GetShoutrrrConfig()
+	shoutrrrCfg, err := h.notifConfig.GetShoutrrrConfig()
 	if err == nil && shoutrrrCfg != nil && len(shoutrrrCfg.URLs) > 0 {
 		shoutrrrConfig = shoutrrrCfg
 		shoutrrrConfigured = true
@@ -65,16 +65,16 @@ func (h *SettingsHandler) SettingsNotifications(c *gin.Context) {
 		"SMTPConfigured":     smtpConfigured,
 		"ShoutrrrConfig":     shoutrrrConfig,
 		"ShoutrrrConfigured": shoutrrrConfigured,
-		"CurrencySymbol":     h.service.GetCurrencySymbol(),
-		"HighCostThreshold":  h.service.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
-		"MonthlyBudget":      h.service.GetFloatSettingWithDefault("monthly_budget", 0),
+		"CurrencySymbol":     h.preferences.GetCurrencySymbol(),
+		"HighCostThreshold":  h.settings.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
+		"MonthlyBudget":      h.settings.GetFloatSettingWithDefault("monthly_budget", 0),
 	})
 	c.HTML(http.StatusOK, "settings-notifications.html", data)
 }
 
 // SettingsData renders the Data settings page (Export, Import, Backup, Calendar, Categories)
 func (h *SettingsHandler) SettingsData(c *gin.Context) {
-	calendarToken, _ := h.service.GetCalendarToken()
+	calendarToken, _ := h.calendar.GetCalendarToken()
 
 	data := h.settingsBaseData(c, "data")
 	mergeTemplateData(data, gin.H{
@@ -87,11 +87,11 @@ func (h *SettingsHandler) SettingsData(c *gin.Context) {
 
 // SettingsSecurity renders the Security settings page (Auth, API Keys)
 func (h *SettingsHandler) SettingsSecurity(c *gin.Context) {
-	authEnabled := h.service.IsAuthEnabled()
-	authUsername, _ := h.service.GetAuthUsername()
+	authEnabled := h.auth.IsAuthEnabled()
+	authUsername, _ := h.auth.GetAuthUsername()
 
 	var smtpConfigured bool
-	_, err := h.service.GetSMTPConfig()
+	_, err := h.notifConfig.GetSMTPConfig()
 	if err == nil {
 		smtpConfigured = true
 	}

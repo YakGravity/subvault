@@ -49,8 +49,8 @@ func (h *SubscriptionHandler) Dashboard(c *gin.Context) {
 		"Stats":            stats,
 		"Subscriptions":    enrichedSubs,
 		"UpcomingRenewals": upcoming,
-		"CurrencySymbol":   h.settingsService.GetCurrencySymbol(),
-		"DarkMode":         h.settingsService.IsDarkModeEnabled(),
+		"CurrencySymbol":   h.preferences.GetCurrencySymbol(),
+		"DarkMode":         h.preferences.IsDarkModeEnabled(),
 	})
 	c.HTML(http.StatusOK, "dashboard.html", data)
 }
@@ -77,8 +77,8 @@ func (h *SubscriptionHandler) SubscriptionsList(c *gin.Context) {
 		"Title":          "Subscriptions",
 		"CurrentPage":    "subscriptions",
 		"Subscriptions":  enrichedSubs,
-		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
-		"DarkMode":       h.settingsService.IsDarkModeEnabled(),
+		"CurrencySymbol": h.preferences.GetCurrencySymbol(),
+		"DarkMode":       h.preferences.IsDarkModeEnabled(),
 		"SortBy":         sortBy,
 		"Order":          order,
 	})
@@ -164,8 +164,8 @@ func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 		"FirstOfMonth":   firstOfMonth,
 		"PrevMonth":      prevMonth,
 		"NextMonth":      nextMonth,
-		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
-		"DarkMode":       h.settingsService.IsDarkModeEnabled(),
+		"CurrencySymbol": h.preferences.GetCurrencySymbol(),
+		"DarkMode":       h.preferences.IsDarkModeEnabled(),
 	})
 	c.HTML(http.StatusOK, "calendar.html", data)
 }
@@ -201,7 +201,7 @@ func (h *SubscriptionHandler) GetSubscriptionForm(c *gin.Context) {
 	mergeTemplateData(data, gin.H{
 		"Subscription":      subscription,
 		"IsEdit":            isEdit,
-		"CurrencySymbol":    h.settingsService.GetCurrencySymbol(),
+		"CurrencySymbol":    h.preferences.GetCurrencySymbol(),
 		"Categories":        categories,
 		"DefaultCategoryID": defaultCategoryID,
 	})

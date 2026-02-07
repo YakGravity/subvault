@@ -11,15 +11,17 @@ type SubscriptionService struct {
 	repo            *repository.SubscriptionRepository
 	categoryService *CategoryService
 	currencyService *CurrencyService
-	settingsService *SettingsService
+	preferences     PreferencesServiceInterface
+	settings        SettingsServiceInterface
 }
 
-func NewSubscriptionService(repo *repository.SubscriptionRepository, categoryService *CategoryService, currencyService *CurrencyService, settingsService *SettingsService) *SubscriptionService {
+func NewSubscriptionService(repo *repository.SubscriptionRepository, categoryService *CategoryService, currencyService *CurrencyService, preferences PreferencesServiceInterface, settings SettingsServiceInterface) *SubscriptionService {
 	return &SubscriptionService{
 		repo:            repo,
 		categoryService: categoryService,
 		currencyService: currencyService,
-		settingsService: settingsService,
+		preferences:     preferences,
+		settings:        settings,
 	}
 }
 
@@ -66,7 +68,7 @@ func (s *SubscriptionService) convertAmount(amount float64, fromCurrency, toCurr
 }
 
 func (s *SubscriptionService) GetStats() (*models.Stats, error) {
-	displayCurrency := s.settingsService.GetCurrency()
+	displayCurrency := s.preferences.GetCurrency()
 
 	// Single query: load all subscriptions with categories
 	allSubs, err := s.repo.GetAll()
@@ -114,7 +116,7 @@ func (s *SubscriptionService) GetStats() (*models.Stats, error) {
 	}
 
 	// Budget calculation
-	budget := s.settingsService.GetFloatSettingWithDefault("monthly_budget", 0)
+	budget := s.settings.GetFloatSettingWithDefault("monthly_budget", 0)
 	stats.MonthlyBudget = budget
 	if budget > 0 {
 		stats.BudgetUtilization = stats.TotalMonthlySpend / budget * 100

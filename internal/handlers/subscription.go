@@ -19,17 +19,21 @@ type SubscriptionWithConversion struct {
 
 type SubscriptionHandler struct {
 	service         service.SubscriptionServiceInterface
-	settingsService service.SettingsServiceInterface
+	preferences     service.PreferencesServiceInterface
+	settings        service.SettingsServiceInterface
+	calendarService service.CalendarServiceInterface
 	currencyService service.CurrencyServiceInterface
 	emailService    service.EmailServiceInterface
 	shoutrrrService service.ShoutrrrServiceInterface
 	logoService     service.LogoServiceInterface
 }
 
-func NewSubscriptionHandler(service service.SubscriptionServiceInterface, settingsService service.SettingsServiceInterface, currencyService service.CurrencyServiceInterface, emailService service.EmailServiceInterface, shoutrrrService service.ShoutrrrServiceInterface, logoService service.LogoServiceInterface) *SubscriptionHandler {
+func NewSubscriptionHandler(svc service.SubscriptionServiceInterface, preferences service.PreferencesServiceInterface, settings service.SettingsServiceInterface, calendarService service.CalendarServiceInterface, currencyService service.CurrencyServiceInterface, emailService service.EmailServiceInterface, shoutrrrService service.ShoutrrrServiceInterface, logoService service.LogoServiceInterface) *SubscriptionHandler {
 	return &SubscriptionHandler{
-		service:         service,
-		settingsService: settingsService,
+		service:         svc,
+		preferences:     preferences,
+		settings:        settings,
+		calendarService: calendarService,
 		currencyService: currencyService,
 		emailService:    emailService,
 		shoutrrrService: shoutrrrService,

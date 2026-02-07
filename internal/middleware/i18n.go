@@ -8,12 +8,12 @@ import (
 )
 
 // I18nMiddleware creates per-request localizer based on user language setting
-func I18nMiddleware(i18nService *i18n.I18nService, settingsService *service.SettingsService) gin.HandlerFunc {
+func I18nMiddleware(i18nService *i18n.I18nService, preferences service.PreferencesServiceInterface) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		lang := settingsService.GetLanguage()
+		lang := preferences.GetLanguage()
 		localizer := i18nService.NewLocalizer(lang)
 		helper := i18n.NewTranslationHelper(i18nService, localizer, lang)
-		if df := settingsService.GetDateFormat(); df != "" {
+		if df := preferences.GetDateFormat(); df != "" {
 			helper.SetDateFormat(df)
 		}
 

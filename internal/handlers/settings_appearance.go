@@ -9,7 +9,7 @@ import (
 
 // GetTheme returns the current theme setting
 func (h *SettingsHandler) GetTheme(c *gin.Context) {
-	theme, err := h.service.GetTheme()
+	theme, err := h.preferences.GetTheme()
 	if err != nil {
 		// Default to 'default' theme if not set
 		theme = "default"
@@ -38,7 +38,7 @@ func (h *SettingsHandler) SetTheme(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.SetTheme(theme); err != nil {
+	if err := h.preferences.SetTheme(theme); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to save theme",
 		})
@@ -55,7 +55,7 @@ func (h *SettingsHandler) SetTheme(c *gin.Context) {
 func (h *SettingsHandler) ToggleDarkMode(c *gin.Context) {
 	enabled := c.PostForm("enabled") == "true"
 
-	err := h.service.SetDarkMode(enabled)
+	err := h.preferences.SetDarkMode(enabled)
 	if err != nil {
 		slog.Error("failed to toggle dark mode", "error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
@@ -84,7 +84,7 @@ func (h *SettingsHandler) SetDateFormat(c *gin.Context) {
 		return
 	}
 
-	if err := h.service.SetDateFormat(goFormat); err != nil {
+	if err := h.preferences.SetDateFormat(goFormat); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save date format"})
 		return
 	}
@@ -94,7 +94,7 @@ func (h *SettingsHandler) SetDateFormat(c *gin.Context) {
 
 // GetDateFormat handles GET /api/settings/date-format
 func (h *SettingsHandler) GetDateFormat(c *gin.Context) {
-	goFormat := h.service.GetDateFormat()
+	goFormat := h.preferences.GetDateFormat()
 
 	// Map back to display format
 	displayFormat := ""

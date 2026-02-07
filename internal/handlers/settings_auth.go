@@ -39,7 +39,7 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 	}
 
 	// Setup authentication
-	err := h.service.SetupAuth(username, password)
+	err := h.auth.SetupAuth(username, password)
 	if err != nil {
 		slog.Error("failed to setup authentication", "error", err)
 		c.HTML(http.StatusInternalServerError, "auth-message.html", gin.H{
@@ -57,7 +57,7 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 
 // DisableAuth disables authentication
 func (h *SettingsHandler) DisableAuth(c *gin.Context) {
-	err := h.service.DisableAuth()
+	err := h.auth.DisableAuth()
 	if err != nil {
 		slog.Error("failed to disable authentication", "error", err)
 		c.HTML(http.StatusInternalServerError, "auth-message.html", gin.H{
@@ -75,8 +75,8 @@ func (h *SettingsHandler) DisableAuth(c *gin.Context) {
 
 // GetAuthStatus returns the current authentication status
 func (h *SettingsHandler) GetAuthStatus(c *gin.Context) {
-	isEnabled := h.service.IsAuthEnabled()
-	username, _ := h.service.GetAuthUsername()
+	isEnabled := h.auth.IsAuthEnabled()
+	username, _ := h.auth.GetAuthUsername()
 
 	c.JSON(http.StatusOK, gin.H{
 		"enabled":  isEnabled,

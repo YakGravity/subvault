@@ -43,7 +43,7 @@ func (h *SettingsHandler) SaveSMTPSettings(c *gin.Context) {
 	}
 
 	// Save configuration
-	err := h.service.SaveSMTPConfig(&config)
+	err := h.notifConfig.SaveSMTPConfig(&config)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "smtp-message.html", gin.H{
 			"Error": err.Error(),
@@ -165,7 +165,7 @@ func (h *SettingsHandler) TestSMTPConnection(c *gin.Context) {
 
 // GetSMTPConfig returns current SMTP configuration (without password)
 func (h *SettingsHandler) GetSMTPConfig(c *gin.Context) {
-	config, err := h.service.GetSMTPConfig()
+	config, err := h.notifConfig.GetSMTPConfig()
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"configured": false})
 		return
@@ -201,7 +201,7 @@ func (h *SettingsHandler) SaveShoutrrrSettings(c *gin.Context) {
 	}
 
 	config := &models.ShoutrrrConfig{URLs: urls}
-	err := h.service.SaveShoutrrrConfig(config)
+	err := h.notifConfig.SaveShoutrrrConfig(config)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "smtp-message.html", gin.H{
 			"Error": err.Error(),
@@ -238,7 +238,7 @@ func (h *SettingsHandler) TestShoutrrrConnection(c *gin.Context) {
 	}
 
 	// Test directly with the provided URLs (no need to save first)
-	shoutrrrService := service.NewShoutrrrService(h.service)
+	shoutrrrService := service.NewShoutrrrService(h.preferences, h.notifConfig)
 	err := shoutrrrService.SendTestNotification(urls)
 	if err != nil {
 		c.HTML(http.StatusBadRequest, "smtp-message.html", gin.H{
@@ -256,7 +256,7 @@ func (h *SettingsHandler) TestShoutrrrConnection(c *gin.Context) {
 
 // GetShoutrrrConfig returns current Shoutrrr configuration
 func (h *SettingsHandler) GetShoutrrrConfig(c *gin.Context) {
-	config, err := h.service.GetShoutrrrConfig()
+	config, err := h.notifConfig.GetShoutrrrConfig()
 	if err != nil || len(config.URLs) == 0 {
 		c.JSON(http.StatusOK, gin.H{"configured": false, "url_count": 0})
 		return
@@ -274,27 +274,27 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 
 	switch setting {
 	case "renewal":
-		enabled := !h.service.GetBoolSettingWithDefault("renewal_reminders", false)
-		h.service.SetBoolSetting("renewal_reminders", enabled)
+		enabled := !h.settings.GetBoolSettingWithDefault("renewal_reminders", false)
+		h.settings.SetBoolSetting("renewal_reminders", enabled)
 		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
 		return
 
 	case "cancellation":
-		enabled := !h.service.GetBoolSettingWithDefault("cancellation_reminders", false)
-		h.service.SetBoolSetting("cancellation_reminders", enabled)
+		enabled := !h.settings.GetBoolSettingWithDefault("cancellation_reminders", false)
+		h.settings.SetBoolSetting("cancellation_reminders", enabled)
 		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
 		return
 
 	case "highcost":
-		enabled := !h.service.GetBoolSettingWithDefault("high_cost_alerts", true)
-		h.service.SetBoolSetting("high_cost_alerts", enabled)
+		enabled := !h.settings.GetBoolSettingWithDefault("high_cost_alerts", true)
+		h.settings.SetBoolSetting("high_cost_alerts", enabled)
 		c.JSON(http.StatusOK, gin.H{"enabled": enabled})
 		return
 
 	case "reminder_days":
 		daysStr := c.PostForm("reminder_days")
 		if days, err := strconv.Atoi(daysStr); err == nil && days >= 1 && days <= 90 {
-			h.service.SetIntSetting("reminder_days", days)
+			h.settings.SetIntSetting("reminder_days", days)
 			c.JSON(http.StatusOK, gin.H{"days": days})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid reminder days"})
@@ -304,7 +304,7 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 	case "cancellation_reminder_days":
 		daysStr := c.PostForm("cancellation_reminder_days")
 		if days, err := strconv.Atoi(daysStr); err == nil && days >= 1 && days <= 90 {
-			h.service.SetIntSetting("cancellation_reminder_days", days)
+			h.settings.SetIntSetting("cancellation_reminder_days", days)
 			c.JSON(http.StatusOK, gin.H{"days": days})
 		} else {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid cancellation reminder days"})
@@ -314,7 +314,7 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 	case "threshold":
 		thresholdStr := c.PostForm("high_cost_threshold")
 		if threshold, err := strconv.ParseFloat(thresholdStr, 64); err == nil && threshold >= 0 && threshold <= 10000 {
-			err := h.service.SetFloatSetting("high_cost_threshold", threshold)
+			err := h.settings.SetFloatSetting("high_cost_threshold", threshold)
 			if err != nil {
 				slog.Error("failed to save high cost threshold", "error", err)
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
@@ -335,7 +335,7 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid budget value"})
 			return
 		}
-		if err := h.service.SetFloatSetting("monthly_budget", floatVal); err != nil {
+		if err := h.settings.SetFloatSetting("monthly_budget", floatVal); err != nil {
 			slog.Error("failed to save monthly budget", "error", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
@@ -351,12 +351,12 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 // GetNotificationSettings returns current notification settings
 func (h *SettingsHandler) GetNotificationSettings(c *gin.Context) {
 	settings := models.NotificationSettings{
-		RenewalReminders:         h.service.GetBoolSettingWithDefault("renewal_reminders", false),
-		HighCostAlerts:           h.service.GetBoolSettingWithDefault("high_cost_alerts", true),
-		HighCostThreshold:        h.service.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
-		ReminderDays:             h.service.GetIntSettingWithDefault("reminder_days", 7),
-		CancellationReminders:    h.service.GetBoolSettingWithDefault("cancellation_reminders", false),
-		CancellationReminderDays: h.service.GetIntSettingWithDefault("cancellation_reminder_days", 7),
+		RenewalReminders:         h.settings.GetBoolSettingWithDefault("renewal_reminders", false),
+		HighCostAlerts:           h.settings.GetBoolSettingWithDefault("high_cost_alerts", true),
+		HighCostThreshold:        h.settings.GetFloatSettingWithDefault("high_cost_threshold", 50.0),
+		ReminderDays:             h.settings.GetIntSettingWithDefault("reminder_days", 7),
+		CancellationReminders:    h.settings.GetBoolSettingWithDefault("cancellation_reminders", false),
+		CancellationReminderDays: h.settings.GetIntSettingWithDefault("cancellation_reminder_days", 7),
 	}
 
 	c.JSON(http.StatusOK, settings)

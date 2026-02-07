@@ -12,14 +12,16 @@ import (
 
 // EmailService handles sending emails via SMTP
 type EmailService struct {
-	settingsService *SettingsService
-	i18nService     *i18n.I18nService
+	preferences PreferencesServiceInterface
+	notifConfig NotificationConfigServiceInterface
+	i18nService *i18n.I18nService
 }
 
 // NewEmailService creates a new email service
-func NewEmailService(settingsService *SettingsService, i18nService ...*i18n.I18nService) *EmailService {
+func NewEmailService(preferences PreferencesServiceInterface, notifConfig NotificationConfigServiceInterface, i18nService ...*i18n.I18nService) *EmailService {
 	svc := &EmailService{
-		settingsService: settingsService,
+		preferences: preferences,
+		notifConfig: notifConfig,
 	}
 	if len(i18nService) > 0 {
 		svc.i18nService = i18nService[0]
@@ -32,7 +34,7 @@ func (e *EmailService) t(messageID string) string {
 	if e.i18nService == nil {
 		return messageID
 	}
-	lang := e.settingsService.GetLanguage()
+	lang := e.preferences.GetLanguage()
 	localizer := e.i18nService.NewLocalizer(lang)
 	return e.i18nService.T(localizer, messageID)
 }
@@ -42,7 +44,7 @@ func (e *EmailService) tData(messageID string, data map[string]interface{}) stri
 	if e.i18nService == nil {
 		return messageID
 	}
-	lang := e.settingsService.GetLanguage()
+	lang := e.preferences.GetLanguage()
 	localizer := e.i18nService.NewLocalizer(lang)
 	return e.i18nService.TData(localizer, messageID, data)
 }
@@ -52,14 +54,14 @@ func (e *EmailService) tPlural(messageID string, count int, data map[string]inte
 	if e.i18nService == nil {
 		return messageID
 	}
-	lang := e.settingsService.GetLanguage()
+	lang := e.preferences.GetLanguage()
 	localizer := e.i18nService.NewLocalizer(lang)
 	return e.i18nService.TPluralCount(localizer, messageID, count, data)
 }
 
 // SendEmail sends an email using the configured SMTP settings
 func (e *EmailService) SendEmail(subject, body string) error {
-	config, err := e.settingsService.GetSMTPConfig()
+	config, err := e.notifConfig.GetSMTPConfig()
 	if err != nil {
 		return fmt.Errorf("failed to get SMTP config: %w", err)
 	}
@@ -200,7 +202,7 @@ func (e *EmailService) SendEmail(subject, body string) error {
 // SendHighCostAlert sends an email alert when a high-cost subscription is created
 func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) error {
 	// Get currency symbol
-	currencySymbol := e.settingsService.GetCurrencySymbol()
+	currencySymbol := e.preferences.GetCurrencySymbol()
 
 	// Build email body
 	tmpl := `
@@ -222,7 +224,7 @@ func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) erro
 	<div class="container">
 		<h2>{{.Title}}</h2>
 		<div class="alert">
-			<strong>⚠️ {{.AlertLabel}}</strong> {{.AlertText}}
+			<strong>` + "\u26a0\ufe0f" + ` {{.AlertLabel}}</strong> {{.AlertText}}
 		</div>
 		<div class="subscription-details">
 			<h3>{{.DetailsTitle}}</h3>
@@ -293,7 +295,7 @@ func (e *EmailService) SendHighCostAlert(subscription *models.Subscription) erro
 // SendRenewalReminder sends an email reminder for an upcoming subscription renewal
 func (e *EmailService) SendRenewalReminder(subscription *models.Subscription, daysUntilRenewal int) error {
 	// Get currency symbol
-	currencySymbol := e.settingsService.GetCurrencySymbol()
+	currencySymbol := e.preferences.GetCurrencySymbol()
 
 	// Build email body
 	tmpl := `
@@ -315,7 +317,7 @@ func (e *EmailService) SendRenewalReminder(subscription *models.Subscription, da
 	<div class="container">
 		<h2>{{.Title}}</h2>
 		<div class="reminder">
-			<strong>🔔 {{.ReminderLabel}}</strong> {{.ReminderText}}
+			<strong>` + "\U0001f514" + ` {{.ReminderLabel}}</strong> {{.ReminderText}}
 		</div>
 		<div class="subscription-details">
 			<h3>{{.DetailsTitle}}</h3>
@@ -390,7 +392,7 @@ func (e *EmailService) SendRenewalReminder(subscription *models.Subscription, da
 // SendCancellationReminder sends an email reminder for an upcoming subscription cancellation
 func (e *EmailService) SendCancellationReminder(subscription *models.Subscription, daysUntilCancellation int) error {
 	// Get currency symbol
-	currencySymbol := e.settingsService.GetCurrencySymbol()
+	currencySymbol := e.preferences.GetCurrencySymbol()
 
 	// Build email body
 	tmpl := `
@@ -412,7 +414,7 @@ func (e *EmailService) SendCancellationReminder(subscription *models.Subscriptio
 	<div class="container">
 		<h2>{{.Title}}</h2>
 		<div class="reminder">
-			<strong>⚠️ {{.ReminderLabel}}</strong> {{.ReminderText}}
+			<strong>` + "\u26a0\ufe0f" + ` {{.ReminderLabel}}</strong> {{.ReminderText}}
 		</div>
 		<div class="subscription-details">
 			<h3>{{.DetailsTitle}}</h3>
@@ -485,7 +487,7 @@ func (e *EmailService) SendCancellationReminder(subscription *models.Subscriptio
 }
 
 func (e *EmailService) SendBudgetExceededAlert(totalSpend, budget float64, currencySymbol string) error {
-	config, err := e.settingsService.GetSMTPConfig()
+	config, err := e.notifConfig.GetSMTPConfig()
 	if err != nil || config == nil || config.Host == "" {
 		return nil
 	}
