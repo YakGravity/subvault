@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"net/http"
 	"sort"
@@ -154,7 +155,7 @@ func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 		"CurrentPage":    "calendar",
 		"Year":           year,
 		"Month":          month,
-		"MonthName":      firstOfMonth.Format("January 2006"),
+		"MonthName":      fmt.Sprintf("%s %d", translateMonth(c, month), year),
 		"EventsByDate":   template.JS(string(eventsJSON)),
 		"FirstOfMonth":   firstOfMonth,
 		"PrevMonth":      prevMonth,
@@ -201,4 +202,24 @@ func (h *SubscriptionHandler) GetSubscriptionForm(c *gin.Context) {
 		"DefaultCategoryID": defaultCategoryID,
 	})
 	c.HTML(http.StatusOK, "subscription-form.html", data)
+}
+
+// translateMonth returns the localized month name for a given month number (1-12).
+func translateMonth(c *gin.Context, month int) string {
+	monthKeys := []string{
+		"month_january", "month_february", "month_march",
+		"month_april", "month_may", "month_june",
+		"month_july", "month_august", "month_september",
+		"month_october", "month_november", "month_december",
+	}
+	fallbacks := []string{
+		"January", "February", "March",
+		"April", "May", "June",
+		"July", "August", "September",
+		"October", "November", "December",
+	}
+	if month < 1 || month > 12 {
+		return "Unknown"
+	}
+	return tr(c, monthKeys[month-1], fallbacks[month-1])
 }

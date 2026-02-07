@@ -120,7 +120,7 @@
         <tbody>
             {{range .Subscriptions}}
             <tr style="cursor:pointer;"
-                onclick="htmx.ajax('GET', '/form/subscription/{{.ID}}', {target:'#modal-content', swap:'innerHTML'}); document.getElementById('modal').classList.remove('hidden');">
+                onclick="htmx.ajax('GET', '/form/subscription/{{.ID}}', {target:'#modal-content', swap:'innerHTML'}); document.getElementById('modal').classList.add('active');">
                 <td style="white-space:nowrap;">
                     <div style="display:flex;align-items:center;gap:10px;">
                         {{if .IconURL}}
@@ -231,7 +231,7 @@
             hx-get="/form/subscription"
             hx-target="#modal-content"
             hx-trigger="click"
-            onclick="document.getElementById('modal').classList.remove('hidden')">
+            onclick="document.getElementById('modal').classList.add('active')">
             {{.T.Tr "sub_list_empty_hint"}}
         </button>
     </div>

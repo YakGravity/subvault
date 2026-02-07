@@ -2,6 +2,7 @@ package service
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gorilla/sessions"
 )
@@ -26,7 +27,7 @@ func NewSessionService(secretKey string) *SessionService {
 		Path:     "/",
 		MaxAge:   SessionMaxAge,
 		HttpOnly: true,
-		Secure:   false, // Set to true if using HTTPS
+		Secure:   os.Getenv("HTTPS_ENABLED") == "true",
 		SameSite: http.SameSiteStrictMode,
 	}
 

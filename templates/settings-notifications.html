@@ -9,7 +9,7 @@
     <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
     <title>{{.Title}} - SubTrackr</title>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="/static/js/htmx.min.js"></script>
     <link rel="stylesheet" href="/static/css/design-system.css">
     <link rel="stylesheet" href="/static/css/themes.css">
     <script src="/static/js/themes.js"></script>
@@ -30,7 +30,7 @@
             <a href="/settings" class="tab-item">{{.T.Tr "settings_tab_general"}}</a>
             <a href="/settings/notifications" class="tab-item active">{{.T.Tr "settings_tab_notifications"}}</a>
             <a href="/settings/data" class="tab-item">{{.T.Tr "settings_tab_data"}}</a>
-            <a href="/settings/appearance" class="tab-item{{if eq .CurrentTab "appearance"}} active{{end}}">{{.T.Tr "settings_tab_appearance"}}</a>
+            <a href="/settings/appearance" class="tab-item">{{.T.Tr "settings_tab_appearance"}}</a>
             <a href="/settings/security" class="tab-item">{{.T.Tr "settings_tab_security"}}</a>
         </div>
 
