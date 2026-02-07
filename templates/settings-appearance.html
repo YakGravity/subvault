@@ -32,7 +32,6 @@
             <a href="/settings/data" class="tab-item">{{.T.Tr "settings_tab_data"}}</a>
             <a href="/settings/appearance" class="tab-item active">{{.T.Tr "settings_tab_appearance"}}</a>
             <a href="/settings/security" class="tab-item">{{.T.Tr "settings_tab_security"}}</a>
-            <a href="/api-docs" class="tab-item">{{.T.Tr "settings_tab_api"}}</a>
         </div>
 
 <div style="display:flex;flex-direction:column;gap:32px;">
@@ -124,9 +123,9 @@
 
     <!-- Accent Color -->
     <div class="card">
-        <div class="card-header">
+        <div class="card-header" style="flex-direction:column;align-items:flex-start;">
             <h2 class="card-title">{{.T.Tr "settings_accent_title"}}</h2>
-            <p style="font-size:13px;color:var(--text-muted);">{{.T.Tr "settings_accent_desc"}}</p>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:2px;">{{.T.Tr "settings_accent_desc"}}</p>
         </div>
         <div style="padding:20px;display:flex;gap:12px;flex-wrap:wrap;">
             <button class="accent-option" data-accent="orange" onclick="setAccentColor('orange')" title="Orange" style="width:44px;height:44px;border-radius:50%;border:3px solid transparent;background:#c2410c;cursor:pointer;transition:border-color .2s,transform .2s;"></button>
@@ -143,22 +142,6 @@
         <div class="card-header">
             <h2 class="card-title">{{.T.Tr "settings_display_title"}}</h2>
         </div>
-        <!-- Compact Mode -->
-        <div class="setting-row">
-            <div>
-                <div class="setting-row-label">{{.T.Tr "settings_compact_label"}}</div>
-                <div class="setting-row-desc">{{.T.Tr "settings_compact_desc"}}</div>
-            </div>
-            <button class="setting-toggle" id="compact-toggle" onclick="this.classList.toggle('active'); setCompactMode(this.classList.contains('active'))"></button>
-        </div>
-        <!-- Sidebar Collapsed -->
-        <div class="setting-row">
-            <div>
-                <div class="setting-row-label">{{.T.Tr "settings_sidebar_label"}}</div>
-                <div class="setting-row-desc">{{.T.Tr "settings_sidebar_desc"}}</div>
-            </div>
-            <button class="setting-toggle" id="sidebar-toggle" onclick="this.classList.toggle('active'); setSidebarCollapsed(this.classList.contains('active'))"></button>
-        </div>
         <!-- Default View -->
         <div class="setting-row">
             <div>
@@ -174,56 +157,8 @@
                 </button>
             </div>
         </div>
-        <!-- Font Size -->
-        <div class="setting-row">
-            <div>
-                <div class="setting-row-label">{{.T.Tr "settings_fontsize_label"}}</div>
-                <div class="setting-row-desc">{{.T.Tr "settings_fontsize_desc"}}</div>
-            </div>
-            <div class="setting-btn-group" id="fontsize-group">
-                <button data-val="small" onclick="setFontSize('small')">{{.T.Tr "fontsize_small"}}</button>
-                <button data-val="normal" onclick="setFontSize('normal')">{{.T.Tr "fontsize_normal"}}</button>
-                <button data-val="large" onclick="setFontSize('large')">{{.T.Tr "fontsize_large"}}</button>
-            </div>
-        </div>
     </div>
 
-    <!-- Date Format -->
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">{{.T.Tr "settings_dateformat_title"}}</h2>
-            <p style="font-size:13px;color:var(--text-muted);">{{.T.Tr "settings_dateformat_desc"}}</p>
-        </div>
-        <div style="padding:20px;display:flex;flex-direction:column;gap:10px;" id="dateformat-options">
-            <label class="setting-row" style="cursor:pointer;margin:0;border-bottom:1px solid var(--border-light);">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <input type="radio" name="dateformat" value="DD.MM.YYYY" style="accent-color:var(--accent);">
-                    <div>
-                        <div class="setting-row-label">DD.MM.YYYY</div>
-                        <div class="setting-row-desc" data-preview="DD.MM.YYYY"></div>
-                    </div>
-                </div>
-            </label>
-            <label class="setting-row" style="cursor:pointer;margin:0;border-bottom:1px solid var(--border-light);">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <input type="radio" name="dateformat" value="MM/DD/YYYY" style="accent-color:var(--accent);">
-                    <div>
-                        <div class="setting-row-label">MM/DD/YYYY</div>
-                        <div class="setting-row-desc" data-preview="MM/DD/YYYY"></div>
-                    </div>
-                </div>
-            </label>
-            <label class="setting-row" style="cursor:pointer;margin:0;">
-                <div style="display:flex;align-items:center;gap:12px;">
-                    <input type="radio" name="dateformat" value="YYYY-MM-DD" style="accent-color:var(--accent);">
-                    <div>
-                        <div class="setting-row-label">YYYY-MM-DD</div>
-                        <div class="setting-row-desc" data-preview="YYYY-MM-DD"></div>
-                    </div>
-                </div>
-            </label>
-        </div>
-    </div>
 </div>
 
     </div><!-- /.main -->
@@ -251,47 +186,10 @@
     document.querySelectorAll('.accent-option').forEach(function(btn) {
         if (btn.dataset.accent === accent) btn.classList.add('active');
     });
-    // Compact toggle
-    if (localStorage.getItem('subtrackr-compact') === 'true') {
-        document.getElementById('compact-toggle').classList.add('active');
-    }
-    // Sidebar toggle
-    if (localStorage.getItem('subtrackr-sidebar') === 'collapsed') {
-        document.getElementById('sidebar-toggle').classList.add('active');
-    }
     // Default view
     var view = localStorage.getItem('subtrackr-view') || 'grid';
     document.querySelectorAll('#view-group button').forEach(function(btn) {
         if (btn.dataset.val === view) btn.classList.add('active');
-    });
-    // Font size
-    var fs = localStorage.getItem('subtrackr-fontsize') || 'normal';
-    document.querySelectorAll('#fontsize-group button').forEach(function(btn) {
-        if (btn.dataset.val === fs) btn.classList.add('active');
-    });
-    // Date format
-    var savedFormat = '{{.DateFormat}}';
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2,'0');
-    var mm = String(today.getMonth()+1).padStart(2,'0');
-    var yyyy = today.getFullYear();
-    var previews = {
-        'DD.MM.YYYY': dd+'.'+mm+'.'+yyyy,
-        'MM/DD/YYYY': mm+'/'+dd+'/'+yyyy,
-        'YYYY-MM-DD': yyyy+'-'+mm+'-'+dd
-    };
-    document.querySelectorAll('[data-preview]').forEach(function(el) {
-        el.textContent = previews[el.dataset.preview] || '';
-    });
-    document.querySelectorAll('input[name="dateformat"]').forEach(function(radio) {
-        if (radio.value === savedFormat) radio.checked = true;
-        radio.addEventListener('change', function() {
-            fetch('/api/settings/date-format', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: 'format=' + encodeURIComponent(this.value)
-            });
-        });
     });
 </script>
 </body>

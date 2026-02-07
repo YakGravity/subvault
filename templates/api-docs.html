@@ -21,18 +21,13 @@
     <div class="main">
         <div class="page-header">
             <div>
-                <h1>{{.T.Tr "nav_settings"}}</h1>
+                <h1>{{.T.Tr "settings_tab_api"}}</h1>
                 <div class="page-header-sub">{{.T.Tr "api_docs_subtitle"}}</div>
             </div>
-        </div>
-
-        <div class="tab-bar">
-            <a href="/settings" class="tab-item">{{.T.Tr "settings_tab_general"}}</a>
-            <a href="/settings/notifications" class="tab-item">{{.T.Tr "settings_tab_notifications"}}</a>
-            <a href="/settings/data" class="tab-item">{{.T.Tr "settings_tab_data"}}</a>
-            <a href="/settings/appearance" class="tab-item{{if eq .CurrentTab "appearance"}} active{{end}}">{{.T.Tr "settings_tab_appearance"}}</a>
-            <a href="/settings/security" class="tab-item">{{.T.Tr "settings_tab_security"}}</a>
-            <a href="/api-docs" class="tab-item active">{{.T.Tr "settings_tab_api"}}</a>
+            <a href="/settings/security" class="btn btn-ghost">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:14px;height:14px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                {{.T.Tr "settings_tab_security"}}
+            </a>
         </div>
 
 <div style="display:flex;flex-direction:column;gap:32px;">

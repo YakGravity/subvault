@@ -62,18 +62,12 @@ function updateAccentButtons(color) {
     });
 }
 
-// Compact mode
-function setCompactMode(enabled) {
-    if (enabled) {
-        localStorage.setItem('subtrackr-compact', 'true');
-        document.documentElement.setAttribute('data-compact', '');
-    } else {
-        localStorage.removeItem('subtrackr-compact');
-        document.documentElement.removeAttribute('data-compact');
-    }
+// Sidebar collapsed
+function toggleSidebar() {
+    var isCollapsed = document.documentElement.getAttribute('data-sidebar') === 'collapsed';
+    setSidebarCollapsed(!isCollapsed);
 }
 
-// Sidebar collapsed
 function setSidebarCollapsed(collapsed) {
     if (collapsed) {
         localStorage.setItem('subtrackr-sidebar', 'collapsed');
@@ -82,16 +76,6 @@ function setSidebarCollapsed(collapsed) {
         localStorage.removeItem('subtrackr-sidebar');
         document.documentElement.removeAttribute('data-sidebar');
     }
-}
-
-// Font size
-function setFontSize(size) {
-    var map = { small: '13px', normal: '14.5px', large: '16px' };
-    localStorage.setItem('subtrackr-fontsize', size);
-    document.documentElement.style.fontSize = map[size] || '14.5px';
-    document.querySelectorAll('#fontsize-group button').forEach(function(btn) {
-        btn.classList.toggle('active', btn.dataset.val === size);
-    });
 }
 
 // Default view

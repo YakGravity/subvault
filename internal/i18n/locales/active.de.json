@@ -1384,7 +1384,7 @@
     "other": "Sicherheit"
   },
   "settings_general_subtitle": {
-    "other": "Darstellung, Sprache und Anzeigeeinstellungen"
+    "other": "Sprache, Währung und Datumsformat"
   },
   "settings_notifications_subtitle": {
     "other": "E-Mail, Push-Benachrichtigungen und Warnungen"
@@ -1402,7 +1402,7 @@
     "other": "Darstellung"
   },
   "settings_appearance_title": {
-    "other": "Darstellung"
+    "other": "Farbschema"
   },
   "settings_appearance_desc": {
     "other": "Wähle dein bevorzugtes Farbschema"
@@ -1438,7 +1438,7 @@
     "other": "Rot"
   },
   "settings_display_title": {
-    "other": "Darstellung"
+    "other": "Ansicht"
   },
   "settings_compact_label": {
     "other": "Kompakte Ansicht"

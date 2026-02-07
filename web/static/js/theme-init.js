@@ -24,20 +24,9 @@
     var accent = localStorage.getItem('subtrackr-accent') || 'orange';
     document.documentElement.setAttribute('data-accent', accent);
 
-    // Compact mode
-    if (localStorage.getItem('subtrackr-compact') === 'true') {
-        document.documentElement.setAttribute('data-compact', '');
-    }
-
     // Sidebar collapsed
     if (localStorage.getItem('subtrackr-sidebar') === 'collapsed') {
         document.documentElement.setAttribute('data-sidebar', 'collapsed');
     }
 
-    // Font size
-    var fontSizeMap = { small: '13px', normal: '14.5px', large: '16px' };
-    var fontSize = localStorage.getItem('subtrackr-fontsize') || 'normal';
-    if (fontSizeMap[fontSize]) {
-        document.documentElement.style.fontSize = fontSizeMap[fontSize];
-    }
 })();
