@@ -11,10 +11,10 @@ import (
 )
 
 type CategoryHandler struct {
-	service *service.CategoryService
+	service service.CategoryServiceInterface
 }
 
-func NewCategoryHandler(service *service.CategoryService) *CategoryHandler {
+func NewCategoryHandler(service service.CategoryServiceInterface) *CategoryHandler {
 	return &CategoryHandler{service: service}
 }
 
@@ -47,7 +47,7 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrInvalidID})
 		return
 	}
 	var category models.Category
@@ -67,7 +67,7 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrInvalidID})
 		return
 	}
 	if err := h.service.Delete(uint(id)); err != nil {

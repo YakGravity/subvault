@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"subtrackr/internal/models"
@@ -126,7 +126,7 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 
 	created, err := h.service.Create(&subscription)
 	if err != nil {
-		log.Printf("API: Failed to create subscription: %v", err)
+		slog.Error("failed to create subscription via API", "error", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -136,10 +136,10 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 		subscriptionWithCategory, err := h.service.GetByID(created.ID)
 		if err == nil && subscriptionWithCategory != nil {
 			if err := h.emailService.SendHighCostAlert(subscriptionWithCategory); err != nil {
-				log.Printf("Failed to send high-cost alert email: %v", err)
+				slog.Error("failed to send high-cost alert email", "error", err)
 			}
 			if err := h.shoutrrrService.SendHighCostAlert(subscriptionWithCategory); err != nil {
-				log.Printf("Failed to send high-cost alert Shoutrrr notification: %v", err)
+				slog.Error("failed to send high-cost alert shoutrrr notification", "error", err)
 			}
 		}
 	}
@@ -151,13 +151,13 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrInvalidID})
 		return
 	}
 
 	original, err := h.service.GetByID(uint(id))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Subscription not found"})
+		c.JSON(http.StatusNotFound, gin.H{"error": ErrSubscriptionNotFound})
 		return
 	}
 
@@ -261,10 +261,10 @@ func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 		subscriptionWithCategory, err := h.service.GetByID(updated.ID)
 		if err == nil && subscriptionWithCategory != nil {
 			if err := h.emailService.SendHighCostAlert(subscriptionWithCategory); err != nil {
-				log.Printf("Failed to send high-cost alert email: %v", err)
+				slog.Error("failed to send high-cost alert email", "error", err)
 			}
 			if err := h.shoutrrrService.SendHighCostAlert(subscriptionWithCategory); err != nil {
-				log.Printf("Failed to send high-cost alert Shoutrrr notification: %v", err)
+				slog.Error("failed to send high-cost alert shoutrrr notification", "error", err)
 			}
 		}
 	}
@@ -276,7 +276,7 @@ func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 func (h *SubscriptionHandler) DeleteSubscriptionAPI(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrInvalidID})
 		return
 	}
 

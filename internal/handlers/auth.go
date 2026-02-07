@@ -12,12 +12,12 @@ import (
 )
 
 type AuthHandler struct {
-	settingsService *service.SettingsService
+	settingsService service.SettingsServiceInterface
 	sessionService  *service.SessionService
-	emailService    *service.EmailService
+	emailService    service.EmailServiceInterface
 }
 
-func NewAuthHandler(settingsService *service.SettingsService, sessionService *service.SessionService, emailService *service.EmailService) *AuthHandler {
+func NewAuthHandler(settingsService service.SettingsServiceInterface, sessionService *service.SessionService, emailService service.EmailServiceInterface) *AuthHandler {
 	return &AuthHandler{
 		settingsService: settingsService,
 		sessionService:  sessionService,
@@ -219,7 +219,7 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	// Then validate passwords match
 	if newPassword != confirmPassword {
 		c.HTML(http.StatusBadRequest, "reset-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
-			"Error": tr(c, "auth_error_password_mismatch", "Passwords do not match"),
+			"Error": tr(c, "auth_error_password_mismatch", ErrPasswordsDoNotMatch),
 		}))
 		return
 	}

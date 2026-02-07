@@ -4,7 +4,7 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
@@ -34,11 +34,11 @@ func NewI18nService() *I18nService {
 	for _, file := range localeFiles {
 		data, err := localeFS.ReadFile(file)
 		if err != nil {
-			log.Printf("Warning: failed to read locale file %s: %v", file, err)
+			slog.Warn("failed to read locale file", "file", file, "error", err)
 			continue
 		}
 		if _, err := bundle.ParseMessageFileBytes(data, file); err != nil {
-			log.Printf("Warning: failed to parse locale file %s: %v", file, err)
+			slog.Warn("failed to parse locale file", "file", file, "error", err)
 		}
 	}
 

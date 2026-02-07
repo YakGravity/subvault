@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/xml"
 	"fmt"
-	"log"
+	"log/slog"
 	"net/http"
 	"strings"
 	"subtrackr/internal/models"
@@ -202,7 +202,7 @@ func (s *CurrencyService) fetchAndCacheRatesLocked() error {
 		})
 	}
 	if err := s.repo.SaveRates(ratesToSave); err != nil {
-		log.Printf("Warning: failed to cache exchange rates: %v", err)
+		slog.Warn("failed to cache exchange rates", "error", err)
 	}
 
 	return nil

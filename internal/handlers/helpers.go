@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"subtrackr/internal/i18n"
+	"subtrackr/internal/version"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +19,9 @@ func baseTemplateData(c *gin.Context) gin.H {
 	} else {
 		data["Lang"] = "en"
 	}
+
+	data["CurrentPath"] = c.Request.URL.Path
+	data["Version"] = version.GetVersion()
 
 	return data
 }

@@ -1,7 +1,7 @@
 package service
 
 import (
-	"log"
+	"log/slog"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
 	"time"
@@ -104,7 +104,7 @@ func (s *SubscriptionService) GetStats() (*models.Stats, error) {
 			}
 
 			if sub.OriginalCurrency != displayCurrency && !HasECBRate(sub.OriginalCurrency) {
-				log.Printf("Warning: No ECB exchange rate for %s, using 1:1 fallback for subscription %q", sub.OriginalCurrency, sub.Name)
+				slog.Warn("no ECB exchange rate, using 1:1 fallback", "currency", sub.OriginalCurrency, "subscription", sub.Name)
 			}
 		case "Cancelled":
 			stats.CancelledSubscriptions++

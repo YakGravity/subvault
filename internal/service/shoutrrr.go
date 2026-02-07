@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"log"
+	"log/slog"
 	"strings"
 	"subtrackr/internal/i18n"
 	"subtrackr/internal/models"
@@ -12,11 +12,11 @@ import (
 )
 
 type ShoutrrrService struct {
-	settingsService *SettingsService
+	settingsService SettingsServiceInterface
 	i18nService     *i18n.I18nService
 }
 
-func NewShoutrrrService(settingsService *SettingsService, i18nService ...*i18n.I18nService) *ShoutrrrService {
+func NewShoutrrrService(settingsService SettingsServiceInterface, i18nService ...*i18n.I18nService) *ShoutrrrService {
 	svc := &ShoutrrrService{
 		settingsService: settingsService,
 	}
@@ -130,7 +130,7 @@ func (s *ShoutrrrService) SendHighCostAlert(subscription *models.Subscription) e
 	title := fmt.Sprintf("%s: %s", s.t("shoutrrr_high_cost_alert"), subscription.Name)
 
 	if err := s.sendToAll(title, message); err != nil {
-		log.Printf("Failed to send high cost alert via Shoutrrr: %v", err)
+		slog.Error("failed to send high cost alert via Shoutrrr", "error", err)
 		return err
 	}
 	return nil
@@ -158,7 +158,7 @@ func (s *ShoutrrrService) SendRenewalReminder(subscription *models.Subscription,
 	title := fmt.Sprintf("%s: %s", s.t("shoutrrr_renewal_reminder"), subscription.Name)
 
 	if err := s.sendToAll(title, message); err != nil {
-		log.Printf("Failed to send renewal reminder via Shoutrrr: %v", err)
+		slog.Error("failed to send renewal reminder via Shoutrrr", "error", err)
 		return err
 	}
 	return nil
@@ -186,7 +186,7 @@ func (s *ShoutrrrService) SendCancellationReminder(subscription *models.Subscrip
 	title := fmt.Sprintf("%s: %s", s.t("shoutrrr_cancellation_reminder"), subscription.Name)
 
 	if err := s.sendToAll(title, message); err != nil {
-		log.Printf("Failed to send cancellation reminder via Shoutrrr: %v", err)
+		slog.Error("failed to send cancellation reminder via Shoutrrr", "error", err)
 		return err
 	}
 	return nil
@@ -203,7 +203,7 @@ func (s *ShoutrrrService) SendBudgetExceededAlert(totalSpend, budget float64, cu
 	title := s.t("shoutrrr_budget_exceeded")
 
 	if err := s.sendToAll(title, message); err != nil {
-		log.Printf("Failed to send budget exceeded alert via Shoutrrr: %v", err)
+		slog.Error("failed to send budget exceeded alert via Shoutrrr", "error", err)
 		return err
 	}
 	return nil

@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"net/http"
 	"strings"
 	"time"
@@ -17,12 +17,12 @@ import (
 )
 
 type ImportHandler struct {
-	subscriptionService *service.SubscriptionService
-	categoryService     *service.CategoryService
-	settingsService     *service.SettingsService
+	subscriptionService service.SubscriptionServiceInterface
+	categoryService     service.CategoryServiceInterface
+	settingsService     service.SettingsServiceInterface
 }
 
-func NewImportHandler(subscriptionService *service.SubscriptionService, categoryService *service.CategoryService, settingsService *service.SettingsService) *ImportHandler {
+func NewImportHandler(subscriptionService service.SubscriptionServiceInterface, categoryService service.CategoryServiceInterface, settingsService service.SettingsServiceInterface) *ImportHandler {
 	return &ImportHandler{
 		subscriptionService: subscriptionService,
 		categoryService:     categoryService,
@@ -63,14 +63,14 @@ type subtrackrExport struct {
 func (h *ImportHandler) ImportSubscriptions(c *gin.Context) {
 	file, _, err := c.Request.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrNoFileUploaded})
 		return
 	}
 	defer file.Close()
 
 	data, err := io.ReadAll(file)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to read file"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrFailedReadFile})
 		return
 	}
 
@@ -285,7 +285,7 @@ func (h *ImportHandler) getOrCreateCategory(name string) *models.Category {
 	newCat := &models.Category{Name: name}
 	created, err := h.categoryService.Create(newCat)
 	if err != nil {
-		log.Printf("Failed to create category %s: %v", name, err)
+		slog.Error("failed to create category", "category", name, "error", err)
 		return nil
 	}
 	return created
@@ -295,20 +295,20 @@ func (h *ImportHandler) getOrCreateCategory(name string) *models.Category {
 func (h *ImportHandler) ImportEncrypted(c *gin.Context) {
 	password := c.PostForm("password")
 	if password == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Password required"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrPasswordRequired})
 		return
 	}
 
 	file, _, err := c.Request.FormFile("file")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No file uploaded"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrNoFileUploaded})
 		return
 	}
 	defer file.Close()
 
 	data, err := io.ReadAll(file)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to read file"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": ErrFailedReadFile})
 		return
 	}
 

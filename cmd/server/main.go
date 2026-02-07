@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"log/slog"
 	"math"
 	"net/http"
 	"os"
+	"strings"
 	"subtrackr/internal/config"
 	"subtrackr/internal/database"
 	"subtrackr/internal/handlers"
@@ -24,6 +26,9 @@ import (
 )
 
 func main() {
+	// Setup structured logging
+	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, nil)))
+
 	// CLI flags
 	resetPassword := flag.Bool("reset-password", false, "Reset admin password (interactive or with --new-password)")
 	newPassword := flag.String("new-password", "", "New password for admin (non-interactive, use with --reset-password)")
@@ -64,7 +69,7 @@ func main() {
 
 	// Migrate existing Pushover config to Shoutrrr format (one-time migration)
 	if err := settingsService.MigratePushoverToShoutrrr(); err != nil {
-		log.Printf("Warning: Pushover to Shoutrrr migration failed: %v", err)
+		slog.Warn("pushover to shoutrrr migration failed", "error", err)
 	}
 	logoService := service.NewLogoService()
 
@@ -100,53 +105,12 @@ func main() {
 
 	router := gin.Default()
 
-	// Create template functions
-	router.SetFuncMap(template.FuncMap{
-		"dict": func(values ...interface{}) map[string]interface{} {
-			if len(values)%2 != 0 {
-				return nil
-			}
-			m := make(map[string]interface{}, len(values)/2)
-			for i := 0; i < len(values); i += 2 {
-				key, ok := values[i].(string)
-				if !ok {
-					continue
-				}
-				m[key] = values[i+1]
-			}
-			return m
-		},
-		"add": func(a, b float64) float64 { return a + b },
-		"sub": func(a, b float64) float64 { return a - b },
-		"mul": func(a, b float64) float64 { return a * b },
-		"div": func(a, b float64) float64 {
-			if b == 0 {
-				return 0
-			}
-			return a / b
-		},
-		"int": func(v interface{}) int {
-			switch val := v.(type) {
-			case int:
-				return val
-			case int64:
-				return int(val)
-			case float64:
-				return int(val)
-			case time.Month:
-				return int(val)
-			default:
-				return 0
-			}
-		},
-	})
-
 	// Load HTML templates with error handling
 	tmpl := loadTemplates()
 	if tmpl != nil && len(tmpl.Templates()) > 0 {
 		router.SetHTMLTemplate(tmpl)
 	} else {
-		log.Printf("Warning: Template loading failed, using fallback")
+		slog.Warn("template loading failed, using fallback")
 		// Fallback to LoadHTMLGlob for compatibility
 		router.LoadHTMLGlob("templates/*")
 	}
@@ -218,7 +182,7 @@ func main() {
 		port = "8080"
 	}
 
-	log.Printf("SubTrackr server starting on port %s", port)
+	slog.Info("server starting", "port", port)
 	log.Fatal(router.Run(":" + port))
 }
 
@@ -242,12 +206,13 @@ func loadTemplates() *template.Template {
 			}
 			return m
 		},
-		"add": func(a, b float64) float64 { return a + b },
-		"sub": func(a, b float64) float64 { return a - b },
-		"mul": func(a, b float64) float64 { return a * b },
+		"hasPrefix": strings.HasPrefix,
+		"add":       func(a, b float64) float64 { return a + b },
+		"sub":       func(a, b float64) float64 { return a - b },
+		"mul":       func(a, b float64) float64 { return a * b },
 		"div": func(a, b float64) float64 {
 			if b == 0 {
-				log.Printf("Warning: Division by zero attempted in template")
+				slog.Warn("division by zero attempted in template")
 				return math.NaN()
 			}
 			return a / b
@@ -267,6 +232,16 @@ func loadTemplates() *template.Template {
 			}
 		},
 	})
+
+	// Load partials first (they define reusable template blocks)
+	partialFiles := []string{
+		"templates/partials/sidebar.html",
+	}
+	for _, file := range partialFiles {
+		if _, err := tmpl.ParseFiles(file); err != nil {
+			slog.Error("failed to parse partial", "file", file, "error", err)
+		}
+	}
 
 	// Critical templates required for basic functionality
 	criticalTemplates := []string{
@@ -312,7 +287,7 @@ func loadTemplates() *template.Template {
 	// Load templates individually to catch arm64-specific issues
 	for _, file := range templateFiles {
 		if _, err := os.Stat(file); err != nil {
-			log.Printf("Warning: Template file not found: %s", file)
+			slog.Warn("template file not found", "file", file)
 			// Check if this is a critical template
 			for _, critical := range criticalTemplates {
 				if critical == file {
@@ -323,7 +298,7 @@ func loadTemplates() *template.Template {
 		}
 
 		if _, err := tmpl.ParseFiles(file); err != nil {
-			log.Printf("Error: Failed to parse template %s: %v", file, err)
+			slog.Error("failed to parse template", "file", file, "error", err)
 			failedCount++
 			// Check if this is a critical template
 			for _, critical := range criticalTemplates {
@@ -337,7 +312,7 @@ func loadTemplates() *template.Template {
 	}
 
 	// Log template loading summary
-	log.Printf("Template loading summary: %d parsed, %d failed, %d total", parsedCount, failedCount, len(templateFiles))
+	slog.Info("template loading complete", "parsed", parsedCount, "failed", failedCount, "total", len(templateFiles))
 
 	// Fatal error if critical templates are missing
 	if len(missingCritical) > 0 {
@@ -346,7 +321,7 @@ func loadTemplates() *template.Template {
 
 	// Warn if too many templates failed
 	if failedCount > len(templateFiles)/2 {
-		log.Printf("Warning: More than half of templates failed to load (%d/%d). Application may not function correctly.", failedCount, len(templateFiles))
+		slog.Warn("more than half of templates failed to load", "failed", failedCount, "total", len(templateFiles))
 	}
 
 	return tmpl
@@ -499,7 +474,7 @@ func startRenewalReminderScheduler(subscriptionService *service.SubscriptionServ
 			func() {
 				defer func() {
 					if r := recover(); r != nil {
-						log.Printf("Panic in renewal reminder check: %v", r)
+						slog.Error("panic in renewal reminder check", "panic", r)
 					}
 				}()
 				checkAndSendRenewalReminders(subscriptionService, emailService, shoutrrrService, settingsService)
@@ -513,16 +488,16 @@ func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionServi
 	// Get subscriptions needing reminders (per-subscription settings)
 	subscriptions, err := subscriptionService.GetSubscriptionsNeedingReminders()
 	if err != nil {
-		log.Printf("Error getting subscriptions for renewal reminders: %v", err)
+		slog.Error("failed to get subscriptions for renewal reminders", "error", err)
 		return
 	}
 
 	if len(subscriptions) == 0 {
-		log.Printf("No subscriptions need renewal reminders today")
+		slog.Info("no subscriptions need renewal reminders today")
 		return
 	}
 
-	log.Printf("Checking %d subscription(s) for renewal reminders", len(subscriptions))
+	slog.Info("checking subscriptions for renewal reminders", "count", len(subscriptions))
 
 	// Send reminder for each subscription (both email and Shoutrrr)
 	sentCount := 0
@@ -533,7 +508,7 @@ func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionServi
 
 		// If both fail, count as failed; otherwise consider it sent
 		if emailErr != nil && shoutrrrErr != nil {
-			log.Printf("Error sending renewal reminder for subscription %s (ID: %d): email=%v, shoutrrr=%v", sub.Name, sub.ID, emailErr, shoutrrrErr)
+			slog.Error("failed to send renewal reminder", "subscription", sub.Name, "id", sub.ID, "emailError", emailErr, "shoutrrrError", shoutrrrErr)
 			failedCount++
 		} else {
 			// Mark reminder as sent for this renewal date
@@ -547,21 +522,21 @@ func checkAndSendRenewalReminders(subscriptionService *service.SubscriptionServi
 			// Update the subscription in the database
 			_, updateErr := subscriptionService.Update(sub.ID, sub)
 			if updateErr != nil {
-				log.Printf("Warning: Failed to update last reminder sent for subscription %s (ID: %d): %v", sub.Name, sub.ID, updateErr)
+				slog.Warn("failed to update last reminder sent", "subscription", sub.Name, "id", sub.ID, "error", updateErr)
 			}
 
 			if emailErr != nil {
-				log.Printf("Sent Shoutrrr renewal reminder for subscription %s (renews in %d days) - email failed: %v", sub.Name, daysUntil, emailErr)
+				slog.Info("sent shoutrrr renewal reminder", "subscription", sub.Name, "daysUntil", daysUntil, "emailError", emailErr)
 			} else if shoutrrrErr != nil {
-				log.Printf("Sent email renewal reminder for subscription %s (renews in %d days) - Shoutrrr failed: %v", sub.Name, daysUntil, shoutrrrErr)
+				slog.Info("sent email renewal reminder", "subscription", sub.Name, "daysUntil", daysUntil, "shoutrrrError", shoutrrrErr)
 			} else {
-				log.Printf("Sent renewal reminders (email and Shoutrrr) for subscription %s (renews in %d days)", sub.Name, daysUntil)
+				slog.Info("sent renewal reminders", "subscription", sub.Name, "daysUntil", daysUntil)
 			}
 			sentCount++
 		}
 	}
 
-	log.Printf("Renewal reminder check complete: %d sent, %d failed", sentCount, failedCount)
+	slog.Info("renewal reminder check complete", "sent", sentCount, "failed", failedCount)
 }
 
 // startCancellationReminderScheduler starts a background goroutine that checks for
@@ -584,7 +559,7 @@ func startCancellationReminderScheduler(subscriptionService *service.Subscriptio
 			func() {
 				defer func() {
 					if r := recover(); r != nil {
-						log.Printf("Panic in cancellation reminder check: %v", r)
+						slog.Error("panic in cancellation reminder check", "panic", r)
 					}
 				}()
 				checkAndSendCancellationReminders(subscriptionService, emailService, shoutrrrService, settingsService)
@@ -598,16 +573,16 @@ func checkAndSendCancellationReminders(subscriptionService *service.Subscription
 	// Get subscriptions needing cancellation reminders (per-subscription settings)
 	subscriptions, err := subscriptionService.GetSubscriptionsNeedingCancellationReminders()
 	if err != nil {
-		log.Printf("Error getting subscriptions for cancellation reminders: %v", err)
+		slog.Error("failed to get subscriptions for cancellation reminders", "error", err)
 		return
 	}
 
 	if len(subscriptions) == 0 {
-		log.Printf("No subscriptions need cancellation reminders today")
+		slog.Info("no subscriptions need cancellation reminders today")
 		return
 	}
 
-	log.Printf("Checking %d subscription(s) for cancellation reminders", len(subscriptions))
+	slog.Info("checking subscriptions for cancellation reminders", "count", len(subscriptions))
 
 	// Send reminder for each subscription (both email and Shoutrrr)
 	sentCount := 0
@@ -618,7 +593,7 @@ func checkAndSendCancellationReminders(subscriptionService *service.Subscription
 
 		// If both fail, count as failed; otherwise consider it sent
 		if emailErr != nil && shoutrrrErr != nil {
-			log.Printf("Error sending cancellation reminder for subscription %s (ID: %d): email=%v, shoutrrr=%v", sub.Name, sub.ID, emailErr, shoutrrrErr)
+			slog.Error("failed to send cancellation reminder", "subscription", sub.Name, "id", sub.ID, "emailError", emailErr, "shoutrrrError", shoutrrrErr)
 			failedCount++
 		} else {
 			// Mark reminder as sent for this cancellation date
@@ -632,21 +607,21 @@ func checkAndSendCancellationReminders(subscriptionService *service.Subscription
 			// Update the subscription in the database
 			_, updateErr := subscriptionService.Update(sub.ID, sub)
 			if updateErr != nil {
-				log.Printf("Warning: Failed to update last cancellation reminder sent for subscription %s (ID: %d): %v", sub.Name, sub.ID, updateErr)
+				slog.Warn("failed to update last cancellation reminder sent", "subscription", sub.Name, "id", sub.ID, "error", updateErr)
 			}
 
 			if emailErr != nil {
-				log.Printf("Sent Shoutrrr cancellation reminder for subscription %s (ends in %d days) - email failed: %v", sub.Name, daysUntil, emailErr)
+				slog.Info("sent shoutrrr cancellation reminder", "subscription", sub.Name, "daysUntil", daysUntil, "emailError", emailErr)
 			} else if shoutrrrErr != nil {
-				log.Printf("Sent email cancellation reminder for subscription %s (ends in %d days) - Shoutrrr failed: %v", sub.Name, daysUntil, shoutrrrErr)
+				slog.Info("sent email cancellation reminder", "subscription", sub.Name, "daysUntil", daysUntil, "shoutrrrError", shoutrrrErr)
 			} else {
-				log.Printf("Sent cancellation reminders (email and Shoutrrr) for subscription %s (ends in %d days)", sub.Name, daysUntil)
+				slog.Info("sent cancellation reminders", "subscription", sub.Name, "daysUntil", daysUntil)
 			}
 			sentCount++
 		}
 	}
 
-	log.Printf("Cancellation reminder check complete: %d sent, %d failed", sentCount, failedCount)
+	slog.Info("cancellation reminder check complete", "sent", sentCount, "failed", failedCount)
 }
 
 // handleResetPassword handles the --reset-password CLI command

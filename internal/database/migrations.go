@@ -1,7 +1,7 @@
 package database
 
 import (
-	"log"
+	"log/slog"
 	"strconv"
 	"subtrackr/internal/models"
 
@@ -54,7 +54,7 @@ func migrateCategoriesToDynamic(db *gorm.DB) error {
 		return nil
 	}
 
-	log.Println("Running migration: Converting categories to dynamic system...")
+	slog.Info("running migration: converting categories to dynamic system")
 
 	// First ensure default categories exist
 	defaultCategories := []string{"Entertainment", "Productivity", "Storage", "Software", "Fitness", "Education", "Food", "Travel", "Business", "Other"}
@@ -101,7 +101,7 @@ func migrateCategoriesToDynamic(db *gorm.DB) error {
 	// The repository layer now handles both old and new schemas transparently
 	// This ensures backward compatibility without data loss
 
-	log.Println("Migration completed: Categories converted to dynamic system")
+	slog.Info("migration completed: categories converted to dynamic system")
 	return nil
 }
 
@@ -116,20 +116,20 @@ func migrateCurrencyFields(db *gorm.DB) error {
 		return nil
 	}
 
-	log.Println("Running migration: Adding currency fields...")
+	slog.Info("running migration: adding currency fields")
 
 	// Add original_currency column with default 'USD'
 	if err := db.Exec("ALTER TABLE subscriptions ADD COLUMN original_currency TEXT DEFAULT 'USD'").Error; err != nil {
 		// Column might already exist, that's okay
-		log.Printf("Note: Could not add original_currency column: %v", err)
+		slog.Info("could not add original_currency column", "error", err)
 	}
 
 	// Set USD as default for existing subscriptions
 	if err := db.Exec("UPDATE subscriptions SET original_currency = 'USD' WHERE original_currency IS NULL OR original_currency = ''").Error; err != nil {
-		log.Printf("Warning: Could not update existing subscriptions with default currency: %v", err)
+		slog.Warn("could not update existing subscriptions with default currency", "error", err)
 	}
 
-	log.Println("Migration completed: Currency fields added")
+	slog.Info("migration completed: currency fields added")
 	return nil
 }
 
@@ -144,20 +144,20 @@ func migrateDateCalculationVersioning(db *gorm.DB) error {
 		return nil
 	}
 
-	log.Println("Running migration: Adding date calculation versioning...")
+	slog.Info("running migration: adding date calculation versioning")
 
 	// Add date_calculation_version column with default 1 (existing logic)
 	if err := db.Exec("ALTER TABLE subscriptions ADD COLUMN date_calculation_version INTEGER DEFAULT 1").Error; err != nil {
 		// Column might already exist, that's okay
-		log.Printf("Note: Could not add date_calculation_version column: %v", err)
+		slog.Info("could not add date_calculation_version column", "error", err)
 	}
 
 	// Set version 1 for all existing subscriptions (maintain backward compatibility)
 	if err := db.Exec("UPDATE subscriptions SET date_calculation_version = 1 WHERE date_calculation_version IS NULL").Error; err != nil {
-		log.Printf("Warning: Could not update existing subscriptions with default version: %v", err)
+		slog.Warn("could not update existing subscriptions with default version", "error", err)
 	}
 
-	log.Println("Migration completed: Date calculation versioning added")
+	slog.Info("migration completed: date calculation versioning added")
 	return nil
 }
 
@@ -172,20 +172,20 @@ func migrateSubscriptionIcons(db *gorm.DB) error {
 		return nil
 	}
 
-	log.Println("Running migration: Adding subscription icon URLs...")
+	slog.Info("running migration: adding subscription icon URLs")
 
 	// Add icon_url column (nullable, empty string default)
 	if err := db.Exec("ALTER TABLE subscriptions ADD COLUMN icon_url TEXT DEFAULT ''").Error; err != nil {
 		// Column might already exist, that's okay
-		log.Printf("Note: Could not add icon_url column: %v", err)
+		slog.Info("could not add icon_url column", "error", err)
 	}
 
 	// Set empty string as default for existing subscriptions
 	if err := db.Exec("UPDATE subscriptions SET icon_url = '' WHERE icon_url IS NULL").Error; err != nil {
-		log.Printf("Warning: Could not update existing subscriptions with default icon_url: %v", err)
+		slog.Warn("could not update existing subscriptions with default icon_url", "error", err)
 	}
 
-	log.Println("Migration completed: Subscription icon URLs added")
+	slog.Info("migration completed: subscription icon URLs added")
 	return nil
 }
 
@@ -200,19 +200,19 @@ func migrateReminderTracking(db *gorm.DB) error {
 		return nil
 	}
 
-	log.Println("Running migration: Adding reminder tracking fields...")
+	slog.Info("running migration: adding reminder tracking fields")
 
 	// Add last_reminder_sent column
 	if err := db.Exec("ALTER TABLE subscriptions ADD COLUMN last_reminder_sent DATETIME").Error; err != nil {
-		log.Printf("Note: Could not add last_reminder_sent column: %v", err)
+		slog.Info("could not add last_reminder_sent column", "error", err)
 	}
 
 	// Add last_reminder_renewal_date column
 	if err := db.Exec("ALTER TABLE subscriptions ADD COLUMN last_reminder_renewal_date DATETIME").Error; err != nil {
-		log.Printf("Note: Could not add last_reminder_renewal_date column: %v", err)
+		slog.Info("could not add last_reminder_renewal_date column", "error", err)
 	}
 
-	log.Println("Migration completed: Reminder tracking fields added")
+	slog.Info("migration completed: reminder tracking fields added")
 	return nil
 }
 
@@ -227,19 +227,19 @@ func migrateCancellationReminderTracking(db *gorm.DB) error {
 		return nil
 	}
 
-	log.Println("Running migration: Adding cancellation reminder tracking fields...")
+	slog.Info("running migration: adding cancellation reminder tracking fields")
 
 	// Add last_cancellation_reminder_sent column
 	if err := db.Exec("ALTER TABLE subscriptions ADD COLUMN last_cancellation_reminder_sent DATETIME").Error; err != nil {
-		log.Printf("Note: Could not add last_cancellation_reminder_sent column: %v", err)
+		slog.Info("could not add last_cancellation_reminder_sent column", "error", err)
 	}
 
 	// Add last_cancellation_reminder_date column
 	if err := db.Exec("ALTER TABLE subscriptions ADD COLUMN last_cancellation_reminder_date DATETIME").Error; err != nil {
-		log.Printf("Note: Could not add last_cancellation_reminder_date column: %v", err)
+		slog.Info("could not add last_cancellation_reminder_date column", "error", err)
 	}
 
-	log.Println("Migration completed: Cancellation reminder tracking fields added")
+	slog.Info("migration completed: cancellation reminder tracking fields added")
 	return nil
 }
 

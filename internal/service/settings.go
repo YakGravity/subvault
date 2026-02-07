@@ -6,7 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"strconv"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
@@ -17,6 +17,25 @@ import (
 )
 
 const settingsCacheTTL = 30 * time.Second
+
+// Setting key constants
+const (
+	SettingKeySMTPConfig         = "smtp_config"
+	SettingKeyTheme              = "theme"
+	SettingKeyCurrency           = "currency"
+	SettingKeyDarkMode           = "dark_mode"
+	SettingKeyLanguage           = "language"
+	SettingKeyDateFormat         = "date_format"
+	SettingKeyCalendarToken      = "calendar_token"
+	SettingKeyAuthEnabled        = "auth_enabled"
+	SettingKeyAuthUsername       = "auth_username"
+	SettingKeyAuthPasswordHash   = "auth_password_hash"
+	SettingKeyAuthSessionSecret  = "auth_session_secret"
+	SettingKeyAuthResetToken     = "auth_reset_token"
+	SettingKeyAuthResetExpiry    = "auth_reset_token_expiry"
+	SettingKeyShoutrrrConfig     = "shoutrrr_config"
+	SettingKeyPushoverConfig     = "pushover_config"
+)
 
 type SettingsService struct {
 	repo     *repository.SettingsRepository
@@ -36,7 +55,7 @@ func NewSettingsService(repo *repository.SettingsRepository) *SettingsService {
 func (s *SettingsService) loadCache() {
 	settings, err := s.repo.GetAll()
 	if err != nil {
-		log.Printf("Warning: Failed to load settings cache: %v", err)
+		slog.Warn("failed to load settings cache", "error", err)
 		return
 	}
 	s.cache = make(map[string]string, len(settings))
@@ -85,12 +104,12 @@ func (s *SettingsService) SaveSMTPConfig(config *models.SMTPConfig) error {
 	}
 
 	defer s.invalidateCache()
-	return s.repo.Set("smtp_config", string(data))
+	return s.repo.Set(SettingKeySMTPConfig, string(data))
 }
 
 // GetSMTPConfig retrieves SMTP configuration
 func (s *SettingsService) GetSMTPConfig() (*models.SMTPConfig, error) {
-	data, ok := s.getCached("smtp_config")
+	data, ok := s.getCached(SettingKeySMTPConfig)
 	if !ok {
 		return nil, fmt.Errorf("smtp_config not found")
 	}
@@ -177,7 +196,7 @@ func (s *SettingsService) GetFloatSetting(key string, defaultValue float64) (flo
 
 // GetTheme retrieves the current theme setting
 func (s *SettingsService) GetTheme() (string, error) {
-	theme, ok := s.getCached("theme")
+	theme, ok := s.getCached(SettingKeyTheme)
 	if !ok || theme == "" {
 		return "default", nil
 	}
@@ -187,7 +206,7 @@ func (s *SettingsService) GetTheme() (string, error) {
 // SetTheme saves the theme preference
 func (s *SettingsService) SetTheme(theme string) error {
 	defer s.invalidateCache()
-	return s.repo.Set("theme", theme)
+	return s.repo.Set(SettingKeyTheme, theme)
 }
 
 // GetFloatSettingWithDefault retrieves a float setting with default
@@ -248,12 +267,12 @@ func (s *SettingsService) SetCurrency(currency string) error {
 		return fmt.Errorf("invalid currency: %s", currency)
 	}
 	defer s.invalidateCache()
-	return s.repo.Set("currency", currency)
+	return s.repo.Set(SettingKeyCurrency, currency)
 }
 
 // GetCurrency retrieves the currency preference
 func (s *SettingsService) GetCurrency() string {
-	currency, ok := s.getCached("currency")
+	currency, ok := s.getCached(SettingKeyCurrency)
 	if !ok || currency == "" {
 		return "USD"
 	}
@@ -339,29 +358,29 @@ func (s *SettingsService) GetCurrencySymbol() string {
 
 // SetDarkMode saves the dark mode preference
 func (s *SettingsService) SetDarkMode(enabled bool) error {
-	return s.SetBoolSetting("dark_mode", enabled)
+	return s.SetBoolSetting(SettingKeyDarkMode, enabled)
 }
 
 // IsDarkModeEnabled returns whether dark mode is enabled
 func (s *SettingsService) IsDarkModeEnabled() bool {
-	return s.GetBoolSettingWithDefault("dark_mode", false)
+	return s.GetBoolSettingWithDefault(SettingKeyDarkMode, false)
 }
 
 // Auth-related methods
 
 // IsAuthEnabled returns whether authentication is enabled
 func (s *SettingsService) IsAuthEnabled() bool {
-	return s.GetBoolSettingWithDefault("auth_enabled", false)
+	return s.GetBoolSettingWithDefault(SettingKeyAuthEnabled, false)
 }
 
 // SetAuthEnabled enables or disables authentication
 func (s *SettingsService) SetAuthEnabled(enabled bool) error {
-	return s.SetBoolSetting("auth_enabled", enabled)
+	return s.SetBoolSetting(SettingKeyAuthEnabled, enabled)
 }
 
 // GetAuthUsername returns the configured admin username
 func (s *SettingsService) GetAuthUsername() (string, error) {
-	val, ok := s.getCached("auth_username")
+	val, ok := s.getCached(SettingKeyAuthUsername)
 	if !ok {
 		return "", fmt.Errorf("auth_username not found")
 	}
@@ -371,7 +390,7 @@ func (s *SettingsService) GetAuthUsername() (string, error) {
 // SetAuthUsername sets the admin username
 func (s *SettingsService) SetAuthUsername(username string) error {
 	defer s.invalidateCache()
-	return s.repo.Set("auth_username", username)
+	return s.repo.Set(SettingKeyAuthUsername, username)
 }
 
 // HashPassword hashes a password using bcrypt
@@ -390,12 +409,12 @@ func (s *SettingsService) SetAuthPassword(password string) error {
 		return err
 	}
 	defer s.invalidateCache()
-	return s.repo.Set("auth_password_hash", hash)
+	return s.repo.Set(SettingKeyAuthPasswordHash, hash)
 }
 
 // ValidatePassword checks if a password matches the stored hash
 func (s *SettingsService) ValidatePassword(password string) error {
-	hash, ok := s.getCached("auth_password_hash")
+	hash, ok := s.getCached(SettingKeyAuthPasswordHash)
 	if !ok {
 		return fmt.Errorf("no password configured")
 	}
@@ -404,7 +423,7 @@ func (s *SettingsService) ValidatePassword(password string) error {
 
 // GetOrGenerateSessionSecret returns the session secret, generating one if it doesn't exist
 func (s *SettingsService) GetOrGenerateSessionSecret() (string, error) {
-	secret, ok := s.getCached("auth_session_secret")
+	secret, ok := s.getCached(SettingKeyAuthSessionSecret)
 	if ok && secret != "" {
 		return secret, nil
 	}
@@ -417,7 +436,7 @@ func (s *SettingsService) GetOrGenerateSessionSecret() (string, error) {
 	secret = base64.URLEncoding.EncodeToString(bytes)
 
 	// Save it
-	if err := s.repo.Set("auth_session_secret", secret); err != nil {
+	if err := s.repo.Set(SettingKeyAuthSessionSecret, secret); err != nil {
 		return "", err
 	}
 	s.invalidateCache()
@@ -454,8 +473,8 @@ func (s *SettingsService) DisableAuth() error {
 	}
 
 	// Optionally clear credentials (commented out to allow re-enabling without re-entering)
-	// s.repo.Delete("auth_username")
-	// s.repo.Delete("auth_password_hash")
+	// s.repo.Delete(SettingKeyAuthUsername)
+	// s.repo.Delete(SettingKeyAuthPasswordHash)
 
 	return nil
 }
@@ -468,12 +487,12 @@ func (s *SettingsService) GenerateResetToken() (string, error) {
 	}
 	token := base64.URLEncoding.EncodeToString(bytes)
 
-	if err := s.repo.Set("auth_reset_token", token); err != nil {
+	if err := s.repo.Set(SettingKeyAuthResetToken, token); err != nil {
 		return "", err
 	}
 
 	expiry := time.Now().Add(1 * time.Hour).Format(time.RFC3339)
-	if err := s.repo.Set("auth_reset_token_expiry", expiry); err != nil {
+	if err := s.repo.Set(SettingKeyAuthResetExpiry, expiry); err != nil {
 		return "", err
 	}
 
@@ -483,12 +502,12 @@ func (s *SettingsService) GenerateResetToken() (string, error) {
 
 // ValidateResetToken checks if a reset token is valid
 func (s *SettingsService) ValidateResetToken(token string) error {
-	storedToken, ok := s.getCached("auth_reset_token")
+	storedToken, ok := s.getCached(SettingKeyAuthResetToken)
 	if !ok || subtle.ConstantTimeCompare([]byte(storedToken), []byte(token)) != 1 {
 		return fmt.Errorf("invalid token")
 	}
 
-	expiryStr, ok := s.getCached("auth_reset_token_expiry")
+	expiryStr, ok := s.getCached(SettingKeyAuthResetExpiry)
 	if !ok {
 		return fmt.Errorf("token expired")
 	}
@@ -503,8 +522,8 @@ func (s *SettingsService) ValidateResetToken(token string) error {
 
 // ClearResetToken removes the reset token after use
 func (s *SettingsService) ClearResetToken() error {
-	s.repo.Delete("auth_reset_token")
-	s.repo.Delete("auth_reset_token_expiry")
+	s.repo.Delete(SettingKeyAuthResetToken)
+	s.repo.Delete(SettingKeyAuthResetExpiry)
 	s.invalidateCache()
 	return nil
 }
@@ -517,12 +536,12 @@ func (s *SettingsService) SaveShoutrrrConfig(config *models.ShoutrrrConfig) erro
 	}
 
 	defer s.invalidateCache()
-	return s.repo.Set("shoutrrr_config", string(data))
+	return s.repo.Set(SettingKeyShoutrrrConfig, string(data))
 }
 
 // GetShoutrrrConfig retrieves Shoutrrr configuration
 func (s *SettingsService) GetShoutrrrConfig() (*models.ShoutrrrConfig, error) {
-	data, ok := s.getCached("shoutrrr_config")
+	data, ok := s.getCached(SettingKeyShoutrrrConfig)
 	if !ok {
 		return nil, fmt.Errorf("shoutrrr_config not found")
 	}
@@ -538,7 +557,7 @@ func (s *SettingsService) GetShoutrrrConfig() (*models.ShoutrrrConfig, error) {
 
 // MigratePushoverToShoutrrr migrates existing Pushover config to Shoutrrr format
 func (s *SettingsService) MigratePushoverToShoutrrr() error {
-	data, ok := s.getCached("pushover_config")
+	data, ok := s.getCached(SettingKeyPushoverConfig)
 	if !ok {
 		return nil // No Pushover config exists, nothing to migrate
 	}
@@ -572,8 +591,8 @@ func (s *SettingsService) MigratePushoverToShoutrrr() error {
 	}
 
 	// Delete old Pushover config
-	s.repo.Delete("pushover_config")
-	log.Printf("Migrated Pushover config to Shoutrrr URL format")
+	s.repo.Delete(SettingKeyPushoverConfig)
+	slog.Info("migrated Pushover config to Shoutrrr URL format")
 
 	return nil
 }
@@ -594,12 +613,12 @@ func (s *SettingsService) SetLanguage(lang string) error {
 		return fmt.Errorf("invalid language: %s", lang)
 	}
 	defer s.invalidateCache()
-	return s.repo.Set("language", lang)
+	return s.repo.Set(SettingKeyLanguage, lang)
 }
 
 // GetLanguage retrieves the language preference
 func (s *SettingsService) GetLanguage() string {
-	lang, ok := s.getCached("language")
+	lang, ok := s.getCached(SettingKeyLanguage)
 	if !ok || lang == "" {
 		return "en"
 	}
@@ -609,13 +628,13 @@ func (s *SettingsService) GetLanguage() string {
 // SetDateFormat saves the date format preference
 func (s *SettingsService) SetDateFormat(format string) error {
 	s.invalidateCache()
-	return s.repo.Set("date_format", format)
+	return s.repo.Set(SettingKeyDateFormat, format)
 }
 
 // GetDateFormat retrieves the date format preference (Go format string).
 // Returns empty string if not set (locale default will be used).
 func (s *SettingsService) GetDateFormat() string {
-	val, ok := s.getCached("date_format")
+	val, ok := s.getCached(SettingKeyDateFormat)
 	if !ok || val == "" {
 		return ""
 	}
@@ -629,7 +648,7 @@ func (s *SettingsService) GenerateCalendarToken() (string, error) {
 		return "", err
 	}
 	token := fmt.Sprintf("%x", bytes)
-	if err := s.repo.Set("calendar_token", token); err != nil {
+	if err := s.repo.Set(SettingKeyCalendarToken, token); err != nil {
 		return "", err
 	}
 	s.invalidateCache()
@@ -638,7 +657,7 @@ func (s *SettingsService) GenerateCalendarToken() (string, error) {
 
 // GetCalendarToken retrieves the calendar feed token
 func (s *SettingsService) GetCalendarToken() (string, error) {
-	val, ok := s.getCached("calendar_token")
+	val, ok := s.getCached(SettingKeyCalendarToken)
 	if !ok {
 		return "", fmt.Errorf("calendar_token not found")
 	}
@@ -648,5 +667,5 @@ func (s *SettingsService) GetCalendarToken() (string, error) {
 // RevokeCalendarToken deletes the calendar feed token
 func (s *SettingsService) RevokeCalendarToken() error {
 	defer s.invalidateCache()
-	return s.repo.Set("calendar_token", "")
+	return s.repo.Set(SettingKeyCalendarToken, "")
 }
