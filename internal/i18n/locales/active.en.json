@@ -1384,7 +1384,7 @@
     "other": "Security"
   },
   "settings_general_subtitle": {
-    "other": "Appearance, language, and display preferences"
+    "other": "Language, currency, and date format"
   },
   "settings_notifications_subtitle": {
     "other": "Email, push notifications, and alerts"
@@ -1402,7 +1402,7 @@
     "other": "Appearance"
   },
   "settings_appearance_title": {
-    "other": "Appearance"
+    "other": "Color Scheme"
   },
   "settings_appearance_desc": {
     "other": "Choose your preferred color scheme"
@@ -1438,7 +1438,7 @@
     "other": "Red"
   },
   "settings_display_title": {
-    "other": "Display"
+    "other": "View"
   },
   "settings_compact_label": {
     "other": "Compact View"

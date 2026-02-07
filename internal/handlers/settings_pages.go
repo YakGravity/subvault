@@ -7,19 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SettingsGeneral renders the General settings page (Appearance, Language, Currency, About)
+// SettingsGeneral renders the General settings page (Language, Currency, Date Format)
 func (h *SettingsHandler) SettingsGeneral(c *gin.Context) {
-	data := h.settingsBaseData(c, "general")
-	mergeTemplateData(data, gin.H{
-		"Title":    "Settings",
-		"Currency": h.service.GetCurrency(),
-		"Language": h.service.GetLanguage(),
-	})
-	c.HTML(http.StatusOK, "settings-general.html", data)
-}
-
-// SettingsAppearance renders the Appearance settings page (Light/Dark/System)
-func (h *SettingsHandler) SettingsAppearance(c *gin.Context) {
 	goFormat := h.service.GetDateFormat()
 	displayFormat := ""
 	switch goFormat {
@@ -31,10 +20,21 @@ func (h *SettingsHandler) SettingsAppearance(c *gin.Context) {
 		displayFormat = "YYYY-MM-DD"
 	}
 
+	data := h.settingsBaseData(c, "general")
+	mergeTemplateData(data, gin.H{
+		"Title":      "Settings",
+		"Currency":   h.service.GetCurrency(),
+		"Language":   h.service.GetLanguage(),
+		"DateFormat": displayFormat,
+	})
+	c.HTML(http.StatusOK, "settings-general.html", data)
+}
+
+// SettingsAppearance renders the Appearance settings page (Theme, Accent, View)
+func (h *SettingsHandler) SettingsAppearance(c *gin.Context) {
 	data := h.settingsBaseData(c, "appearance")
 	mergeTemplateData(data, gin.H{
-		"Title":      "Appearance",
-		"DateFormat": displayFormat,
+		"Title": "Appearance",
 	})
 	c.HTML(http.StatusOK, "settings-appearance.html", data)
 }

@@ -32,7 +32,6 @@
             <a href="/settings/data" class="tab-item">{{.T.Tr "settings_tab_data"}}</a>
             <a href="/settings/appearance" class="tab-item{{if eq .CurrentTab "appearance"}} active{{end}}">{{.T.Tr "settings_tab_appearance"}}</a>
             <a href="/settings/security" class="tab-item">{{.T.Tr "settings_tab_security"}}</a>
-            <a href="/api-docs" class="tab-item">{{.T.Tr "settings_tab_api"}}</a>
         </div>
 
 <div style="display:flex;flex-direction:column;gap:32px;">
@@ -107,9 +106,65 @@
         </div>
     </div>
 
+    <!-- Date Format -->
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_dateformat_title"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_dateformat_desc"}}</p>
+            <div style="display:flex;flex-direction:column;gap:10px;" id="dateformat-options">
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+                    <input type="radio" name="dateformat" value="DD.MM.YYYY" style="accent-color:var(--accent);">
+                    <div>
+                        <span style="font-size:13px;font-weight:500;color:var(--text);">DD.MM.YYYY</span>
+                        <span style="font-size:12px;color:var(--text-secondary);margin-left:8px;" data-preview="DD.MM.YYYY"></span>
+                    </div>
+                </label>
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+                    <input type="radio" name="dateformat" value="MM/DD/YYYY" style="accent-color:var(--accent);">
+                    <div>
+                        <span style="font-size:13px;font-weight:500;color:var(--text);">MM/DD/YYYY</span>
+                        <span style="font-size:12px;color:var(--text-secondary);margin-left:8px;" data-preview="MM/DD/YYYY"></span>
+                    </div>
+                </label>
+                <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+                    <input type="radio" name="dateformat" value="YYYY-MM-DD" style="accent-color:var(--accent);">
+                    <div>
+                        <span style="font-size:13px;font-weight:500;color:var(--text);">YYYY-MM-DD</span>
+                        <span style="font-size:12px;color:var(--text-secondary);margin-left:8px;" data-preview="YYYY-MM-DD"></span>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
 
 </div>
 
     </div><!-- /.main -->
+<script>
+    // Date format
+    var savedFormat = '{{.DateFormat}}';
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2,'0');
+    var mm = String(today.getMonth()+1).padStart(2,'0');
+    var yyyy = today.getFullYear();
+    var previews = {
+        'DD.MM.YYYY': dd+'.'+mm+'.'+yyyy,
+        'MM/DD/YYYY': mm+'/'+dd+'/'+yyyy,
+        'YYYY-MM-DD': yyyy+'-'+mm+'-'+dd
+    };
+    document.querySelectorAll('[data-preview]').forEach(function(el) {
+        el.textContent = previews[el.dataset.preview] || '';
+    });
+    document.querySelectorAll('input[name="dateformat"]').forEach(function(radio) {
+        if (radio.value === savedFormat) radio.checked = true;
+        radio.addEventListener('change', function() {
+            fetch('/api/settings/date-format', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'format=' + encodeURIComponent(this.value)
+            });
+        });
+    });
+</script>
 </body>
 </html>
