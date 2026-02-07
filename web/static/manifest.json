@@ -4,8 +4,8 @@
   "description": "Track and manage your subscriptions",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#111827",
-  "theme_color": "#37889b",
+  "background_color": "#1c1917",
+  "theme_color": "#c2410c",
   "icons": [
     {
       "src": "/static/images/icon-192.png",

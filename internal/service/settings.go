@@ -20,21 +20,21 @@ const settingsCacheTTL = 30 * time.Second
 
 // Setting key constants
 const (
-	SettingKeySMTPConfig         = "smtp_config"
-	SettingKeyTheme              = "theme"
-	SettingKeyCurrency           = "currency"
-	SettingKeyDarkMode           = "dark_mode"
-	SettingKeyLanguage           = "language"
-	SettingKeyDateFormat         = "date_format"
-	SettingKeyCalendarToken      = "calendar_token"
-	SettingKeyAuthEnabled        = "auth_enabled"
-	SettingKeyAuthUsername       = "auth_username"
-	SettingKeyAuthPasswordHash   = "auth_password_hash"
-	SettingKeyAuthSessionSecret  = "auth_session_secret"
-	SettingKeyAuthResetToken     = "auth_reset_token"
-	SettingKeyAuthResetExpiry    = "auth_reset_token_expiry"
-	SettingKeyShoutrrrConfig     = "shoutrrr_config"
-	SettingKeyPushoverConfig     = "pushover_config"
+	SettingKeySMTPConfig        = "smtp_config"
+	SettingKeyTheme             = "theme"
+	SettingKeyCurrency          = "currency"
+	SettingKeyDarkMode          = "dark_mode"
+	SettingKeyLanguage          = "language"
+	SettingKeyDateFormat        = "date_format"
+	SettingKeyCalendarToken     = "calendar_token"
+	SettingKeyAuthEnabled       = "auth_enabled"
+	SettingKeyAuthUsername      = "auth_username"
+	SettingKeyAuthPasswordHash  = "auth_password_hash"
+	SettingKeyAuthSessionSecret = "auth_session_secret"
+	SettingKeyAuthResetToken    = "auth_reset_token"
+	SettingKeyAuthResetExpiry   = "auth_reset_token_expiry"
+	SettingKeyShoutrrrConfig    = "shoutrrr_config"
+	SettingKeyPushoverConfig    = "pushover_config"
 )
 
 type SettingsService struct {

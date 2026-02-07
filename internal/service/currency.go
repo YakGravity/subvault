@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"strings"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
 	"sync"
@@ -41,11 +40,6 @@ func HasECBRate(currency string) bool {
 		return true
 	}
 	return ecbCurrencies[currency]
-}
-
-// supportedCurrencySymbols returns the currencies as a comma-separated string
-func supportedCurrencySymbols() string {
-	return strings.Join(SupportedCurrencies, ",")
 }
 
 // ECB XML response structs

@@ -51,7 +51,7 @@ function applySavedSortPreference() {
     const preference = getSortPreference();
     if (!preference) return;
 
-    const subscriptionList = document.getElementById('subscription-list');
+    const subscriptionList = document.getElementById('sub-grid');
     if (!subscriptionList) return;
 
     // Check if we're on the subscriptions page and not already sorted
@@ -66,7 +66,7 @@ function applySavedSortPreference() {
         // Trigger HTMX request with saved sort preference
         const sortUrl = `/api/subscriptions?sort=${encodeURIComponent(preference.sortBy)}&order=${encodeURIComponent(preference.order)}`;
         htmx.ajax('GET', sortUrl, {
-            target: '#subscription-list',
+            target: '#sub-grid',
             swap: 'outerHTML'
         });
     }

@@ -1015,6 +1015,9 @@
   "analytics_total_monthly_cost": {
     "other": "Monatliche Gesamtkosten"
   },
+  "analytics_monthly_cost": {
+    "other": "Monatliche Kosten"
+  },
   "sub_list_sort_name": {
     "other": "Nach Name sortieren"
   },
@@ -1440,18 +1443,6 @@
   "settings_display_title": {
     "other": "Ansicht"
   },
-  "settings_compact_label": {
-    "other": "Kompakte Ansicht"
-  },
-  "settings_compact_desc": {
-    "other": "Reduziert Abstände und Schriftgrößen für mehr Inhalt"
-  },
-  "settings_sidebar_label": {
-    "other": "Sidebar einklappen"
-  },
-  "settings_sidebar_desc": {
-    "other": "Zeigt nur Icons in der Seitenleiste"
-  },
   "settings_view_label": {
     "other": "Standard-Ansicht"
   },
@@ -1460,21 +1451,6 @@
   },
   "view_table": {
     "other": "Tabelle"
-  },
-  "settings_fontsize_label": {
-    "other": "Schriftgröße"
-  },
-  "settings_fontsize_desc": {
-    "other": "Passe die Textgröße der Anwendung an"
-  },
-  "fontsize_small": {
-    "other": "Klein"
-  },
-  "fontsize_normal": {
-    "other": "Normal"
-  },
-  "fontsize_large": {
-    "other": "Groß"
   },
   "settings_dateformat_title": {
     "other": "Datumsformat"

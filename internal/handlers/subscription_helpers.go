@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"log/slog"
 	"time"
 
@@ -148,11 +147,6 @@ func parseDatePtr(dateStr string) *time.Time {
 	// Log parsing errors for debugging (invalid date format from form)
 	slog.Warn("failed to parse date string", "dateStr", dateStr, "expectedFormat", "YYYY-MM-DD")
 	return nil
-}
-
-// Helper function to format currency
-func formatCurrency(amount float64) string {
-	return fmt.Sprintf("$%.2f", amount)
 }
 
 // Helper function to format date pointers

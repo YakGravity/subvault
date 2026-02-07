@@ -1312,6 +1312,11 @@ a { color: inherit; text-decoration: none; }
     to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
 .animate-in {
     animation: fadeInUp .35s cubic-bezier(.4, 0, .2, 1) both;
 }
