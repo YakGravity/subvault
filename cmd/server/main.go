@@ -91,6 +91,12 @@ func main() {
 	}
 	sessionService := service.NewSessionService(sessionSecret)
 
+	// Initialize CSRF secret
+	csrfSecret, err := settingsService.GetOrGenerateCSRFSecret()
+	if err != nil {
+		log.Fatal("Failed to initialize CSRF secret:", err)
+	}
+
 	// Initialize handlers
 	subscriptionHandler := handlers.NewSubscriptionHandler(subscriptionService, settingsService, currencyService, emailService, shoutrrrService, logoService)
 	settingsHandler := handlers.NewSettingsHandler(settingsService)
@@ -154,6 +160,10 @@ func main() {
 			"status": "healthy",
 		})
 	})
+
+	// Apply CSRF middleware (before auth - login page needs CSRF too)
+	csrfSecure := os.Getenv("HTTPS_ENABLED") == "true"
+	router.Use(middleware.CSRFMiddleware(csrfSecret, csrfSecure))
 
 	// Apply auth middleware
 	router.Use(middleware.AuthMiddleware(settingsService, sessionService))

@@ -23,6 +23,10 @@ func baseTemplateData(c *gin.Context) gin.H {
 	data["CurrentPath"] = c.Request.URL.Path
 	data["Version"] = version.GetVersion()
 
+	if token, exists := c.Get("csrf_token"); exists {
+		data["CSRFToken"] = token.(string)
+	}
+
 	return data
 }
 

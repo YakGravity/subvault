@@ -31,6 +31,7 @@ const (
 	SettingKeyAuthUsername      = "auth_username"
 	SettingKeyAuthPasswordHash  = "auth_password_hash"
 	SettingKeyAuthSessionSecret = "auth_session_secret"
+	SettingKeyCSRFSecret        = "csrf_secret"
 	SettingKeyAuthResetToken    = "auth_reset_token"
 	SettingKeyAuthResetExpiry   = "auth_reset_token_expiry"
 	SettingKeyShoutrrrConfig    = "shoutrrr_config"
@@ -442,6 +443,32 @@ func (s *SettingsService) GetOrGenerateSessionSecret() (string, error) {
 	s.invalidateCache()
 
 	return secret, nil
+}
+
+// GetOrGenerateCSRFSecret returns the CSRF secret, generating one if it doesn't exist
+func (s *SettingsService) GetOrGenerateCSRFSecret() ([]byte, error) {
+	secret, ok := s.getCached(SettingKeyCSRFSecret)
+	if ok && secret != "" {
+		decoded, err := base64.URLEncoding.DecodeString(secret)
+		if err != nil {
+			return nil, err
+		}
+		return decoded, nil
+	}
+
+	// Generate a new 32-byte random secret
+	bytes := make([]byte, 32)
+	if _, err := rand.Read(bytes); err != nil {
+		return nil, err
+	}
+	encoded := base64.URLEncoding.EncodeToString(bytes)
+
+	if err := s.repo.Set(SettingKeyCSRFSecret, encoded); err != nil {
+		return nil, err
+	}
+	s.invalidateCache()
+
+	return bytes, nil
 }
 
 // SetupAuth sets up authentication with username and password

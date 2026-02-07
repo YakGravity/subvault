@@ -6,6 +6,7 @@ require (
 	github.com/containrrr/shoutrrr v0.8.0
 	github.com/dromara/carbon/v2 v2.6.11
 	github.com/gin-gonic/gin v1.9.1
+	github.com/gorilla/csrf v1.7.3
 	github.com/gorilla/sessions v1.4.0
 	github.com/nicksnyder/go-i18n/v2 v2.6.1
 	github.com/stretchr/testify v1.11.1

@@ -50,6 +50,7 @@ type SettingsServiceInterface interface {
 	SetAuthPassword(password string) error
 	ValidatePassword(password string) error
 	GetOrGenerateSessionSecret() (string, error)
+	GetOrGenerateCSRFSecret() ([]byte, error)
 	SetupAuth(username, password string) error
 	DisableAuth() error
 	GenerateResetToken() (string, error)
