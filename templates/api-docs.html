@@ -35,164 +35,169 @@
             <a href="/api-docs" class="tab-item active">{{.T.Tr "settings_tab_api"}}</a>
         </div>
 
-<div style="max-width:896px;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+<div style="display:flex;flex-direction:column;gap:32px;">
 
     <!-- Authentication -->
-    <div>
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px;">{{.T.Tr "api_docs_auth"}}</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "api_docs_auth_desc"}}</p>
-        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;">
-            <div style="margin-bottom:8px;">
-                <span style="color:var(--text-muted);"># Authorization header (recommended)</span><br>
-                <span style="color:var(--text);">Authorization: Bearer sk_your_api_key_here</span>
-            </div>
-            <div>
-                <span style="color:var(--text-muted);"># X-API-Key header (alternative)</span><br>
-                <span style="color:var(--text);">X-API-Key: sk_your_api_key_here</span>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "api_docs_auth"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "api_docs_auth_desc"}}</p>
+            <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;">
+                <div style="margin-bottom:8px;">
+                    <span style="color:var(--text-muted);"># Authorization header (recommended)</span><br>
+                    <span style="color:var(--text);">Authorization: Bearer sk_your_api_key_here</span>
+                </div>
+                <div>
+                    <span style="color:var(--text-muted);"># X-API-Key header (alternative)</span><br>
+                    <span style="color:var(--text);">X-API-Key: sk_your_api_key_here</span>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Endpoints: Subscriptions -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "api_docs_endpoints"}}</h3>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "api_docs_endpoints"}}</h3>
 
-        <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_subscriptions"}}</h4>
-        <div style="background:var(--bg-hover);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;">
-            <table style="width:100%;">
-                <thead>
-                    <tr style="background:var(--bg-card);">
-                        <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_method"}}</th>
-                        <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_endpoint"}}</th>
-                        <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_description"}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border-bottom:1px solid var(--border);">
-                        <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
-                        <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions</td>
-                        <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_list_all_subs"}}</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--border);">
-                        <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--success-light);color:var(--success);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">POST</span></td>
-                        <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions</td>
-                        <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_create_sub"}}</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--border);">
-                        <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
-                        <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions/:id</td>
-                        <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_get_sub_details"}}</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--border);">
-                        <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">PUT</span></td>
-                        <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions/:id</td>
-                        <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_update_sub"}}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">DELETE</span></td>
-                        <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions/:id</td>
-                        <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_delete_sub"}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_subscriptions"}}</h4>
+            <div style="background:var(--bg-hover);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;">
+                <table style="width:100%;">
+                    <thead>
+                        <tr style="background:var(--bg-card);">
+                            <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_method"}}</th>
+                            <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_endpoint"}}</th>
+                            <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_description"}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
+                            <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions</td>
+                            <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_list_all_subs"}}</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--success-light);color:var(--success);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">POST</span></td>
+                            <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions</td>
+                            <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_create_sub"}}</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
+                            <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions/:id</td>
+                            <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_get_sub_details"}}</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--warning-light);color:var(--warning);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">PUT</span></td>
+                            <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions/:id</td>
+                            <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_update_sub"}}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--danger-light);color:var(--danger);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">DELETE</span></td>
+                            <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/subscriptions/:id</td>
+                            <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_delete_sub"}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- Statistics & Export -->
-        <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_stats_export"}}</h4>
-        <div style="background:var(--bg-hover);border-radius:var(--radius);overflow:hidden;">
-            <table style="width:100%;">
-                <thead>
-                    <tr style="background:var(--bg-card);">
-                        <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_method"}}</th>
-                        <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_endpoint"}}</th>
-                        <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_description"}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr style="border-bottom:1px solid var(--border);">
-                        <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
-                        <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/stats</td>
-                        <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_get_stats"}}</td>
-                    </tr>
-                    <tr style="border-bottom:1px solid var(--border);">
-                        <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
-                        <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/export/csv</td>
-                        <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_export_csv"}}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
-                        <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/export/json</td>
-                        <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_export_json"}}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Statistics & Export -->
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_stats_export"}}</h4>
+            <div style="background:var(--bg-hover);border-radius:var(--radius);overflow:hidden;">
+                <table style="width:100%;">
+                    <thead>
+                        <tr style="background:var(--bg-card);">
+                            <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_method"}}</th>
+                            <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_endpoint"}}</th>
+                            <th style="padding:8px 16px;text-align:left;font-size:12px;font-weight:500;color:var(--text-secondary);">{{.T.Tr "api_docs_description"}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
+                            <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/stats</td>
+                            <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_get_stats"}}</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
+                            <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/export/csv</td>
+                            <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_export_csv"}}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:8px 16px;font-size:13px;"><span style="padding:2px 8px;background:var(--info-light);color:var(--info);border-radius:var(--radius-sm);font-size:12px;font-weight:500;">GET</span></td>
+                            <td style="padding:8px 16px;font-size:13px;font-family:var(--mono);color:var(--text);">/api/v1/export/json</td>
+                            <td style="padding:8px 16px;font-size:13px;color:var(--text-secondary);">{{.T.Tr "api_export_json"}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <!-- Example Requests -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "api_docs_examples"}}</h3>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "api_docs_examples"}}</h3>
 
-        <div style="display:flex;flex-direction:column;gap:16px;">
-            <!-- List Subscriptions -->
-            <div>
-                <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_list_subs"}}</h4>
-                <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
-                    <div style="color:var(--success);">curl -H "Authorization: Bearer sk_your_api_key_here" \</div>
-                    <div style="padding-left:16px;">http://localhost:8080/api/v1/subscriptions</div>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+                <!-- List Subscriptions -->
+                <div>
+                    <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_list_subs"}}</h4>
+                    <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
+                        <div style="color:var(--success);">curl -H "Authorization: Bearer sk_your_api_key_here" \</div>
+                        <div style="padding-left:16px;">http://localhost:8080/api/v1/subscriptions</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Create Subscription -->
-            <div>
-                <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_create_sub"}}</h4>
-                <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
-                    <div style="color:var(--success);">curl -X POST \</div>
-                    <div style="padding-left:16px;">-H "Authorization: Bearer sk_your_api_key_here" \</div>
-                    <div style="padding-left:16px;">-H "Content-Type: application/json" \</div>
-                    <div style="padding-left:16px;">-d '{</div>
-                    <div style="padding-left:32px;">"name": "Netflix",</div>
-                    <div style="padding-left:32px;">"cost": 15.99,</div>
-                    <div style="padding-left:32px;">"schedule": "Monthly",</div>
-                    <div style="padding-left:32px;">"status": "Active",</div>
-                    <div style="padding-left:32px;">"category_id": 1</div>
-                    <div style="padding-left:16px;">}' \</div>
-                    <div style="padding-left:16px;">http://localhost:8080/api/v1/subscriptions</div>
+                <!-- Create Subscription -->
+                <div>
+                    <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_create_sub"}}</h4>
+                    <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
+                        <div style="color:var(--success);">curl -X POST \</div>
+                        <div style="padding-left:16px;">-H "Authorization: Bearer sk_your_api_key_here" \</div>
+                        <div style="padding-left:16px;">-H "Content-Type: application/json" \</div>
+                        <div style="padding-left:16px;">-d '{</div>
+                        <div style="padding-left:32px;">"name": "Netflix",</div>
+                        <div style="padding-left:32px;">"cost": 15.99,</div>
+                        <div style="padding-left:32px;">"schedule": "Monthly",</div>
+                        <div style="padding-left:32px;">"status": "Active",</div>
+                        <div style="padding-left:32px;">"category_id": 1</div>
+                        <div style="padding-left:16px;">}' \</div>
+                        <div style="padding-left:16px;">http://localhost:8080/api/v1/subscriptions</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Update Subscription -->
-            <div>
-                <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_update_sub"}}</h4>
-                <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
-                    <div style="color:var(--success);">curl -X PUT \</div>
-                    <div style="padding-left:16px;">-H "Authorization: Bearer sk_your_api_key_here" \</div>
-                    <div style="padding-left:16px;">-H "Content-Type: application/json" \</div>
-                    <div style="padding-left:16px;">-d '{"cost": 19.99, "notes": "Premium Plan"}' \</div>
-                    <div style="padding-left:16px;">http://localhost:8080/api/v1/subscriptions/1</div>
+                <!-- Update Subscription -->
+                <div>
+                    <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_update_sub"}}</h4>
+                    <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
+                        <div style="color:var(--success);">curl -X PUT \</div>
+                        <div style="padding-left:16px;">-H "Authorization: Bearer sk_your_api_key_here" \</div>
+                        <div style="padding-left:16px;">-H "Content-Type: application/json" \</div>
+                        <div style="padding-left:16px;">-d '{"cost": 19.99, "notes": "Premium Plan"}' \</div>
+                        <div style="padding-left:16px;">http://localhost:8080/api/v1/subscriptions/1</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Delete Subscription -->
-            <div>
-                <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_delete_sub"}}</h4>
-                <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
-                    <div style="color:var(--success);">curl -X DELETE \</div>
-                    <div style="padding-left:16px;">-H "Authorization: Bearer sk_your_api_key_here" \</div>
-                    <div style="padding-left:16px;">http://localhost:8080/api/v1/subscriptions/1</div>
+                <!-- Delete Subscription -->
+                <div>
+                    <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_delete_sub"}}</h4>
+                    <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
+                        <div style="color:var(--success);">curl -X DELETE \</div>
+                        <div style="padding-left:16px;">-H "Authorization: Bearer sk_your_api_key_here" \</div>
+                        <div style="padding-left:16px;">http://localhost:8080/api/v1/subscriptions/1</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Get Statistics -->
-            <div>
-                <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_get_stats"}}</h4>
-                <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
-                    <div style="color:var(--success);">curl -H "Authorization: Bearer sk_your_api_key_here" \</div>
-                    <div style="padding-left:16px;">http://localhost:8080/api/v1/stats</div>
-                </div>
-                <div style="margin-top:8px;">
-                    <h5 style="font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:4px;">{{.T.Tr "api_docs_response"}}</h5>
-                    <div style="background:var(--bg-hover);border-radius:var(--radius);padding:12px;font-family:var(--mono);font-size:12px;">
+                <!-- Get Statistics -->
+                <div>
+                    <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "api_docs_get_stats"}}</h4>
+                    <div style="background:var(--bg-nav);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;overflow-x:auto;">
+                        <div style="color:var(--success);">curl -H "Authorization: Bearer sk_your_api_key_here" \</div>
+                        <div style="padding-left:16px;">http://localhost:8080/api/v1/stats</div>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <h5 style="font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:4px;">{{.T.Tr "api_docs_response"}}</h5>
+                        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:12px;font-family:var(--mono);font-size:12px;">
 <pre>{
   "total_monthly_spend": 245.67,
   "total_annual_spend": 2948.04,
@@ -207,6 +212,7 @@
     "Storage": 29.99
   }
 }</pre>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -214,15 +220,17 @@
     </div>
 
     <!-- Additional Resources -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:12px;">{{.T.Tr "api_docs_resources"}}</h3>
-        <div style="background:var(--info-light);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
-            <div style="display:flex;align-items:flex-start;">
-                <svg style="width:20px;height:20px;color:var(--info);margin-top:2px;margin-right:8px;flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
-                </svg>
-                <div style="font-size:13px;color:var(--info);">
-                    <p>{{.T.Tr "api_docs_resources_desc"}}</p>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "api_docs_resources"}}</h3>
+            <div style="background:var(--info-light);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:12px;">
+                <div style="display:flex;align-items:flex-start;">
+                    <svg style="width:20px;height:20px;color:var(--info);margin-top:2px;margin-right:8px;flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div style="font-size:13px;color:var(--info);">
+                        <p>{{.T.Tr "api_docs_resources_desc"}}</p>
+                    </div>
                 </div>
             </div>
         </div>

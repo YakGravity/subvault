@@ -35,297 +35,78 @@
             <a href="/api-docs" class="tab-item">{{.T.Tr "settings_tab_api"}}</a>
         </div>
 
-<div style="max-width:56rem;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+<div style="display:flex;flex-direction:column;gap:32px;">
 
     <!-- Language -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_language"}}</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_language_desc"}}</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-            <label style="display:flex;align-items:center;">
-                <input type="radio"
-                       name="language"
-                       value="en"
-                       {{if eq .Language "en"}}checked{{end}}
-                       hx-post="/api/settings/language"
-                       hx-trigger="change"
-                       hx-vals='{"language": "en"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "lang_en"}}</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio"
-                       name="language"
-                       value="de"
-                       {{if eq .Language "de"}}checked{{end}}
-                       hx-post="/api/settings/language"
-                       hx-trigger="change"
-                       hx-vals='{"language": "de"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "lang_de"}}</span>
-            </label>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_language"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_language_desc"}}</p>
+            <div style="display:flex;gap:16px;">
+                <label style="display:flex;align-items:center;">
+                    <input type="radio" name="language" value="en"
+                           {{if eq .Language "en"}}checked{{end}}
+                           hx-post="/api/settings/language" hx-trigger="change" hx-vals='{"language": "en"}'
+                           style="margin-right:8px;accent-color:var(--accent);">
+                    <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "lang_en"}}</span>
+                </label>
+                <label style="display:flex;align-items:center;">
+                    <input type="radio" name="language" value="de"
+                           {{if eq .Language "de"}}checked{{end}}
+                           hx-post="/api/settings/language" hx-trigger="change" hx-vals='{"language": "de"}'
+                           style="margin-right:8px;accent-color:var(--accent);">
+                    <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "lang_de"}}</span>
+                </label>
+            </div>
         </div>
     </div>
 
     <!-- Currency -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_currency"}}</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_currency_desc"}}</p>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_currency"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_currency_desc"}}</p>
 
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="USD"
-                       {{if or (eq .Currency "USD") (eq .Currency "")}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "USD"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">$ USD ({{.T.Tr "currency_usd"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="EUR"
-                       {{if eq .Currency "EUR"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "EUR"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">EUR ({{.T.Tr "currency_eur"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="GBP"
-                       {{if eq .Currency "GBP"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "GBP"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">GBP ({{.T.Tr "currency_gbp"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="JPY"
-                       {{if eq .Currency "JPY"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "JPY"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">JPY ({{.T.Tr "currency_jpy"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="RUB"
-                       {{if eq .Currency "RUB"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "RUB"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">RUB ({{.T.Tr "currency_rub"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="SEK"
-                       {{if eq .Currency "SEK"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "SEK"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">kr SEK ({{.T.Tr "currency_sek"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="PLN"
-                       {{if eq .Currency "PLN"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "PLN"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">PLN ({{.T.Tr "currency_pln"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="INR"
-                       {{if eq .Currency "INR"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "INR"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">INR ({{.T.Tr "currency_inr"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="CHF"
-                       {{if eq .Currency "CHF"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "CHF"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">Fr. CHF ({{.T.Tr "currency_chf"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="BRL"
-                       {{if eq .Currency "BRL"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "BRL"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">R$ BRL ({{.T.Tr "currency_brl"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="COP"
-                       {{if eq .Currency "COP"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "COP"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">$ COP ({{.T.Tr "currency_cop"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="BDT"
-                       {{if eq .Currency "BDT"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "BDT"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">BDT ({{.T.Tr "currency_bdt"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="AUD"
-                       {{if eq .Currency "AUD"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "AUD"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">A$ AUD ({{.T.Tr "currency_aud"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="CAD"
-                       {{if eq .Currency "CAD"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "CAD"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">C$ CAD ({{.T.Tr "currency_cad"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="CNY"
-                       {{if eq .Currency "CNY"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "CNY"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">CNY ({{.T.Tr "currency_cny"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="CZK"
-                       {{if eq .Currency "CZK"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "CZK"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">CZK ({{.T.Tr "currency_czk"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="DKK"
-                       {{if eq .Currency "DKK"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "DKK"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">kr DKK ({{.T.Tr "currency_dkk"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="HKD"
-                       {{if eq .Currency "HKD"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "HKD"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">HK$ HKD ({{.T.Tr "currency_hkd"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="HUF"
-                       {{if eq .Currency "HUF"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "HUF"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">Ft HUF ({{.T.Tr "currency_huf"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="IDR"
-                       {{if eq .Currency "IDR"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "IDR"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">Rp IDR ({{.T.Tr "currency_idr"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="ILS"
-                       {{if eq .Currency "ILS"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "ILS"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">ILS ({{.T.Tr "currency_ils"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="ISK"
-                       {{if eq .Currency "ISK"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "ISK"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">kr ISK ({{.T.Tr "currency_isk"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="KRW"
-                       {{if eq .Currency "KRW"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "KRW"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">KRW ({{.T.Tr "currency_krw"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="MXN"
-                       {{if eq .Currency "MXN"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "MXN"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">MX$ MXN ({{.T.Tr "currency_mxn"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="MYR"
-                       {{if eq .Currency "MYR"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "MYR"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">RM MYR ({{.T.Tr "currency_myr"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="NOK"
-                       {{if eq .Currency "NOK"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "NOK"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">kr NOK ({{.T.Tr "currency_nok"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="NZD"
-                       {{if eq .Currency "NZD"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "NZD"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">NZ$ NZD ({{.T.Tr "currency_nzd"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="PHP"
-                       {{if eq .Currency "PHP"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "PHP"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">PHP ({{.T.Tr "currency_php"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="RON"
-                       {{if eq .Currency "RON"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "RON"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">lei RON ({{.T.Tr "currency_ron"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="SGD"
-                       {{if eq .Currency "SGD"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "SGD"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">S$ SGD ({{.T.Tr "currency_sgd"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="THB"
-                       {{if eq .Currency "THB"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "THB"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">THB ({{.T.Tr "currency_thb"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="TRY"
-                       {{if eq .Currency "TRY"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "TRY"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">TRY ({{.T.Tr "currency_try"}})</span>
-            </label>
-            <label style="display:flex;align-items:center;">
-                <input type="radio" name="currency" value="ZAR"
-                       {{if eq .Currency "ZAR"}}checked{{end}}
-                       hx-post="/api/settings/currency" hx-trigger="change" hx-vals='{"currency": "ZAR"}'
-                       style="margin-right:8px;accent-color:var(--accent);">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">R ZAR ({{.T.Tr "currency_zar"}})</span>
-            </label>
-        </div>
-        <div id="currency-message" style="margin-top:8px;"></div>
-    </div>
-
-    <!-- About -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_about"}}</h3>
-        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "about_version"}}</span>
-                <span style="font-size:13px;color:var(--text-secondary);">{{.Version}}</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "about_build"}}</span>
-                <span style="font-size:13px;color:var(--text-secondary);">Go + HTMX</span>
-            </div>
-            <div style="display:flex;align-items:center;justify-content:space-between;">
-                <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "about_database"}}</span>
-                <span style="font-size:13px;color:var(--text-secondary);">SQLite</span>
-            </div>
+        <select name="currency" class="form-input" style="max-width:320px;"
+                onchange="htmx.ajax('POST', '/api/settings/currency', {values: {currency: this.value}, target: '#currency-message', swap: 'innerHTML'})">
+            <option value="USD" {{if or (eq .Currency "USD") (eq .Currency "")}}selected{{end}}>$ USD - {{.T.Tr "currency_usd"}}</option>
+            <option value="EUR" {{if eq .Currency "EUR"}}selected{{end}}>EUR - {{.T.Tr "currency_eur"}}</option>
+            <option value="GBP" {{if eq .Currency "GBP"}}selected{{end}}>GBP - {{.T.Tr "currency_gbp"}}</option>
+            <option value="CHF" {{if eq .Currency "CHF"}}selected{{end}}>Fr. CHF - {{.T.Tr "currency_chf"}}</option>
+            <option value="JPY" {{if eq .Currency "JPY"}}selected{{end}}>JPY - {{.T.Tr "currency_jpy"}}</option>
+            <option value="AUD" {{if eq .Currency "AUD"}}selected{{end}}>A$ AUD - {{.T.Tr "currency_aud"}}</option>
+            <option value="CAD" {{if eq .Currency "CAD"}}selected{{end}}>C$ CAD - {{.T.Tr "currency_cad"}}</option>
+            <option value="SEK" {{if eq .Currency "SEK"}}selected{{end}}>kr SEK - {{.T.Tr "currency_sek"}}</option>
+            <option value="NOK" {{if eq .Currency "NOK"}}selected{{end}}>kr NOK - {{.T.Tr "currency_nok"}}</option>
+            <option value="DKK" {{if eq .Currency "DKK"}}selected{{end}}>kr DKK - {{.T.Tr "currency_dkk"}}</option>
+            <option value="PLN" {{if eq .Currency "PLN"}}selected{{end}}>PLN - {{.T.Tr "currency_pln"}}</option>
+            <option value="CZK" {{if eq .Currency "CZK"}}selected{{end}}>CZK - {{.T.Tr "currency_czk"}}</option>
+            <option value="HUF" {{if eq .Currency "HUF"}}selected{{end}}>Ft HUF - {{.T.Tr "currency_huf"}}</option>
+            <option value="RON" {{if eq .Currency "RON"}}selected{{end}}>lei RON - {{.T.Tr "currency_ron"}}</option>
+            <option value="ISK" {{if eq .Currency "ISK"}}selected{{end}}>kr ISK - {{.T.Tr "currency_isk"}}</option>
+            <option value="INR" {{if eq .Currency "INR"}}selected{{end}}>INR - {{.T.Tr "currency_inr"}}</option>
+            <option value="CNY" {{if eq .Currency "CNY"}}selected{{end}}>CNY - {{.T.Tr "currency_cny"}}</option>
+            <option value="KRW" {{if eq .Currency "KRW"}}selected{{end}}>KRW - {{.T.Tr "currency_krw"}}</option>
+            <option value="SGD" {{if eq .Currency "SGD"}}selected{{end}}>S$ SGD - {{.T.Tr "currency_sgd"}}</option>
+            <option value="HKD" {{if eq .Currency "HKD"}}selected{{end}}>HK$ HKD - {{.T.Tr "currency_hkd"}}</option>
+            <option value="MYR" {{if eq .Currency "MYR"}}selected{{end}}>RM MYR - {{.T.Tr "currency_myr"}}</option>
+            <option value="THB" {{if eq .Currency "THB"}}selected{{end}}>THB - {{.T.Tr "currency_thb"}}</option>
+            <option value="IDR" {{if eq .Currency "IDR"}}selected{{end}}>Rp IDR - {{.T.Tr "currency_idr"}}</option>
+            <option value="PHP" {{if eq .Currency "PHP"}}selected{{end}}>PHP - {{.T.Tr "currency_php"}}</option>
+            <option value="BRL" {{if eq .Currency "BRL"}}selected{{end}}>R$ BRL - {{.T.Tr "currency_brl"}}</option>
+            <option value="MXN" {{if eq .Currency "MXN"}}selected{{end}}>MX$ MXN - {{.T.Tr "currency_mxn"}}</option>
+            <option value="COP" {{if eq .Currency "COP"}}selected{{end}}>$ COP - {{.T.Tr "currency_cop"}}</option>
+            <option value="ZAR" {{if eq .Currency "ZAR"}}selected{{end}}>R ZAR - {{.T.Tr "currency_zar"}}</option>
+            <option value="TRY" {{if eq .Currency "TRY"}}selected{{end}}>TRY - {{.T.Tr "currency_try"}}</option>
+            <option value="RUB" {{if eq .Currency "RUB"}}selected{{end}}>RUB - {{.T.Tr "currency_rub"}}</option>
+            <option value="ILS" {{if eq .Currency "ILS"}}selected{{end}}>ILS - {{.T.Tr "currency_ils"}}</option>
+            <option value="NZD" {{if eq .Currency "NZD"}}selected{{end}}>NZ$ NZD - {{.T.Tr "currency_nzd"}}</option>
+            <option value="BDT" {{if eq .Currency "BDT"}}selected{{end}}>BDT - {{.T.Tr "currency_bdt"}}</option>
+        </select>
+            <div id="currency-message" style="margin-top:8px;"></div>
         </div>
     </div>
+
 
 </div>
 

@@ -35,13 +35,13 @@
             <a href="/api-docs" class="tab-item">{{.T.Tr "settings_tab_api"}}</a>
         </div>
 
-<div style="max-width:56rem;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+<div style="display:flex;flex-direction:column;gap:32px;">
 
     <!-- Email Notifications (SMTP) -->
-    <div>
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_email_notifications"}}</h3>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_email_notifications"}}</h3>
 
-        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;margin-bottom:16px;">
             <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_smtp_config"}}</h4>
             <form id="smtp-form" hx-post="/api/settings/smtp" hx-trigger="submit" hx-target="#smtp-message" hx-swap="innerHTML">
                 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px;">
@@ -85,36 +85,34 @@
                 <div style="margin-bottom:16px;">
                     <div id="smtp-message"></div>
                 </div>
-                <div style="display:flex;align-items:center;justify-content:flex-end;">
-                    <div style="display:flex;gap:8px;">
-                        <button type="button"
-                                id="test-smtp-btn"
-                                hx-post="/api/settings/smtp/test"
-                                hx-include="#smtp-form"
-                                hx-target="#smtp-message"
-                                hx-indicator="#smtp-spinner"
-                                class="btn btn-ghost" style="display:inline-flex;align-items:center;">
-                            <svg id="smtp-spinner" class="htmx-indicator" style="width:16px;height:16px;margin-right:8px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            {{.T.Tr "btn_test_connection"}}
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            {{.T.Tr "btn_save_smtp"}}
-                        </button>
-                    </div>
+                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+                    <button type="button"
+                            id="test-smtp-btn"
+                            hx-post="/api/settings/smtp/test"
+                            hx-include="#smtp-form"
+                            hx-target="#smtp-message"
+                            hx-indicator="#smtp-spinner"
+                            class="btn btn-ghost" style="display:inline-flex;align-items:center;">
+                        <svg id="smtp-spinner" class="htmx-indicator" style="width:16px;height:16px;margin-right:8px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        {{.T.Tr "btn_test_connection"}}
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        {{.T.Tr "btn_save_smtp"}}
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Shoutrrr Notifications -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr"}}</h3>
-        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_desc"}}</p>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_shoutrrr"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_desc"}}</p>
 
-        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;margin-bottom:16px;">
             <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_config"}}</h4>
             <form id="shoutrrr-form" hx-post="/api/settings/shoutrrr" hx-trigger="submit" hx-target="#shoutrrr-message" hx-swap="innerHTML">
                 <div style="margin-bottom:16px;">
@@ -126,80 +124,80 @@
                 <div style="margin-bottom:16px;">
                     <div id="shoutrrr-message"></div>
                 </div>
-                <div style="display:flex;align-items:center;justify-content:flex-end;">
-                    <div style="display:flex;gap:8px;">
-                        <button type="button"
-                                id="test-shoutrrr-btn"
-                                hx-post="/api/settings/shoutrrr/test"
-                                hx-include="#shoutrrr-form"
-                                hx-target="#shoutrrr-message"
-                                hx-indicator="#shoutrrr-spinner"
-                                class="btn btn-ghost" style="display:inline-flex;align-items:center;">
-                            <svg id="shoutrrr-spinner" class="htmx-indicator" style="width:16px;height:16px;margin-right:8px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            {{.T.Tr "btn_test_connection"}}
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            {{.T.Tr "btn_save_shoutrrr"}}
-                        </button>
-                    </div>
+                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+                    <button type="button"
+                            id="test-shoutrrr-btn"
+                            hx-post="/api/settings/shoutrrr/test"
+                            hx-include="#shoutrrr-form"
+                            hx-target="#shoutrrr-message"
+                            hx-indicator="#shoutrrr-spinner"
+                            class="btn btn-ghost" style="display:inline-flex;align-items:center;">
+                        <svg id="shoutrrr-spinner" class="htmx-indicator" style="width:16px;height:16px;margin-right:8px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        {{.T.Tr "btn_test_connection"}}
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        {{.T.Tr "btn_save_shoutrrr"}}
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Notification Preferences -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_high_cost_threshold"}}</h3>
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_high_cost_threshold"}}</h3>
 
-        <div style="background:var(--info-light);border:1px solid var(--info);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;">
-            <p style="font-size:13px;color:var(--info);">{{.T.Tr "settings_notifications_moved"}}</p>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:16px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;">
-                <div>
-                    <h4 style="font-size:13px;font-weight:600;color:var(--text);">{{.T.Tr "settings_high_cost_threshold"}}</h4>
-                    <p style="font-size:13px;color:var(--text-secondary);">{{.T.TrData "settings_high_cost_threshold_desc" (dict "Symbol" .CurrencySymbol)}}</p>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="font-size:13px;color:var(--text-secondary);">{{.CurrencySymbol}}</span>
-                    <input type="number"
-                           name="high_cost_threshold"
-                           value="{{printf "%.2f" .HighCostThreshold}}"
-                           min="0"
-                           max="10000"
-                           step="0.01"
-                           hx-post="/api/settings/notifications/threshold"
-                           hx-trigger="change"
-                           hx-swap="none"
-                           class="form-input" style="width:6rem;padding:4px 8px;">
-                </div>
+            <div style="background:var(--info-light);border:1px solid var(--info);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;">
+                <p style="font-size:13px;color:var(--info);">{{.T.Tr "settings_notifications_moved"}}</p>
             </div>
 
-            <!-- Monthly Budget -->
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
-                <div style="flex:1;">
-                    <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "settings_monthly_budget"}}</span>
-                    <p style="font-size:12px;color:var(--text-muted);">{{.T.Tr "settings_monthly_budget_desc"}}</p>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <div>
+                        <h4 style="font-size:13px;font-weight:600;color:var(--text);">{{.T.Tr "settings_high_cost_threshold"}}</h4>
+                        <p style="font-size:13px;color:var(--text-secondary);">{{.T.TrData "settings_high_cost_threshold_desc" (dict "Symbol" .CurrencySymbol)}}</p>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:13px;color:var(--text-secondary);">{{.CurrencySymbol}}</span>
+                        <input type="number"
+                               name="high_cost_threshold"
+                               value="{{printf "%.2f" .HighCostThreshold}}"
+                               min="0"
+                               max="10000"
+                               step="0.01"
+                               hx-post="/api/settings/notifications/threshold"
+                               hx-trigger="change"
+                               hx-swap="none"
+                               class="form-input" style="width:6rem;padding:4px 8px;">
+                    </div>
                 </div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <input type="number"
-                           id="monthly-budget"
-                           step="0.01"
-                           min="0"
-                           value="{{printf "%.2f" .MonthlyBudget}}"
-                           placeholder="0.00"
-                           class="form-input" style="width:7rem;padding:6px 12px;">
-                    <button hx-post="/api/settings/notifications/budget"
-                            hx-include="#monthly-budget"
-                            hx-vals='js:{"value": document.getElementById("monthly-budget").value}'
-                            hx-swap="none"
-                            class="btn btn-primary">
-                        {{.T.Tr "btn_save"}}
-                    </button>
+
+                <!-- Monthly Budget -->
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
+                    <div style="flex:1;">
+                        <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "settings_monthly_budget"}}</span>
+                        <p style="font-size:12px;color:var(--text-muted);">{{.T.Tr "settings_monthly_budget_desc"}}</p>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <input type="number"
+                               id="monthly-budget"
+                               step="0.01"
+                               min="0"
+                               value="{{printf "%.2f" .MonthlyBudget}}"
+                               placeholder="0.00"
+                               class="form-input" style="width:7rem;padding:6px 12px;">
+                        <button hx-post="/api/settings/notifications/budget"
+                                hx-include="#monthly-budget"
+                                hx-vals='js:{"value": document.getElementById("monthly-budget").value}'
+                                hx-swap="none"
+                                class="btn btn-primary">
+                            {{.T.Tr "btn_save"}}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -35,13 +35,13 @@
             <a href="/api-docs" class="tab-item">{{.T.Tr "settings_tab_api"}}</a>
         </div>
 
-<div style="max-width:56rem;margin:0 auto;display:flex;flex-direction:column;gap:32px;">
+<div style="display:flex;flex-direction:column;gap:32px;">
 
     <!-- Export Data -->
-    <div>
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_export"}}</h3>
+    <div class="card"><div style="padding:20px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_export"}}</h3>
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_export_desc"}}</p>
-        <div style="display:flex;gap:12px;">
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
             <a href="/api/export/csv" class="btn btn-primary" style="display:inline-block;">
                 {{.T.Tr "btn_export_csv"}}
             </a>
@@ -49,7 +49,7 @@
                 {{.T.Tr "btn_export_json"}}
             </a>
         </div>
-        <div style="margin-top:16px;padding:16px;background:var(--bg-hover);border-radius:var(--radius);">
+        <div style="margin-top:24px;">
             <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "export_encrypted_title"}}</h4>
             <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">{{.T.Tr "export_encrypted_desc"}}</p>
             <div style="display:flex;align-items:center;gap:8px;">
@@ -63,11 +63,11 @@
             </div>
             <div id="export-encrypted-message" style="margin-top:8px;font-size:13px;"></div>
         </div>
-    </div>
+    </div></div>
 
     <!-- Import Data -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_import"}}</h3>
+    <div class="card"><div style="padding:20px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_import"}}</h3>
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_import_desc"}}</p>
         <form id="import-form" enctype="multipart/form-data">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -79,12 +79,14 @@
                 <input type="file" id="import-file" name="file" accept=".json"
                        style="font-size:13px;color:var(--text-secondary);cursor:pointer;">
             </div>
+        </form>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
             <button type="button" onclick="importSubscriptions()" class="btn btn-primary">
                 {{.T.Tr "btn_import_json"}}
             </button>
-        </form>
+        </div>
         <div id="import-result" style="margin-top:16px;"></div>
-        <div style="margin-top:16px;padding:16px;background:var(--bg-hover);border-radius:var(--radius);">
+        <div style="margin-top:24px;">
             <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;">{{.T.Tr "import_encrypted_title"}}</h4>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
                 <input type="file" id="import-encrypted-file" accept=".stbk"
@@ -99,10 +101,10 @@
             </div>
             <div id="import-encrypted-result" style="margin-top:8px;"></div>
         </div>
-    </div>
+    </div></div>
 
     <!-- Data Management -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
+    <div class="card"><div style="padding:20px;">
         <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_data_mgmt"}}</h3>
         <div style="display:flex;flex-direction:column;gap:16px;">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--warning-light);border:1px solid var(--warning);border-radius:var(--radius);">
@@ -130,11 +132,11 @@
                 </button>
             </div>
         </div>
-    </div>
+    </div></div>
 
     <!-- Calendar Subscription -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_calendar_sub"}}</h3>
+    <div class="card"><div style="padding:20px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_calendar_sub"}}</h3>
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_calendar_desc"}}</p>
         <div id="calendar-token-section">
             {{if .CalendarToken}}
@@ -150,38 +152,40 @@
                     </button>
                 </div>
             </div>
-            <button onclick="revokeCalendarToken()"
-                    class="btn" style="background:var(--danger);color:white;">
-                {{.T.Tr "btn_revoke_calendar"}}
-            </button>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+                <button onclick="revokeCalendarToken()"
+                        class="btn" style="background:var(--danger);color:white;">
+                    {{.T.Tr "btn_revoke_calendar"}}
+                </button>
+            </div>
             {{else}}
-            <button onclick="generateCalendarToken()"
-                    class="btn btn-primary">
-                {{.T.Tr "btn_generate_calendar"}}
-            </button>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+                <button onclick="generateCalendarToken()"
+                        class="btn btn-primary">
+                    {{.T.Tr "btn_generate_calendar"}}
+                </button>
+            </div>
             {{end}}
         </div>
         <div id="calendar-message" style="margin-top:8px;"></div>
-    </div>
+    </div></div>
 
     <!-- Category Management -->
-    <div style="border-top:1px solid var(--border);padding-top:32px;">
-        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_categories"}}</h3>
+    <div class="card"><div style="padding:20px;">
+        <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_categories"}}</h3>
         <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_categories_desc"}}</p>
         <div id="categories-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;"></div>
-        <div style="background:var(--bg-hover);border-radius:var(--radius);padding:16px;">
-            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">{{.T.Tr "settings_add_category"}}</h4>
-            <form id="add-category-form">
-                <div style="display:flex;align-items:flex-end;gap:12px;">
-                    <div style="flex:1;">
-                        <label for="category_name" class="form-label">{{.T.Tr "category_name_label"}}</label>
-                        <input type="text" id="category_name" name="name" required placeholder="e.g., Streaming" class="form-input">
-                    </div>
-                    <button type="submit" class="btn btn-primary">{{.T.Tr "btn_add_category"}}</button>
+        <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">{{.T.Tr "settings_add_category"}}</h4>
+        <form id="add-category-form">
+            <div style="display:flex;align-items:flex-end;gap:12px;">
+                <div style="flex:1;">
+                    <label for="category_name" class="form-label">{{.T.Tr "category_name_label"}}</label>
+                    <input type="text" id="category_name" name="name" required placeholder="e.g., Streaming" class="form-input">
                 </div>
-            </form>
-        </div>
-    </div>
+                <button type="submit" class="btn btn-primary">{{.T.Tr "btn_add_category"}}</button>
+            </div>
+        </form>
+    </div></div>
 
 </div>
 
