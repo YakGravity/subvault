@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"log/slog"
 	"net/http"
 	"strconv"
 
@@ -13,8 +14,9 @@ import (
 func (h *SettingsHandler) ListAPIKeys(c *gin.Context) {
 	keys, err := h.service.GetAllAPIKeys()
 	if err != nil {
+		slog.Error("failed to list API keys", "error", err)
 		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
-			"Error": err.Error(),
+			"Error": "An internal error occurred",
 		}))
 		return
 	}
@@ -55,8 +57,9 @@ func (h *SettingsHandler) CreateAPIKey(c *gin.Context) {
 	// Save the API key
 	newKey, err := h.service.CreateAPIKey(name, apiKey)
 	if err != nil {
+		slog.Error("failed to create API key", "error", err)
 		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
-			"Error": err.Error(),
+			"Error": "An internal error occurred",
 		}))
 		return
 	}
@@ -64,8 +67,9 @@ func (h *SettingsHandler) CreateAPIKey(c *gin.Context) {
 	// Get all keys including the new one
 	keys, err := h.service.GetAllAPIKeys()
 	if err != nil {
+		slog.Error("failed to list API keys after creation", "error", err)
 		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
-			"Error": err.Error(),
+			"Error": "An internal error occurred",
 		}))
 		return
 	}
@@ -98,8 +102,9 @@ func (h *SettingsHandler) DeleteAPIKey(c *gin.Context) {
 
 	err = h.service.DeleteAPIKey(uint(id))
 	if err != nil {
+		slog.Error("failed to delete API key", "error", err, "id", id)
 		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
-			"Error": err.Error(),
+			"Error": "An internal error occurred",
 		}))
 		return
 	}

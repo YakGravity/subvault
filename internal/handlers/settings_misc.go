@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -40,7 +41,8 @@ func (h *SettingsHandler) UpdateLanguage(c *gin.Context) {
 func (h *SettingsHandler) GenerateCalendarToken(c *gin.Context) {
 	token, err := h.service.GenerateCalendarToken()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to generate calendar token", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -52,7 +54,8 @@ func (h *SettingsHandler) GenerateCalendarToken(c *gin.Context) {
 // RevokeCalendarToken deletes the calendar feed token
 func (h *SettingsHandler) RevokeCalendarToken(c *gin.Context) {
 	if err := h.service.RevokeCalendarToken(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to revoke calendar token", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true})

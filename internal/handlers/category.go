@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -22,7 +23,8 @@ func NewCategoryHandler(service service.CategoryServiceInterface) *CategoryHandl
 func (h *CategoryHandler) ListCategories(c *gin.Context) {
 	categories, err := h.service.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to list categories", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 	c.JSON(http.StatusOK, categories)
@@ -37,7 +39,8 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 	}
 	created, err := h.service.Create(&category)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to create category", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 	c.JSON(http.StatusCreated, created)
@@ -57,7 +60,8 @@ func (h *CategoryHandler) UpdateCategory(c *gin.Context) {
 	}
 	updated, err := h.service.Update(uint(id), &category)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to update category", "error", err, "id", id)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 	c.JSON(http.StatusOK, updated)
@@ -75,7 +79,8 @@ func (h *CategoryHandler) DeleteCategory(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"error": tr(c, "category_cannot_delete_default", "Cannot delete the default category")})
 			return
 		}
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to delete category", "error", err, "id", id)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 	c.Status(http.StatusNoContent)

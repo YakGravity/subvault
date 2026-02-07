@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"log/slog"
 	"net/http"
 	"sort"
 	"strconv"
@@ -18,7 +19,8 @@ import (
 func (h *SubscriptionHandler) Dashboard(c *gin.Context) {
 	stats, err := h.service.GetStats()
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.html", gin.H{"error": err.Error()})
+		slog.Error("failed to get subscription stats", "error", err)
+		c.HTML(http.StatusInternalServerError, "error.html", gin.H{"error": "An internal error occurred"})
 		return
 	}
 
@@ -62,7 +64,8 @@ func (h *SubscriptionHandler) SubscriptionsList(c *gin.Context) {
 	// Get sorted subscriptions
 	subscriptions, err := h.service.GetAllSorted(sortBy, order)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.html", gin.H{"error": err.Error()})
+		slog.Error("failed to get sorted subscriptions", "error", err)
+		c.HTML(http.StatusInternalServerError, "error.html", gin.H{"error": "An internal error occurred"})
 		return
 	}
 
@@ -87,7 +90,8 @@ func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 	// Get all subscriptions with renewal dates
 	subscriptions, err := h.service.GetAll()
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.html", gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions for calendar", "error", err)
+		c.HTML(http.StatusInternalServerError, "error.html", gin.H{"error": "An internal error occurred"})
 		return
 	}
 

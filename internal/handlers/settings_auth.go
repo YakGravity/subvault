@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -40,8 +41,9 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 	// Setup authentication
 	err := h.service.SetupAuth(username, password)
 	if err != nil {
+		slog.Error("failed to setup authentication", "error", err)
 		c.HTML(http.StatusInternalServerError, "auth-message.html", gin.H{
-			"Error": err.Error(),
+			"Error": "An internal error occurred",
 			"Type":  "error",
 		})
 		return
@@ -57,8 +59,9 @@ func (h *SettingsHandler) SetupAuth(c *gin.Context) {
 func (h *SettingsHandler) DisableAuth(c *gin.Context) {
 	err := h.service.DisableAuth()
 	if err != nil {
+		slog.Error("failed to disable authentication", "error", err)
 		c.HTML(http.StatusInternalServerError, "auth-message.html", gin.H{
-			"Error": err.Error(),
+			"Error": "An internal error occurred",
 			"Type":  "error",
 		})
 		return

@@ -5,6 +5,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -18,7 +19,8 @@ import (
 func (h *SubscriptionHandler) ExportCSV(c *gin.Context) {
 	subscriptions, err := h.service.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions for CSV export", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
@@ -75,7 +77,8 @@ func (h *SubscriptionHandler) ExportCSV(c *gin.Context) {
 func (h *SubscriptionHandler) ExportJSON(c *gin.Context) {
 	subscriptions, err := h.service.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions for JSON export", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
@@ -99,7 +102,8 @@ func (h *SubscriptionHandler) ExportEncrypted(c *gin.Context) {
 
 	subscriptions, err := h.service.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions for encrypted export", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
@@ -137,13 +141,15 @@ func (h *SubscriptionHandler) ExportEncrypted(c *gin.Context) {
 func (h *SubscriptionHandler) BackupData(c *gin.Context) {
 	subscriptions, err := h.service.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions for backup", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
 	stats, err := h.service.GetStats()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get stats for backup", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
@@ -164,7 +170,8 @@ func (h *SubscriptionHandler) BackupData(c *gin.Context) {
 func (h *SubscriptionHandler) ClearAllData(c *gin.Context) {
 	subscriptions, err := h.service.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions for clearing data", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
@@ -172,7 +179,8 @@ func (h *SubscriptionHandler) ClearAllData(c *gin.Context) {
 	for _, sub := range subscriptions {
 		err := h.service.Delete(sub.ID)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to delete subscription %d: %v", sub.ID, err)})
+			slog.Error("failed to delete subscription during clear", "error", err, "id", sub.ID)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
 		}
 	}
@@ -187,7 +195,8 @@ func (h *SubscriptionHandler) ClearAllData(c *gin.Context) {
 func (h *SubscriptionHandler) ExportICal(c *gin.Context) {
 	subscriptions, err := h.service.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions for iCal export", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 

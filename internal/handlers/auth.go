@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/subtle"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
@@ -166,8 +167,9 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 
 	err = h.emailService.SendEmail(subject, body)
 	if err != nil {
+		slog.Error("failed to send reset email", "error", err)
 		c.HTML(http.StatusInternalServerError, "forgot-password-error.html", mergeTemplateData(baseTemplateData(c), gin.H{
-			"Error": "Failed to send reset email: " + err.Error(),
+			"Error": tr(c, "error_something_wrong", "Something went wrong"),
 		}))
 		return
 	}

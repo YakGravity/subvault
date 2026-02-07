@@ -19,7 +19,8 @@ func (h *SubscriptionHandler) GetSubscriptions(c *gin.Context) {
 	// Get sorted subscriptions
 	subscriptions, err := h.service.GetAllSorted(sortBy, order)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions", "error", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
@@ -308,7 +309,8 @@ func (h *SubscriptionHandler) DeleteSubscription(c *gin.Context) {
 
 	err = h.service.Delete(uint(id))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to delete subscription", "error", err, "id", id)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 

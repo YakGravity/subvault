@@ -3,6 +3,7 @@ package handlers
 import (
 	"crypto/tls"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/smtp"
 	"strconv"
@@ -315,7 +316,8 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 		if threshold, err := strconv.ParseFloat(thresholdStr, 64); err == nil && threshold >= 0 && threshold <= 10000 {
 			err := h.service.SetFloatSetting("high_cost_threshold", threshold)
 			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				slog.Error("failed to save high cost threshold", "error", err)
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 				return
 			}
 			c.JSON(http.StatusOK, gin.H{"threshold": threshold})
@@ -334,7 +336,8 @@ func (h *SettingsHandler) UpdateNotificationSetting(c *gin.Context) {
 			return
 		}
 		if err := h.service.SetFloatSetting("monthly_budget", floatVal); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			slog.Error("failed to save monthly budget", "error", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
 		}
 		c.JSON(http.StatusOK, gin.H{"success": true})
