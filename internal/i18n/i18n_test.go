@@ -81,9 +81,9 @@ func TestI18nService_T_FallbackToEnglish(t *testing.T) {
 			expected:  "Save",
 		},
 		{
-			name:      "Unknown lang falls back to English for settings_title",
+			name:      "Unknown lang falls back to English for nav_settings",
 			lang:      "xx",
-			messageID: "settings_title",
+			messageID: "nav_settings",
 			expected:  "Settings",
 		},
 	}

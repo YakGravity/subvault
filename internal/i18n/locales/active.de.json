@@ -5,29 +5,17 @@
   "nav_subscriptions": {
     "other": "Abonnements"
   },
-  "nav_analytics": {
-    "other": "Auswertungen"
-  },
   "nav_calendar": {
     "other": "Kalender"
   },
   "nav_add": {
     "other": "Hinzufügen"
   },
-  "nav_add_subscription": {
-    "other": "Abonnement hinzufügen"
-  },
-  "settings_title": {
-    "other": "Einstellungen"
-  },
-  "settings_subtitle": {
-    "other": "Verwalten Sie Ihre SubTrackr-Einstellungen und Daten"
-  },
   "settings_language": {
     "other": "Sprache"
   },
   "settings_language_desc": {
-    "other": "Wählen Sie Ihre bevorzugte Sprache"
+    "other": "Wähle deine bevorzugte Sprache"
   },
   "lang_en": {
     "other": "English"
@@ -35,47 +23,14 @@
   "lang_de": {
     "other": "Deutsch"
   },
-  "settings_appearance": {
-    "other": "Erscheinungsbild"
-  },
   "settings_appearance_desc": {
-    "other": "Personalisieren Sie Ihr SubTrackr-Erlebnis mit ansprechenden Designs"
-  },
-  "theme_default": {
-    "other": "Standard"
+    "other": "Wähle dein bevorzugtes Farbschema"
   },
   "theme_default_desc": {
     "other": "Klar und professionell"
   },
   "theme_dark": {
     "other": "Dunkel"
-  },
-  "theme_dark_desc": {
-    "other": "Angenehm für die Augen"
-  },
-  "theme_dark_classic": {
-    "other": "Dunkel Klassisch"
-  },
-  "theme_dark_classic_desc": {
-    "other": "Ursprünglicher Dunkelmodus"
-  },
-  "theme_christmas": {
-    "other": "Weihnachten"
-  },
-  "theme_christmas_desc": {
-    "other": "Festlich und fröhlich!"
-  },
-  "theme_midnight": {
-    "other": "Mitternacht"
-  },
-  "theme_midnight_desc": {
-    "other": "Tief und geheimnisvoll"
-  },
-  "theme_ocean": {
-    "other": "Ozean"
-  },
-  "theme_ocean_desc": {
-    "other": "Kühl und erfrischend"
   },
   "settings_calendar_sub": {
     "other": "Kalender-Abo"
@@ -92,12 +47,6 @@
   "btn_revoke_calendar": {
     "other": "Kalender-URL widerrufen"
   },
-  "calendar_token_generated": {
-    "other": "Kalender-URL erfolgreich generiert"
-  },
-  "calendar_token_revoked": {
-    "other": "Kalender-URL erfolgreich widerrufen"
-  },
   "settings_import": {
     "other": "Daten importieren"
   },
@@ -109,9 +58,6 @@
   },
   "import_result_title": {
     "other": "Import-Ergebnis"
-  },
-  "import_result_summary": {
-    "other": "Import abgeschlossen"
   },
   "import_imported": {
     "other": "Importiert"
@@ -128,26 +74,17 @@
   "import_go_dashboard": {
     "other": "Zum Dashboard"
   },
-  "import_error_parse": {
-    "other": "Import-Datei konnte nicht gelesen werden"
-  },
-  "import_error_empty": {
-    "other": "Keine Abonnements in der Datei gefunden"
-  },
   "import_format_wallos": {
     "other": "Wallos JSON"
   },
   "import_format_subtrackr": {
     "other": "SubTrackr JSON"
   },
-  "import_skip_duplicate": {
-    "other": "Übersprungen (Duplikat)"
-  },
   "settings_export": {
     "other": "Daten exportieren"
   },
   "settings_export_desc": {
-    "other": "Laden Sie Ihre Abonnementdaten in verschiedenen Formaten herunter"
+    "other": "Lade deine Abonnementdaten in verschiedenen Formaten herunter"
   },
   "btn_export_csv": {
     "other": "Als CSV exportieren"
@@ -179,12 +116,6 @@
   "import_encrypted_title": {
     "other": "Verschlüsseltes Backup importieren"
   },
-  "import_decrypt_error": {
-    "other": "Entschlüsselung fehlgeschlagen: falsches Passwort oder beschädigte Datei"
-  },
-  "import_decrypt_success": {
-    "other": "Datei erfolgreich entschlüsselt"
-  },
   "settings_data_mgmt": {
     "other": "Datenverwaltung"
   },
@@ -192,7 +123,7 @@
     "other": "Daten sichern"
   },
   "settings_backup_desc": {
-    "other": "Erstellen Sie eine Sicherungskopie aller Ihrer Abonnementdaten"
+    "other": "Erstelle eine Sicherungskopie aller deiner Abonnementdaten"
   },
   "btn_create_backup": {
     "other": "Sicherung erstellen"
@@ -207,7 +138,7 @@
     "other": "Daten löschen"
   },
   "confirm_clear_data": {
-    "other": "Möchten Sie wirklich alle Abonnementdaten löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    "other": "Möchtest du wirklich alle Abonnementdaten löschen? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "settings_email_notifications": {
     "other": "E-Mail-Benachrichtigungen"
@@ -245,41 +176,11 @@
   "btn_save_smtp": {
     "other": "SMTP-Einstellungen speichern"
   },
-  "settings_renewal_reminders": {
-    "other": "Erinnerung Abo-Verlängerung"
-  },
-  "settings_renewal_reminders_desc": {
-    "other": "Vor Abo-Verlängerung erinnern"
-  },
-  "settings_high_cost_alerts": {
-    "other": "Kostenwarnung"
-  },
-  "settings_high_cost_alerts_desc": {
-    "other": "Bei teuren Abos warnen"
-  },
   "settings_high_cost_threshold": {
     "other": "Kostenschwelle"
   },
   "settings_high_cost_threshold_desc": {
     "other": "Monatlicher Schwellenwert für Kostenwarnungen (in {{.Symbol}})"
-  },
-  "settings_days_before_renewal": {
-    "other": "Vorlauf Verlängerung"
-  },
-  "settings_days_before_renewal_desc": {
-    "other": "Tage vor Verlängerung"
-  },
-  "settings_cancellation_reminders": {
-    "other": "Kündigungserinnerung"
-  },
-  "settings_cancellation_reminders_desc": {
-    "other": "Vor Ablauf der Kündigungsfrist erinnern"
-  },
-  "settings_days_before_cancellation": {
-    "other": "Vorlauf Kündigung"
-  },
-  "settings_days_before_cancellation_desc": {
-    "other": "Tage vor Kündigung"
   },
   "settings_shoutrrr": {
     "other": "Push-Benachrichtigungen (Shoutrrr)"
@@ -294,7 +195,7 @@
     "other": "Benachrichtigungs-URLs (eine pro Zeile)"
   },
   "shoutrrr_urls_hint": {
-    "other": "Geben Sie eine Shoutrrr-URL pro Zeile ein. Unterstützte Dienste und URL-Formate:"
+    "other": "Gib eine Shoutrrr-URL pro Zeile ein. Unterstützte Dienste und URL-Formate:"
   },
   "btn_save_shoutrrr": {
     "other": "Benachrichtigungseinstellungen speichern"
@@ -303,13 +204,7 @@
     "other": "Sicherheit"
   },
   "settings_security_desc": {
-    "other": "Schützen Sie Ihre SubTrackr-Instanz mit Anmeldeauthentifizierung"
-  },
-  "settings_require_login": {
-    "other": "Anmeldung erforderlich"
-  },
-  "settings_require_login_desc": {
-    "other": "Authentifizierung aktivieren, um Ihre Daten zu schützen"
+    "other": "Schütze deine SubTrackr-Instanz mit Anmeldeauthentifizierung"
   },
   "auth_enabled_msg": {
     "other": "Authentifizierung ist aktiviert"
@@ -325,12 +220,6 @@
   },
   "auth_min_chars": {
     "other": "Mindestens 8 Zeichen"
-  },
-  "auth_email_required_hint": {
-    "other": "E-Mail muss zuerst konfiguriert werden, um die Passwortwiederherstellung zu ermöglichen."
-  },
-  "auth_configure_email_first": {
-    "other": "Bitte konfigurieren Sie zuerst die E-Mail-Einstellungen oben, bevor Sie die Anmeldung aktivieren."
   },
   "btn_enable_auth": {
     "other": "Authentifizierung aktivieren"
@@ -447,7 +336,7 @@
     "other": "Kategorien"
   },
   "settings_categories_desc": {
-    "other": "Verwalten Sie Ihre Abonnementkategorien"
+    "other": "Verwalte deine Abonnementkategorien"
   },
   "settings_add_category": {
     "other": "Neue Kategorie hinzufügen"
@@ -465,28 +354,13 @@
     "other": "API-Schlüssel"
   },
   "settings_api_keys_desc": {
-    "other": "Erstellen Sie API-Schlüssel, um von externen Anwendungen auf SubTrackr zuzugreifen"
-  },
-  "settings_create_api_key": {
-    "other": "Neuen API-Schlüssel erstellen"
+    "other": "Erstelle API-Schlüssel, um von externen Anwendungen auf SubTrackr zuzugreifen"
   },
   "api_key_name_label": {
     "other": "Schlüsselname"
   },
   "btn_generate_api_key": {
     "other": "API-Schlüssel generieren"
-  },
-  "settings_about": {
-    "other": "Über SubTrackr"
-  },
-  "about_version": {
-    "other": "Version"
-  },
-  "about_build": {
-    "other": "Build"
-  },
-  "about_database": {
-    "other": "Datenbank"
   },
   "dashboard_monthly_spend": {
     "other": "Monatliche Ausgaben"
@@ -508,27 +382,6 @@
   },
   "dashboard_no_category_data": {
     "other": "Keine Ausgabedaten nach Kategorie gefunden."
-  },
-  "dashboard_add_subs_hint": {
-    "other": "Fügen Sie aktive Abonnements hinzu, um die Kategorieaufschlüsselung zu sehen."
-  },
-  "dashboard_all_subscriptions": {
-    "other": "Alle Abonnements"
-  },
-  "default_category_name": {
-    "other": "Allgemein"
-  },
-  "subscriptions_title": {
-    "other": "Abonnements"
-  },
-  "analytics_title": {
-    "other": "Auswertungen"
-  },
-  "calendar_title": {
-    "other": "Kalender"
-  },
-  "login_title": {
-    "other": "Anmeldung"
   },
   "login_sign_in": {
     "other": "Bei SubTrackr anmelden"
@@ -552,7 +405,7 @@
     "other": "Passwort vergessen"
   },
   "forgot_password_desc": {
-    "other": "Geben Sie Ihre Daten ein und wir senden Ihnen einen Link zum Zurücksetzen des Passworts."
+    "other": "Gib deine Daten ein und wir senden dir einen Link zum Zurücksetzen des Passworts."
   },
   "btn_send_reset_link": {
     "other": "Link zum Zurücksetzen senden"
@@ -572,14 +425,8 @@
   "btn_reset_password": {
     "other": "Passwort zurücksetzen"
   },
-  "error_page_title": {
-    "other": "Fehler"
-  },
   "error_something_wrong": {
     "other": "Etwas ist schiefgelaufen"
-  },
-  "error_go_back": {
-    "other": "Zurück"
   },
   "error_go_dashboard": {
     "other": "Zum Dashboard"
@@ -620,9 +467,6 @@
   "sub_form_schedule": {
     "other": "Abrechnungszyklus"
   },
-  "sub_form_section_contract": {
-    "other": "Vertragsdaten"
-  },
   "sub_form_status": {
     "other": "Status"
   },
@@ -647,14 +491,8 @@
   "sub_form_price_type": {
     "other": "Preisart"
   },
-  "sub_form_account": {
-    "other": "Konto"
-  },
   "sub_form_website": {
     "other": "Website-URL"
-  },
-  "sub_form_icon_url": {
-    "other": "Symbol-URL"
   },
   "sub_form_login_name": {
     "other": "Login-Name"
@@ -735,46 +573,22 @@
     "other": "Keine Abonnements gefunden."
   },
   "sub_list_empty_hint": {
-    "other": "Fügen Sie Ihr erstes Abonnement hinzu, um zu beginnen."
-  },
-  "analytics_spending_breakdown": {
-    "other": "Ausgabenübersicht"
-  },
-  "analytics_monthly_by_category": {
-    "other": "Monatliche Ausgaben nach Kategorie"
+    "other": "Füge dein erstes Abonnement hinzu, um zu beginnen."
   },
   "analytics_cost_distribution": {
     "other": "Kostenverteilung"
   },
-  "analytics_schedule_breakdown": {
-    "other": "Aufschlüsselung nach Abrechnungszyklus"
-  },
   "analytics_total_monthly": {
     "other": "Gesamt monatlich"
   },
-  "analytics_total_annual": {
-    "other": "Gesamt jährlich"
-  },
-  "analytics_avg_per_sub": {
-    "other": "Durchschnitt pro Abonnement"
-  },
   "calendar_today": {
     "other": "Heute"
-  },
-  "calendar_renewal_events": {
-    "other": "Verlängerungstermine"
-  },
-  "calendar_no_events": {
-    "other": "Keine Verlängerungstermine in diesem Monat."
-  },
-  "api_docs_title": {
-    "other": "API-Dokumentation"
   },
   "api_docs_auth": {
     "other": "Authentifizierung"
   },
   "api_docs_auth_desc": {
-    "other": "Alle API-Anfragen erfordern eine Authentifizierung mittels API-Schlüssel. Fügen Sie Ihren API-Schlüssel in die Anfrage-Header ein:"
+    "other": "Alle API-Anfragen erfordern eine Authentifizierung mittels API-Schlüssel. Füge deinen API-Schlüssel in die Anfrage-Header ein:"
   },
   "api_docs_endpoints": {
     "other": "API-Endpunkte"
@@ -804,19 +618,13 @@
     "other": "Weitere Ressourcen"
   },
   "api_docs_resources_desc": {
-    "other": "Weitere Informationen und Beispiele zur API finden Sie in der README-Datei des Projekts."
+    "other": "Weitere Informationen und Beispiele zur API findest du in der README-Datei des Projekts."
   },
   "api_docs_update_sub": {
     "other": "Abonnement aktualisieren (partiell)"
   },
   "api_docs_delete_sub": {
     "other": "Abonnement löschen"
-  },
-  "api_docs_key_info": {
-    "other": "Fügen Sie den API-Schlüssel im"
-  },
-  "api_docs_key_header": {
-    "other": "Header für alle Anfragen ein."
   },
   "api_docs_method": {
     "other": "Methode"
@@ -855,7 +663,7 @@
     "other": "Warnung: Hochkosten-Abonnement"
   },
   "email_high_cost_alert": {
-    "other": "Ein neues kostenintensives Abonnement wurde zu Ihrem SubTrackr-Konto hinzugefügt."
+    "other": "Ein neues kostenintensives Abonnement wurde zu deinem SubTrackr-Konto hinzugefügt."
   },
   "email_sub_details": {
     "other": "Abonnementdetails"
@@ -882,14 +690,14 @@
     "other": "Dies ist eine automatische Benachrichtigung von SubTrackr."
   },
   "email_footer_manage": {
-    "other": "Sie können Ihre Benachrichtigungseinstellungen auf der Einstellungsseite verwalten."
+    "other": "Du kannst deine Benachrichtigungseinstellungen auf der Einstellungsseite verwalten."
   },
   "email_renewal_title": {
     "other": "Erinnerung: Abonnementverlängerung"
   },
   "email_renewal_reminder": {
-    "one": "Ihr Abonnement {{.Name}} wird in {{.Count}} Tag verlängert.",
-    "other": "Ihr Abonnement {{.Name}} wird in {{.Count}} Tagen verlängert."
+    "one": "Dein Abonnement {{.Name}} wird in {{.Count}} Tag verlängert.",
+    "other": "Dein Abonnement {{.Name}} wird in {{.Count}} Tagen verlängert."
   },
   "email_renewal_date": {
     "other": "Verlängerungsdatum:"
@@ -898,8 +706,8 @@
     "other": "Erinnerung: Abonnementkündigung"
   },
   "email_cancellation_reminder": {
-    "one": "Ihr Abonnement {{.Name}} endet in {{.Count}} Tag.",
-    "other": "Ihr Abonnement {{.Name}} endet in {{.Count}} Tagen."
+    "one": "Dein Abonnement {{.Name}} endet in {{.Count}} Tag.",
+    "other": "Dein Abonnement {{.Name}} endet in {{.Count}} Tagen."
   },
   "email_cancellation_date": {
     "other": "Kündigungsdatum:"
@@ -973,27 +781,6 @@
   "month_december": {
     "other": "Dezember"
   },
-  "weekday_monday": {
-    "other": "Mo"
-  },
-  "weekday_tuesday": {
-    "other": "Di"
-  },
-  "weekday_wednesday": {
-    "other": "Mi"
-  },
-  "weekday_thursday": {
-    "other": "Do"
-  },
-  "weekday_friday": {
-    "other": "Fr"
-  },
-  "weekday_saturday": {
-    "other": "Sa"
-  },
-  "weekday_sunday": {
-    "other": "So"
-  },
   "loading_api_keys": {
     "other": "API-Schlüssel werden geladen..."
   },
@@ -1006,35 +793,14 @@
   "analytics_upcoming_renewals": {
     "other": "Bevorstehende Verlängerungen"
   },
-  "analytics_cost_analysis": {
-    "other": "Kostenanalyse"
-  },
   "analytics_avg_daily_cost": {
     "other": "Durchschnittliche Tageskosten"
-  },
-  "analytics_total_monthly_cost": {
-    "other": "Monatliche Gesamtkosten"
   },
   "analytics_monthly_cost": {
     "other": "Monatliche Kosten"
   },
-  "sub_list_sort_name": {
-    "other": "Nach Name sortieren"
-  },
-  "sub_list_sort_cost": {
-    "other": "Nach Kosten sortieren"
-  },
-  "sub_list_sort_date": {
-    "other": "Nach Datum sortieren"
-  },
-  "sub_list_sort_status": {
-    "other": "Nach Status sortieren"
-  },
-  "sub_form_none": {
-    "other": "Keine"
-  },
   "forgot_password_check_email": {
-    "other": "Bitte prüfen Sie Ihr E-Mail-Postfach für den Link zum Zurücksetzen des Passworts"
+    "other": "Bitte prüfe dein E-Mail-Postfach für den Link zum Zurücksetzen des Passworts"
   },
   "btn_back_to_login": {
     "other": "Zurück zum Login"
@@ -1052,25 +818,22 @@
     "other": "Aktionen"
   },
   "confirm_delete_subscription": {
-    "other": "Möchten Sie dieses Abonnement wirklich löschen?"
+    "other": "Möchtest du dieses Abonnement wirklich löschen?"
   },
   "confirm_delete_api_key": {
-    "other": "Möchten Sie diesen API-Schlüssel wirklich löschen?"
+    "other": "Möchtest du diesen API-Schlüssel wirklich löschen?"
   },
   "category_cannot_delete_default": {
     "other": "Die Standardkategorie kann nicht gelöscht werden"
   },
   "category_enter_name": {
-    "other": "Bitte geben Sie einen Kategorienamen ein"
+    "other": "Bitte gib einen Kategorienamen ein"
   },
   "category_is_default": {
     "other": "Standard"
   },
   "btn_add": {
     "other": "Hinzufügen"
-  },
-  "sub_list_renewal_date": {
-    "other": "Verlängerungsdatum"
   },
   "sub_list_category": {
     "other": "Kategorie"
@@ -1096,9 +859,6 @@
   "sub_list_uncategorized": {
     "other": "Ohne Kategorie"
   },
-  "sub_list_monthly": {
-    "other": "/Monat"
-  },
   "auth_error_system": {
     "other": "Authentifizierungssystemfehler"
   },
@@ -1112,10 +872,10 @@
     "other": "Reset-Token konnte nicht generiert werden"
   },
   "auth_error_email_not_configured": {
-    "other": "E-Mail ist nicht konfiguriert. Bitte kontaktieren Sie den Administrator."
+    "other": "E-Mail ist nicht konfiguriert. Bitte kontaktiere den Administrator."
   },
   "auth_success_reset_sent": {
-    "other": "Der Link zum Zurücksetzen des Passworts wurde an Ihre E-Mail gesendet"
+    "other": "Der Link zum Zurücksetzen des Passworts wurde an deine E-Mail gesendet"
   },
   "auth_error_password_short": {
     "other": "Das Passwort muss mindestens 8 Zeichen lang sein"
@@ -1130,7 +890,7 @@
     "other": "Passwort konnte nicht aktualisiert werden"
   },
   "auth_success_password_reset": {
-    "other": "Passwort erfolgreich zurückgesetzt. Sie können sich jetzt mit Ihrem neuen Passwort anmelden."
+    "other": "Passwort erfolgreich zurückgesetzt. Du kannst dich jetzt mit deinem neuen Passwort anmelden."
   },
   "settings_error_smtp_required": {
     "other": "Erforderliche SMTP-Felder: Host, Port, Benutzername, Passwort, Absender-E-Mail, Empfänger-E-Mail"
@@ -1153,11 +913,8 @@
   "settings_error_password_short": {
     "other": "Das Passwort muss mindestens 8 Zeichen lang sein"
   },
-  "settings_error_email_first": {
-    "other": "Bitte konfigurieren Sie zuerst die E-Mail-Einstellungen (erforderlich für Passwort-Wiederherstellung)"
-  },
   "settings_success_auth_enabled": {
-    "other": "Authentifizierung erfolgreich aktiviert. Sie müssen sich beim nächsten Seitenaufruf anmelden."
+    "other": "Authentifizierung erfolgreich aktiviert. Du musst dich beim nächsten Seitenaufruf anmelden."
   },
   "settings_success_auth_disabled": {
     "other": "Authentifizierung erfolgreich deaktiviert"
@@ -1175,16 +932,13 @@
     "other": "Testbenachrichtigung konnte nicht gesendet werden"
   },
   "settings_success_shoutrrr_test": {
-    "other": "Testbenachrichtigung erfolgreich gesendet! Prüfen Sie Ihre Geräte."
+    "other": "Testbenachrichtigung erfolgreich gesendet! Prüfe deine Geräte."
   },
   "no_api_keys_yet": {
     "other": "Noch keine API-Schlüssel erstellt"
   },
   "placeholder_payment_method": {
     "other": "z.B. Visa ****1234"
-  },
-  "placeholder_account": {
-    "other": "E-Mail-Adresse oder Benutzername"
   },
   "placeholder_contract_number": {
     "other": "z.B. VN-67890"
@@ -1234,14 +988,6 @@
   "calendar_export_ical": {
     "other": "Als iCal exportieren"
   },
-  "analytics_across_active": {
-    "one": "Über {{.Count}} aktives Abonnement",
-    "other": "Über {{.Count}} aktive Abonnements"
-  },
-  "analytics_from_cancelled": {
-    "one": "Aus {{.Count}} gekündigtem Abonnement",
-    "other": "Aus {{.Count}} gekündigten Abonnements"
-  },
   "api_key_created": {
     "other": "Erstellt"
   },
@@ -1257,14 +1003,8 @@
   "api_key_requests": {
     "other": "Anfragen"
   },
-  "category_no_categories": {
-    "other": "Keine Kategorien gefunden."
-  },
   "category_reassign_info": {
     "other": "Abos werden in die Standardkategorie verschoben"
-  },
-  "analytics_projected_yearly": {
-    "other": "Voraussichtliche Jahreskosten"
   },
   "api_key_new_badge": {
     "other": "Neu"
@@ -1314,9 +1054,6 @@
   "dashboard_budget": {
     "other": "Monatsbudget"
   },
-  "dashboard_budget_remaining": {
-    "other": "Verbleibend"
-  },
   "dashboard_budget_exceeded": {
     "other": "Budget überschritten!"
   },
@@ -1344,9 +1081,6 @@
   "dashboard_cancelled": {
     "other": "gekündigt"
   },
-  "nav_main_menu": {
-    "other": "Hauptmenü"
-  },
   "nav_system": {
     "other": "System"
   },
@@ -1355,9 +1089,6 @@
   },
   "settings_tab_api": {
     "other": "API"
-  },
-  "analytics_subtitle": {
-    "other": "Einblicke in deine Ausgaben"
   },
   "calendar_subtitle": {
     "other": "Anstehende Verlängerungstermine"
@@ -1370,9 +1101,6 @@
   },
   "sub_card_ends": {
     "other": "Endet:"
-  },
-  "filter_all": {
-    "other": "Alle"
   },
   "settings_tab_general": {
     "other": "Allgemein"
@@ -1407,23 +1135,14 @@
   "settings_appearance_title": {
     "other": "Farbschema"
   },
-  "settings_appearance_desc": {
-    "other": "Wähle dein bevorzugtes Farbschema"
-  },
   "settings_appearance_subtitle": {
     "other": "Passe das Erscheinungsbild von SubTrackr an"
   },
   "theme_light": {
     "other": "Hell"
   },
-  "theme_light_desc": {
-    "other": "Klar und professionell"
-  },
   "theme_system": {
     "other": "System"
-  },
-  "theme_system_desc": {
-    "other": "Folgt den Geräteeinstellungen"
   },
   "settings_accent_title": {
     "other": "Akzentfarbe"
