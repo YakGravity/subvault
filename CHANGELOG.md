@@ -5,6 +5,17 @@ All notable changes to SubVault will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.2] - 2026-02-09
+
+### Fixed
+- Docker container PUID/PGID support via gosu entrypoint script
+- Container no longer requires volume pre-chown or chmod 777 workaround
+
+### Changed
+- Replaced static `USER 99:100` with dynamic user creation in entrypoint
+- Added PUID/PGID environment variables to docker-compose.yml
+- Added PUID/PGID config fields to Unraid CA template
+
 ## [v1.3.1] - 2026-02-08
 
 ### Fixed
@@ -146,6 +157,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Comprehensive performance optimization
 
+[v1.3.2]: https://github.com/YakGravity/subvault/compare/v1.3.1...v1.3.2
 [v1.3.1]: https://github.com/YakGravity/subvault/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/YakGravity/subvault/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/YakGravity/subvault/compare/v1.1.0...v1.2.0
