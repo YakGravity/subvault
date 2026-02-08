@@ -1,150 +1,81 @@
 # SubVault
 
-A self-hosted subscription management application built with Go and HTMX. Track your subscriptions, visualize spending, and get renewal reminders.
+[![Go](https://img.shields.io/badge/go-1.24+-00ADD8?logo=go&logoColor=white)](https://golang.org/)
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
+[![Docker](https://img.shields.io/badge/docker-ghcr.io-2496ED?logo=docker&logoColor=white)](https://ghcr.io/yakgravity/subvault)
+[![Build](https://github.com/YakGravity/subvault/actions/workflows/test-build.yml/badge.svg)](https://github.com/YakGravity/subvault/actions/workflows/test-build.yml)
+
+A self-hosted subscription management application built with Go and HTMX. Track recurring expenses, visualize spending analytics, and get renewal reminders — all on your own server.
+
+<!-- TODO: Add screenshots
+## Screenshots
+
+![Dashboard](screenshots/dashboard-light.png)
+![Dark Mode](screenshots/dashboard-dark.png)
+-->
 
 ## Features
 
-- **Dashboard Overview**: Real-time stats showing monthly/annual spending
-- **Subscription Management**: Track all your subscriptions in one place with logos
-- **Calendar View**: Visual calendar showing all subscription renewal dates with iCal export
-- **Analytics**: Visualize spending by category and track savings
-- **Email & Pushover Notifications**: Get reminders before subscriptions renew
-- **Data Export**: Export your data as CSV, JSON, iCal, or encrypted backup format
-- **12 Themes**: 6 color palettes with light/dark mode, accent colors, sidebar collapse
-- **Multi-Currency Support**: 30+ currencies with automatic ECB exchange rates (no API key needed)
-- **Docker Ready**: Production-ready Docker image with non-root user and healthcheck
-- **Self-Hosted**: Your data stays on your server
-- **Mobile Responsive**: Optimized mobile experience
-- **REST API**: Full API with key-based authentication
-- **i18n**: English and German
-
-## Tech Stack
-
-- **Backend**: Go with Gin framework
-- **Database**: SQLite (no external database needed)
-- **Frontend**: HTMX + custom CSS design system (no Tailwind)
-- **Deployment**: Docker & Docker Compose
+- **Dashboard** — Monthly/annual spending overview with category breakdown
+- **Subscription Tracking** — Manage all recurring expenses with automatic logo fetching
+- **Calendar View** — Visual renewal calendar with iCal export (RFC 7986 colors)
+- **Analytics** — Spending trends by category, monthly projections, savings tracking
+- **Notifications** — Email (SMTP) and push notifications via [Shoutrrr](https://containrrr.dev/shoutrrr/)
+- **Multi-Currency** — 30+ currencies with automatic ECB exchange rates
+- **12 Themes** — 6 color palettes with light/dark mode, accent colors, collapsible sidebar
+- **Data Export** — CSV, JSON, iCal, and encrypted backup format
+- **REST API** — Full CRUD API with key-based authentication
+- **i18n** — English and German
+- **Mobile Responsive** — Optimized for all screen sizes
+- **Self-Hosted** — SQLite database, no external dependencies
 
 ## Quick Start
 
-### Docker Compose (Recommended)
-
 ```yaml
+# docker-compose.yml
 services:
   subvault:
-    image: ghcr.io/YakGravity/subvault:latest
+    image: ghcr.io/yakgravity/subvault:latest
     ports:
       - "8080:8080"
     volumes:
       - subvault_data:/app/data
-    environment:
-      - GIN_MODE=release
-      - DATABASE_PATH=/app/data/subvault.db
     restart: unless-stopped
 
 volumes:
   subvault_data:
-    driver: local
 ```
 
 ```bash
 docker compose up -d
 ```
 
-Open http://localhost:8080.
+Open [http://localhost:8080](http://localhost:8080) — no initial setup required.
 
-### Build from Source
+## Documentation
 
-```bash
-git clone https://github.com/YakGravity/subvault.git
-cd subvault
+| Topic | Description |
+|-------|-------------|
+| [Configuration](docs/configuration.md) | Environment variables, Docker setup, notifications, reverse proxy |
+| [API](docs/api.md) | REST API endpoints, authentication, examples |
+| [Development](docs/development.md) | Local setup, building, project structure, code style |
+| [Migration](docs/migration.md) | Migrating from SubTrackr |
 
-# Build and run
-make build
-./subvault
+## Tech Stack
 
-# Or with Docker
-make docker-build && make docker-up
-```
-
-## Configuration
-
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `PORT` | Server port | `8080` |
-| `DATABASE_PATH` | SQLite database file path | `./data/subvault.db` |
-| `GIN_MODE` | Gin framework mode (debug/release) | `debug` |
-
-### Currency Conversion
-
-SubVault provides automatic currency conversion using European Central Bank (ECB) exchange rates - no API key required.
-
-### Notifications
-
-- **Email (SMTP)**: Configure via Settings > Email Notifications
-- **Pushover**: Configure via Settings > Pushover Notifications
-
-### Data Persistence
-
-Always mount a volume to `/app/data` to persist your database.
-
-## Migration from SubTrackr
-
-If you're upgrading from SubTrackr:
-
-1. **Database**: Rename `subtrackr.db` to `subvault.db` (or update `DATABASE_PATH`)
-2. **Docker volumes**: Update volume names in your compose file
-3. **localStorage**: Theme preferences will reset (new key names)
-4. **Session**: Users will need to log in again
-
-## API Documentation
-
-SubVault provides a RESTful API for external integrations. Create an API key from Settings in the web interface.
-
-```bash
-# Authorization header
-curl -H "Authorization: Bearer sk_your_api_key_here" http://localhost:8080/api/v1/subscriptions
-```
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/subscriptions` | List all subscriptions |
-| POST | `/api/v1/subscriptions` | Create a new subscription |
-| GET | `/api/v1/subscriptions/:id` | Get subscription details |
-| PUT | `/api/v1/subscriptions/:id` | Update subscription |
-| DELETE | `/api/v1/subscriptions/:id` | Delete subscription |
-| GET | `/api/v1/stats` | Get subscription statistics |
-| GET | `/api/v1/export/csv` | Export as CSV |
-| GET | `/api/v1/export/json` | Export as JSON |
-| GET | `/api/v1/export/ical` | Export as iCal |
-| GET | `/api/v1/categories` | List all categories |
-| POST | `/api/v1/categories` | Create a new category |
-| PUT | `/api/v1/categories/:id` | Update category |
-| DELETE | `/api/v1/categories/:id` | Delete category |
-
-## Development
-
-### Prerequisites
-
-- Go 1.24+
-- Docker (optional)
-
-### Local Development
-
-```bash
-go mod download
-go run cmd/server/main.go
-
-# Build binary
-make build
-```
+| Component | Technology |
+|-----------|-----------|
+| Backend | Go 1.24, Gin |
+| Database | SQLite (via GORM) |
+| Frontend | HTMX, custom CSS design system |
+| Auth | Session-based + API keys, CSRF protection |
+| i18n | go-i18n (English, German) |
+| Container | Multi-arch Docker (amd64, arm64) |
 
 ## Attribution
 
-SubVault is a fork of [SubTrackr](https://github.com/bscott/subtrackr) by [bscott](https://github.com/bscott), originally created as a self-hosted subscription tracker. This fork extends the original with additional features including multi-currency support, extended theme system, i18n, encrypted backups, and a production-ready Docker setup.
+SubVault is a fork of [SubTrackr](https://github.com/bscott/subtrackr) by [Brian Scott](https://github.com/bscott). This fork extends the original with multi-currency support, an extended theme system, internationalization, encrypted backups, push notifications, calendar integration, and a production-ready Docker setup.
 
 ## License
 
-This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0) - see the [LICENSE](LICENSE) file for details.
+[GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE)
