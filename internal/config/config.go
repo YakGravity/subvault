@@ -12,7 +12,7 @@ type Config struct {
 
 func Load() *Config {
 	return &Config{
-		DatabasePath: getEnv("DATABASE_PATH", "./data/subtrackr.db"),
+		DatabasePath: getEnv("DATABASE_PATH", "./data/subvault.db"),
 		Port:         getEnv("PORT", "8080"),
 		Environment:  getEnv("GIN_MODE", "debug"),
 	}

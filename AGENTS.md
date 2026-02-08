@@ -1,8 +1,8 @@
-# SubTrackr - Agent Documentation
+# SubVault - Agent Documentation
 
 ## Project Overview
 
-SubTrackr is a self-hosted subscription management application built with Go and HTMX. It helps users track subscriptions, visualize spending, and get renewal reminders.
+SubVault is a self-hosted subscription management application built with Go and HTMX. It helps users track subscriptions, visualize spending, and get renewal reminders.
 
 ## Architecture
 
@@ -15,7 +15,7 @@ SubTrackr is a self-hosted subscription management application built with Go and
 ### Project Structure
 
 ```
-subtrackr-xyz/
+subvault/
 ├── cmd/
 │   ├── server/          # Main server entry point
 │   └── migrate-dates/   # Date migration utility
@@ -246,7 +246,7 @@ This project uses versioned branches for releases. See `CLAUDE.md` for the compl
 ### Environment Variables
 
 - `PORT` - Server port (default: 8080)
-- `DATABASE_PATH` - SQLite database path (default: ./data/subtrackr.db)
+- `DATABASE_PATH` - SQLite database path (default: ./data/subvault.db)
 - `GIN_MODE` - Gin mode: debug/release (default: debug)
 
 ### Building and Running
@@ -256,7 +256,7 @@ This project uses versioned branches for releases. See `CLAUDE.md` for the compl
 go run cmd/server/main.go
 
 # Build
-go build -o subtrackr cmd/server/main.go
+go build -o subvault cmd/server/main.go
 
 # Docker
 docker-compose up -d --build

@@ -1,6 +1,6 @@
 {
-  "name": "SubTrackr",
-  "short_name": "SubTrackr",
+  "name": "SubVault",
+  "short_name": "SubVault",
   "description": "Track and manage your subscriptions",
   "start_url": "/",
   "display": "standalone",

@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	SessionName      = "subtrackr_session"
+	SessionName      = "subvault_session"
 	SessionUserKey   = "user_authenticated"
 	SessionMaxAge    = 24 * 60 * 60      // 24 hours in seconds
 	RememberMeMaxAge = 30 * 24 * 60 * 60 // 30 days in seconds

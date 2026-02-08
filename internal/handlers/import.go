@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"subtrackr/internal/crypto"
-	"subtrackr/internal/models"
-	"subtrackr/internal/service"
+	"subvault/internal/crypto"
+	"subvault/internal/models"
+	"subvault/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -83,7 +83,7 @@ func (h *ImportHandler) ImportSubscriptions(c *gin.Context) {
 	switch format {
 	case "wallos":
 		result = h.importWallos(data)
-	case "subtrackr":
+	case "subvault", "subtrackr":
 		result = h.importSubTrackr(data)
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Unknown format"})

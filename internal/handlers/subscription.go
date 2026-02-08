@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"subtrackr/internal/models"
-	"subtrackr/internal/service"
+	"subvault/internal/models"
+	"subvault/internal/service"
 )
 
 // SubscriptionWithConversion represents a subscription with currency conversion info

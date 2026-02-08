@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"subtrackr/internal/models"
-	"subtrackr/internal/repository"
+	"subvault/internal/models"
+	"subvault/internal/repository"
 )
 
 func setupCategoryTestDB(t *testing.T) *gorm.DB {

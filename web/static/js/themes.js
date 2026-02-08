@@ -1,4 +1,4 @@
-// SubTrackr Theme System
+// SubVault Theme System
 
 // Compute the data-theme value from palette + mode
 function computeTheme(palette, isDark) {
@@ -7,21 +7,21 @@ function computeTheme(palette, isDark) {
 }
 
 function isDarkMode() {
-    var mode = localStorage.getItem('subtrackr-theme') || 'system';
+    var mode = localStorage.getItem('subvault-theme') || 'system';
     if (mode === 'system') return window.matchMedia('(prefers-color-scheme: dark)').matches;
     return mode === 'dark';
 }
 
 // Set light/dark/system mode
 function setThemeMode(mode) {
-    localStorage.setItem('subtrackr-theme', mode);
+    localStorage.setItem('subvault-theme', mode);
     var isDark;
     if (mode === 'system') {
         isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     } else {
         isDark = mode === 'dark';
     }
-    var palette = localStorage.getItem('subtrackr-palette') || 'default';
+    var palette = localStorage.getItem('subvault-palette') || 'default';
     document.documentElement.setAttribute('data-theme', computeTheme(palette, isDark));
     document.documentElement.setAttribute('data-mode', isDark ? 'dark' : 'light');
     // Save to server
@@ -37,7 +37,7 @@ function updateThemeButtons(mode) {
 
 // Set theme palette
 function setPalette(palette) {
-    localStorage.setItem('subtrackr-palette', palette);
+    localStorage.setItem('subvault-palette', palette);
     var isDark = isDarkMode();
     document.documentElement.setAttribute('data-theme', computeTheme(palette, isDark));
     updatePaletteOptions(palette);
@@ -51,7 +51,7 @@ function updatePaletteOptions(palette) {
 
 // Accent color
 function setAccentColor(color) {
-    localStorage.setItem('subtrackr-accent', color);
+    localStorage.setItem('subvault-accent', color);
     document.documentElement.setAttribute('data-accent', color);
     updateAccentButtons(color);
 }
@@ -70,17 +70,17 @@ function toggleSidebar() {
 
 function setSidebarCollapsed(collapsed) {
     if (collapsed) {
-        localStorage.setItem('subtrackr-sidebar', 'collapsed');
+        localStorage.setItem('subvault-sidebar', 'collapsed');
         document.documentElement.setAttribute('data-sidebar', 'collapsed');
     } else {
-        localStorage.removeItem('subtrackr-sidebar');
+        localStorage.removeItem('subvault-sidebar');
         document.documentElement.removeAttribute('data-sidebar');
     }
 }
 
 // Default view
 function setDefaultView(view) {
-    localStorage.setItem('subtrackr-view', view);
+    localStorage.setItem('subvault-view', view);
     document.querySelectorAll('#view-group button').forEach(function(btn) {
         btn.classList.toggle('active', btn.dataset.val === view);
     });
@@ -88,9 +88,9 @@ function setDefaultView(view) {
 
 // Listen for system theme changes
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
-    if (localStorage.getItem('subtrackr-theme') === 'system') {
+    if (localStorage.getItem('subvault-theme') === 'system') {
         var isDark = this.matches;
-        var palette = localStorage.getItem('subtrackr-palette') || 'default';
+        var palette = localStorage.getItem('subvault-palette') || 'default';
         document.documentElement.setAttribute('data-theme', computeTheme(palette, isDark));
         document.documentElement.setAttribute('data-mode', isDark ? 'dark' : 'light');
     }
@@ -98,10 +98,10 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', fun
 
 // Init active buttons on load
 document.addEventListener('DOMContentLoaded', function() {
-    var mode = localStorage.getItem('subtrackr-theme') || 'system';
+    var mode = localStorage.getItem('subvault-theme') || 'system';
     updateThemeButtons(mode);
-    var palette = localStorage.getItem('subtrackr-palette') || 'default';
+    var palette = localStorage.getItem('subvault-palette') || 'default';
     updatePaletteOptions(palette);
-    var accent = localStorage.getItem('subtrackr-accent') || 'orange';
+    var accent = localStorage.getItem('subvault-accent') || 'orange';
     updateAccentButtons(accent);
 });

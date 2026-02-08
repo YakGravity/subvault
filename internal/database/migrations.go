@@ -3,7 +3,7 @@ package database
 import (
 	"log/slog"
 	"strconv"
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 
 	"gorm.io/gorm"
 )

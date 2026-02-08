@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    <title>{{.Title}} - SubTrackr</title>
+    <title>{{.Title}} - SubVault</title>
     <script src="/static/js/htmx.min.js"></script>
     <script src="/static/js/csrf.js"></script>
     <link rel="stylesheet" href="/static/css/design-system.css">
@@ -75,7 +75,7 @@
                 <select id="import-format" name="format" class="form-input" style="width:auto;">
                     <option value="">Auto-detect</option>
                     <option value="wallos">{{.T.Tr "import_format_wallos"}}</option>
-                    <option value="subtrackr">{{.T.Tr "import_format_subtrackr"}}</option>
+                    <option value="subvault">{{.T.Tr "import_format_subvault"}}</option>
                 </select>
                 <input type="file" id="import-file" name="file" accept=".json"
                        style="font-size:13px;color:var(--text-secondary);cursor:pointer;">
@@ -317,7 +317,7 @@ function exportEncrypted() {
         .then(blob => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = 'subtrackr-backup.stbk'; a.click();
+            a.href = url; a.download = 'subvault-backup.stbk'; a.click();
             URL.revokeObjectURL(url);
             document.getElementById('export-password').value = '';
             document.getElementById('export-password-confirm').value = '';

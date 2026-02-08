@@ -7,8 +7,8 @@ import (
 	"log/slog"
 	"net/http"
 	"sort"
-	"subtrackr/internal/models"
-	"subtrackr/internal/repository"
+	"subvault/internal/models"
+	"subvault/internal/repository"
 	"sync"
 	"time"
 )

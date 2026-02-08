@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"subtrackr/internal/i18n"
-	"subtrackr/internal/version"
+	"subvault/internal/i18n"
+	"subvault/internal/version"
 
 	"github.com/gin-gonic/gin"
 )

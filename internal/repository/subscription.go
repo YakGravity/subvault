@@ -2,7 +2,7 @@ package repository
 
 import (
 	"strings"
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 	"time"
 
 	"gorm.io/gorm"

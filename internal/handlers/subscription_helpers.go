@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"time"
 
-	"subtrackr/internal/models"
-	"subtrackr/internal/service"
+	"subvault/internal/models"
+	"subvault/internal/service"
 )
 
 // enrichWithCurrencyConversion adds currency conversion info to subscriptions

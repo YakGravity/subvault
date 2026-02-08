@@ -51,7 +51,7 @@
     "other": "Import Data"
   },
   "settings_import_desc": {
-    "other": "Import subscriptions from Wallos or a SubTrackr JSON export."
+    "other": "Import subscriptions from Wallos or a SubVault JSON export."
   },
   "btn_import_json": {
     "other": "Import"
@@ -77,8 +77,8 @@
   "import_format_wallos": {
     "other": "Wallos JSON"
   },
-  "import_format_subtrackr": {
-    "other": "SubTrackr JSON"
+  "import_format_subvault": {
+    "other": "SubVault JSON"
   },
   "settings_export": {
     "other": "Export Data"
@@ -204,7 +204,7 @@
     "other": "Security"
   },
   "settings_security_desc": {
-    "other": "Protect your SubTrackr instance with login authentication"
+    "other": "Protect your SubVault instance with login authentication"
   },
   "auth_enabled_msg": {
     "other": "Authentication is enabled"
@@ -354,7 +354,7 @@
     "other": "API Keys"
   },
   "settings_api_keys_desc": {
-    "other": "Create API keys to access SubTrackr from external applications"
+    "other": "Create API keys to access SubVault from external applications"
   },
   "api_key_name_label": {
     "other": "Key Name"
@@ -384,7 +384,7 @@
     "other": "No category spending data found."
   },
   "login_sign_in": {
-    "other": "Sign in to SubTrackr"
+    "other": "Sign in to SubVault"
   },
   "login_username": {
     "other": "Username"
@@ -663,7 +663,7 @@
     "other": "High Cost Subscription Alert"
   },
   "email_high_cost_alert": {
-    "other": "A new high-cost subscription has been added to your SubTrackr account."
+    "other": "A new high-cost subscription has been added to your SubVault account."
   },
   "email_sub_details": {
     "other": "Subscription Details"
@@ -687,7 +687,7 @@
     "other": "URL:"
   },
   "email_footer_auto": {
-    "other": "This is an automated notification from SubTrackr."
+    "other": "This is an automated notification from SubVault."
   },
   "email_footer_manage": {
     "other": "You can manage your notification preferences in the Settings page."
@@ -1064,7 +1064,7 @@
     "other": "Budget Alert: Monthly spending exceeded!"
   },
   "email_budget_exceeded_subject": {
-    "other": "SubTrackr: Monthly Budget Exceeded"
+    "other": "SubVault: Monthly Budget Exceeded"
   },
   "dashboard_subtitle": {
     "other": "Overview of your subscriptions"
@@ -1136,7 +1136,7 @@
     "other": "Color Scheme"
   },
   "settings_appearance_subtitle": {
-    "other": "Customize the look of SubTrackr"
+    "other": "Customize the look of SubVault"
   },
   "theme_light": {
     "other": "Light"

@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 
 	"github.com/gin-gonic/gin"
 )

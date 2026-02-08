@@ -1,4 +1,4 @@
-module subtrackr
+module subvault
 
 go 1.24.0
 

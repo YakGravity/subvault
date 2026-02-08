@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
-	"subtrackr/internal/models"
-	"subtrackr/internal/repository"
+	"subvault/internal/models"
+	"subvault/internal/repository"
 )
 
 // CategoryService provides business logic for categories

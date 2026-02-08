@@ -51,7 +51,7 @@
     "other": "Daten importieren"
   },
   "settings_import_desc": {
-    "other": "Importiere Abonnements aus Wallos oder einem SubTrackr JSON-Export."
+    "other": "Importiere Abonnements aus Wallos oder einem SubVault JSON-Export."
   },
   "btn_import_json": {
     "other": "Importieren"
@@ -77,8 +77,8 @@
   "import_format_wallos": {
     "other": "Wallos JSON"
   },
-  "import_format_subtrackr": {
-    "other": "SubTrackr JSON"
+  "import_format_subvault": {
+    "other": "SubVault JSON"
   },
   "settings_export": {
     "other": "Daten exportieren"
@@ -204,7 +204,7 @@
     "other": "Sicherheit"
   },
   "settings_security_desc": {
-    "other": "Schütze deine SubTrackr-Instanz mit Anmeldeauthentifizierung"
+    "other": "Schütze deine SubVault-Instanz mit Anmeldeauthentifizierung"
   },
   "auth_enabled_msg": {
     "other": "Authentifizierung ist aktiviert"
@@ -354,7 +354,7 @@
     "other": "API-Schlüssel"
   },
   "settings_api_keys_desc": {
-    "other": "Erstelle API-Schlüssel, um von externen Anwendungen auf SubTrackr zuzugreifen"
+    "other": "Erstelle API-Schlüssel, um von externen Anwendungen auf SubVault zuzugreifen"
   },
   "api_key_name_label": {
     "other": "Schlüsselname"
@@ -384,7 +384,7 @@
     "other": "Keine Ausgabedaten nach Kategorie gefunden."
   },
   "login_sign_in": {
-    "other": "Bei SubTrackr anmelden"
+    "other": "Bei SubVault anmelden"
   },
   "login_username": {
     "other": "Benutzername"
@@ -663,7 +663,7 @@
     "other": "Warnung: Hochkosten-Abonnement"
   },
   "email_high_cost_alert": {
-    "other": "Ein neues kostenintensives Abonnement wurde zu deinem SubTrackr-Konto hinzugefügt."
+    "other": "Ein neues kostenintensives Abonnement wurde zu deinem SubVault-Konto hinzugefügt."
   },
   "email_sub_details": {
     "other": "Abonnementdetails"
@@ -687,7 +687,7 @@
     "other": "URL:"
   },
   "email_footer_auto": {
-    "other": "Dies ist eine automatische Benachrichtigung von SubTrackr."
+    "other": "Dies ist eine automatische Benachrichtigung von SubVault."
   },
   "email_footer_manage": {
     "other": "Du kannst deine Benachrichtigungseinstellungen auf der Einstellungsseite verwalten."
@@ -1064,7 +1064,7 @@
     "other": "Budget-Alarm: Monatliche Ausgaben überschritten!"
   },
   "email_budget_exceeded_subject": {
-    "other": "SubTrackr: Monatsbudget überschritten"
+    "other": "SubVault: Monatsbudget überschritten"
   },
   "dashboard_subtitle": {
     "other": "Überblick über deine Abonnements"
@@ -1136,7 +1136,7 @@
     "other": "Farbschema"
   },
   "settings_appearance_subtitle": {
-    "other": "Passe das Erscheinungsbild von SubTrackr an"
+    "other": "Passe das Erscheinungsbild von SubVault an"
   },
   "theme_light": {
     "other": "Hell"

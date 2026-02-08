@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    <title>{{.Title}} - SubTrackr</title>
+    <title>{{.Title}} - SubVault</title>
     <script src="/static/js/htmx.min.js"></script>
     <script src="/static/js/csrf.js"></script>
     <link rel="stylesheet" href="/static/css/design-system.css">
@@ -166,7 +166,7 @@
     </div><!-- /.main -->
 <script>
     // Mode button group
-    var mode = localStorage.getItem('subtrackr-theme') || 'system';
+    var mode = localStorage.getItem('subvault-theme') || 'system';
     document.querySelectorAll('#mode-group button').forEach(function(btn) {
         if (btn.dataset.val === mode) btn.classList.add('active');
         btn.addEventListener('click', function() {
@@ -175,7 +175,7 @@
         });
     });
     // Theme palette
-    var palette = localStorage.getItem('subtrackr-palette') || 'default';
+    var palette = localStorage.getItem('subvault-palette') || 'default';
     document.querySelectorAll('.theme-option').forEach(function(opt) {
         if (opt.dataset.palette === palette) opt.classList.add('active');
         opt.addEventListener('click', function() {
@@ -184,12 +184,12 @@
         });
     });
     // Accent
-    var accent = localStorage.getItem('subtrackr-accent') || 'orange';
+    var accent = localStorage.getItem('subvault-accent') || 'orange';
     document.querySelectorAll('.accent-option').forEach(function(btn) {
         if (btn.dataset.accent === accent) btn.classList.add('active');
     });
     // Default view
-    var view = localStorage.getItem('subtrackr-view') || 'grid';
+    var view = localStorage.getItem('subvault-view') || 'grid';
     document.querySelectorAll('#view-group button').forEach(function(btn) {
         if (btn.dataset.val === view) btn.classList.add('active');
     });

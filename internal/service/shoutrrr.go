@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
-	"subtrackr/internal/i18n"
-	"subtrackr/internal/models"
+	"subvault/internal/i18n"
+	"subvault/internal/models"
 
 	"github.com/containrrr/shoutrrr"
 	t "github.com/containrrr/shoutrrr/pkg/types"
@@ -94,9 +94,9 @@ func (s *ShoutrrrService) SendTestNotification(urls []string) error {
 	}
 
 	params := t.Params{
-		"title": "SubTrackr Test",
+		"title": "SubVault Test",
 	}
-	errs := sender.Send("This is a test notification from SubTrackr. If you received this, your notification configuration is working correctly!", &params)
+	errs := sender.Send("This is a test notification from SubVault. If you received this, your notification configuration is working correctly!", &params)
 
 	var errMsgs []string
 	for _, e := range errs {

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"subtrackr/internal/service"
+	"subvault/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

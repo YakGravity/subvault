@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 
 	"github.com/stretchr/testify/assert"
 )

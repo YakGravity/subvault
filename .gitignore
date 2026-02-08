@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-subtrackr
+subvault
 main
 
 # Beads (keep issues.jsonl and interactions.jsonl for syncing)
@@ -75,7 +75,7 @@ server.log
 server
 *.db
 data/
-subtrackr
+subvault
 
 # Release notes (draft files, not committed)
 RELEASE_NOTES*.md

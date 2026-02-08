@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 
 	"gorm.io/gorm"
 )

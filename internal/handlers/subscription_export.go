@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"time"
 
-	"subtrackr/internal/crypto"
-	"subtrackr/internal/models"
+	"subvault/internal/crypto"
+	"subvault/internal/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -133,7 +133,7 @@ func (h *SubscriptionHandler) ExportEncrypted(c *gin.Context) {
 	}
 
 	c.Header("Content-Type", "application/octet-stream")
-	c.Header("Content-Disposition", `attachment; filename="subtrackr-backup.stbk"`)
+	c.Header("Content-Disposition", `attachment; filename="subvault-backup.stbk"`)
 	c.Data(http.StatusOK, "application/octet-stream", encrypted)
 }
 
@@ -162,7 +162,7 @@ func (h *SubscriptionHandler) BackupData(c *gin.Context) {
 	}
 
 	c.Header("Content-Type", "application/json")
-	c.Header("Content-Disposition", "attachment; filename=subtrackr-backup.json")
+	c.Header("Content-Disposition", "attachment; filename=subvault-backup.json")
 	c.JSON(http.StatusOK, backup)
 }
 
@@ -203,7 +203,7 @@ func (h *SubscriptionHandler) ExportICal(c *gin.Context) {
 	icalContent := h.generateICal(subscriptions)
 
 	c.Header("Content-Type", "text/calendar; charset=utf-8")
-	c.Header("Content-Disposition", `attachment; filename="subtrackr-renewals.ics"`)
+	c.Header("Content-Disposition", `attachment; filename="subvault-renewals.ics"`)
 	c.Data(http.StatusOK, "text/calendar; charset=utf-8", []byte(icalContent))
 }
 
@@ -238,7 +238,7 @@ func (h *SubscriptionHandler) ServeCalendarFeed(c *gin.Context) {
 func (h *SubscriptionHandler) generateICal(subscriptions []models.Subscription) string {
 	icalContent := "BEGIN:VCALENDAR\r\n"
 	icalContent += "VERSION:2.0\r\n"
-	icalContent += "PRODID:-//SubTrackr//Subscription Renewals//EN\r\n"
+	icalContent += "PRODID:-//SubVault//Subscription Renewals//EN\r\n"
 	icalContent += "CALSCALE:GREGORIAN\r\n"
 	icalContent += "METHOD:PUBLISH\r\n"
 
@@ -248,7 +248,7 @@ func (h *SubscriptionHandler) generateICal(subscriptions []models.Subscription) 
 			dtStart := sub.RenewalDate.Format("20060102T150000Z")
 			dtEnd := sub.RenewalDate.Add(1 * time.Hour).Format("20060102T150000Z")
 			dtStamp := now.Format("20060102T150000Z")
-			uid := fmt.Sprintf("subtrackr-%d-%d@subtrackr", sub.ID, sub.RenewalDate.Unix())
+			uid := fmt.Sprintf("subvault-%d-%d@subvault", sub.ID, sub.RenewalDate.Unix())
 
 			summary := fmt.Sprintf("%s Renewal", sub.Name)
 			description := fmt.Sprintf("Subscription: %s\\nCost: %s%.2f\\nSchedule: %s", sub.Name, h.preferences.GetCurrencySymbol(), sub.Cost, sub.Schedule)

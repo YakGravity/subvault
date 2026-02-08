@@ -1,7 +1,7 @@
-// SubTrackr Sort Preference Persistence
+// SubVault Sort Preference Persistence
 // Saves and restores user's sort preference using localStorage
 
-const SORT_STORAGE_KEY = 'subtrackr-sort';
+const SORT_STORAGE_KEY = 'subvault-sort';
 const VALID_SORT_FIELDS = ['name', 'cost', 'renewal_date', 'status', 'category', 'schedule', 'created_at'];
 const VALID_SORT_ORDERS = ['asc', 'desc'];
 

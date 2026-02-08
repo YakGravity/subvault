@@ -2,8 +2,8 @@ package service
 
 import (
 	"log/slog"
-	"subtrackr/internal/models"
-	"subtrackr/internal/repository"
+	"subvault/internal/models"
+	"subvault/internal/repository"
 	"time"
 )
 

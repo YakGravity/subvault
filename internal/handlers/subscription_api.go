@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 	"time"
 
 	"github.com/gin-gonic/gin"

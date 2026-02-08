@@ -6,7 +6,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log/slog"
-	"subtrackr/internal/repository"
+	"subvault/internal/repository"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"

@@ -8,8 +8,8 @@ import (
 	"net/smtp"
 	"strconv"
 	"strings"
-	"subtrackr/internal/models"
-	"subtrackr/internal/service"
+	"subvault/internal/models"
+	"subvault/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

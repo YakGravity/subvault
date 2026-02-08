@@ -9,7 +9,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
-    <title>{{.Title}} - SubTrackr</title>
+    <title>{{.Title}} - SubVault</title>
     <script src="/static/js/htmx.min.js"></script>
     <script src="/static/js/csrf.js"></script>
     <link rel="stylesheet" href="/static/css/design-system.css">
@@ -287,7 +287,7 @@
             document.getElementById('view-table').classList.toggle('active', mode === 'table');
             grid.style.display = mode === 'grid' ? '' : 'none';
             table.style.display = mode === 'table' ? '' : 'none';
-            localStorage.setItem('subtrackr-view', mode);
+            localStorage.setItem('subvault-view', mode);
             applyFilter();
         }
 
@@ -302,7 +302,7 @@
                 span.textContent = '(' + (counts[s] || 0) + ')';
             });
             // Restore view
-            if (localStorage.getItem('subtrackr-view') === 'table') setView('table');
+            if (localStorage.getItem('subvault-view') === 'table') setView('table');
             // Restore sort
             var saved = getSortPreference();
             if (saved) {

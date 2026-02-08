@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"net/http"
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 
 	"github.com/gin-gonic/gin"
 )

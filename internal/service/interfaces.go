@@ -1,6 +1,6 @@
 package service
 
-import "subtrackr/internal/models"
+import "subvault/internal/models"
 
 // SubscriptionServiceInterface defines the contract for subscription operations.
 type SubscriptionServiceInterface interface {

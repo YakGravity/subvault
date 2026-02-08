@@ -48,7 +48,7 @@ jobs:
         run: go mod verify
 
       - name: Build application
-        run: go build -v -o subtrackr cmd/server/main.go
+        run: go build -v -o subvault cmd/server/main.go
 
       - name: Run tests
         run: go test -v ./...

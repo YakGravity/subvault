@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"subtrackr/internal/service"
+	"subvault/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -142,10 +142,10 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 	}
 	resetURL := fmt.Sprintf("%s://%s/reset-password?token=%s", scheme, c.Request.Host, url.QueryEscape(token))
 
-	subject := "SubTrackr Password Reset"
+	subject := "SubVault Password Reset"
 	body := fmt.Sprintf(`
 		<h2>Password Reset Request</h2>
-		<p>You have requested to reset your SubTrackr password.</p>
+		<p>You have requested to reset your SubVault password.</p>
 		<p>Click the link below to reset your password:</p>
 		<p><a href="%s">Reset Password</a></p>
 		<p>This link will expire in 1 hour.</p>

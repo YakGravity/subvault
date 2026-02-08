@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log/slog"
-	"subtrackr/internal/models"
-	"subtrackr/internal/repository"
+	"subvault/internal/models"
+	"subvault/internal/repository"
 )
 
 type NotificationConfigService struct {

@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 	"strings"
-	"subtrackr/internal/database"
-	"subtrackr/internal/models"
+	"subvault/internal/database"
+	"subvault/internal/models"
 	"time"
 
 	"gorm.io/driver/sqlite"
@@ -16,7 +16,7 @@ import (
 
 func main() {
 	var (
-		dbPath = flag.String("db", "subtrackr.db", "Path to SQLite database")
+		dbPath = flag.String("db", "subvault.db", "Path to SQLite database")
 		dryRun = flag.Bool("dry-run", false, "Show what would be changed without making changes")
 		action = flag.String("action", "compare", "Action to perform: compare, migrate, rollback, stats")
 		subID  = flag.Uint("subscription-id", 0, "Subscription ID for single operations")

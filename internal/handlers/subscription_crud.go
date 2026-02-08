@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 
 	"github.com/gin-gonic/gin"
 )

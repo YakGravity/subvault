@@ -23,10 +23,9 @@ ARG GIT_TAG=dev
 ARG GIT_COMMIT=unknown
 
 # Build the application with optimizations and version info
-# Use build args directly - no need for .git directory
 RUN CGO_ENABLED=1 GOOS=linux go build \
-    -ldflags="-w -s -X 'subtrackr/internal/version.Version=${GIT_TAG}' -X 'subtrackr/internal/version.GitCommit=${GIT_COMMIT}'" \
-    -o subtrackr ./cmd/server
+    -ldflags="-w -s -X 'subvault/internal/version.Version=${GIT_TAG}' -X 'subvault/internal/version.GitCommit=${GIT_COMMIT}'" \
+    -o subvault ./cmd/server
 
 # Final stage
 FROM debian:bookworm-slim
@@ -37,28 +36,36 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     sqlite3 \
     tzdata \
-    && rm -rf /var/lib/apt/lists/* \
-    && mkdir -p /app/data
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r subvault && useradd -r -g subvault -d /app -s /sbin/nologin subvault
 
 WORKDIR /app
 
 # Copy the binary from builder
-COPY --from=builder /app/subtrackr .
+COPY --from=builder /app/subvault .
 
 # Copy templates and static assets
 COPY templates/ ./templates/
 COPY web/ ./web/
+
+# Create data directory with correct ownership
+RUN mkdir -p /app/data && chown -R subvault:subvault /app
+
+# Switch to non-root user
+USER subvault
 
 # Expose port
 EXPOSE 8080
 
 # Set environment variables
 ENV GIN_MODE=release
-ENV DATABASE_PATH=/app/data/subtrackr.db
+ENV DATABASE_PATH=/app/data/subvault.db
 
-# Healthcheck to verify the application is running and database is accessible
+# Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8080/healthz || exit 1
 
 # Run the application
-CMD ["./subtrackr"]
+CMD ["./subvault"]

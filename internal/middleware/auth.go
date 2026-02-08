@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"subtrackr/internal/service"
+	"subvault/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

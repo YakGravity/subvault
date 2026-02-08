@@ -3,7 +3,7 @@ package service
 import (
 	"time"
 
-	"subtrackr/internal/models"
+	"subvault/internal/models"
 )
 
 type RenewalService struct{}

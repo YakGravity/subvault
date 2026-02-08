@@ -17,7 +17,7 @@ Dockerfile
 .env*
 
 # Build artifacts
-subtrackr
+subvault
 *.exe
 *.exe~
 *.dll
@@ -55,9 +55,6 @@ data/
 *.temp
 tmp/
 
-# CI/CD
-.github/
-
 # Legacy files (no longer used)
 node_modules/
 src/
@@ -69,10 +66,10 @@ postcss.config*
 rebuild.sh
 remove-configs.sh
 
-# Media files
+# Media files (but keep web/static assets)
+screenshots/
 *.png
 *.jpg
 *.jpeg
 *.gif
-*.svg
-*.ico
+!web/static/**

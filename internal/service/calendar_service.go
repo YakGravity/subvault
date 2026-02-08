@@ -3,7 +3,7 @@ package service
 import (
 	"crypto/rand"
 	"fmt"
-	"subtrackr/internal/repository"
+	"subvault/internal/repository"
 )
 
 type CalendarService struct {

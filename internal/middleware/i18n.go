@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"subtrackr/internal/i18n"
-	"subtrackr/internal/service"
+	"subvault/internal/i18n"
+	"subvault/internal/service"
 
 	"github.com/gin-gonic/gin"
 )

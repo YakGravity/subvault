@@ -1,8 +1,8 @@
-# SubTrackr - Claude Code Instructions
+# SubVault - Claude Code Instructions
 
 ## Git Remotes
 
-- **origin** → Lokales Gitea (http://localhost:3001/user/subtrackr-v2) - push & fetch
+- **origin** → Lokales Gitea (http://localhost:3001/user/subvault) - push & fetch
 - **upstream** → GitHub (https://github.com/bscott/subtrackr) - nur fetch, push blockiert
 
 ```bash

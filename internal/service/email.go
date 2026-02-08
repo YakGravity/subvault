@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"html/template"
 	"net/smtp"
-	"subtrackr/internal/i18n"
-	"subtrackr/internal/models"
+	"subvault/internal/i18n"
+	"subvault/internal/models"
 )
 
 // EmailService handles sending emails via SMTP
@@ -118,7 +118,7 @@ func (e *EmailService) SendEmail(subject, body string) error {
 
 		fromName := config.FromName
 		if fromName == "" {
-			fromName = "SubTrackr"
+			fromName = "SubVault"
 		}
 
 		message := fmt.Sprintf("From: %s <%s>\r\n", fromName, config.From)
@@ -175,7 +175,7 @@ func (e *EmailService) SendEmail(subject, body string) error {
 
 		fromName := config.FromName
 		if fromName == "" {
-			fromName = "SubTrackr"
+			fromName = "SubVault"
 		}
 
 		message := fmt.Sprintf("From: %s <%s>\r\n", fromName, config.From)

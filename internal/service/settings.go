@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strconv"
-	"subtrackr/internal/repository"
+	"subvault/internal/repository"
 	"sync"
 	"time"
 )
