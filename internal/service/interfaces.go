@@ -133,6 +133,12 @@ type LogoServiceInterface interface {
 	DownloadLogo(logoURL string) ([]byte, error)
 }
 
+// RenewalServiceInterface defines the contract for subscription renewal date calculation.
+type RenewalServiceInterface interface {
+	InitializeRenewalDate(sub *models.Subscription)
+	RecalculateIfNeeded(existing, updated *models.Subscription)
+}
+
 // Compile-time interface satisfaction checks.
 var _ SubscriptionServiceInterface = (*SubscriptionService)(nil)
 var _ SettingsServiceInterface = (*SettingsService)(nil)
@@ -146,3 +152,4 @@ var _ CategoryServiceInterface = (*CategoryService)(nil)
 var _ EmailServiceInterface = (*EmailService)(nil)
 var _ ShoutrrrServiceInterface = (*ShoutrrrService)(nil)
 var _ LogoServiceInterface = (*LogoService)(nil)
+var _ RenewalServiceInterface = (*RenewalService)(nil)

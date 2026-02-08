@@ -13,19 +13,22 @@ type SubscriptionService struct {
 	currencyService *CurrencyService
 	preferences     PreferencesServiceInterface
 	settings        SettingsServiceInterface
+	renewalService  RenewalServiceInterface
 }
 
-func NewSubscriptionService(repo *repository.SubscriptionRepository, categoryService *CategoryService, currencyService *CurrencyService, preferences PreferencesServiceInterface, settings SettingsServiceInterface) *SubscriptionService {
+func NewSubscriptionService(repo *repository.SubscriptionRepository, categoryService *CategoryService, currencyService *CurrencyService, preferences PreferencesServiceInterface, settings SettingsServiceInterface, renewalService RenewalServiceInterface) *SubscriptionService {
 	return &SubscriptionService{
 		repo:            repo,
 		categoryService: categoryService,
 		currencyService: currencyService,
 		preferences:     preferences,
 		settings:        settings,
+		renewalService:  renewalService,
 	}
 }
 
 func (s *SubscriptionService) Create(subscription *models.Subscription) (*models.Subscription, error) {
+	s.renewalService.InitializeRenewalDate(subscription)
 	return s.repo.Create(subscription)
 }
 
@@ -42,6 +45,11 @@ func (s *SubscriptionService) GetByID(id uint) (*models.Subscription, error) {
 }
 
 func (s *SubscriptionService) Update(id uint, subscription *models.Subscription) (*models.Subscription, error) {
+	existing, err := s.repo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+	s.renewalService.RecalculateIfNeeded(existing, subscription)
 	return s.repo.Update(id, subscription)
 }
 

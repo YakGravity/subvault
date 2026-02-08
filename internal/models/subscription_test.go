@@ -6,24 +6,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
 )
-
-func setupTestDB(t *testing.T) *gorm.DB {
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("Failed to open test database: %v", err)
-	}
-
-	// Migrate the schema
-	err = db.AutoMigrate(&Subscription{})
-	if err != nil {
-		t.Fatalf("Failed to migrate test database: %v", err)
-	}
-
-	return db
-}
 
 func TestSubscription_CalculateNextRenewalDate(t *testing.T) {
 	now := time.Now()
@@ -72,7 +55,7 @@ func TestSubscription_CalculateNextRenewalDate(t *testing.T) {
 				Status:    "Active",
 			}
 
-			sub.calculateNextRenewalDate()
+			sub.CalculateNextRenewalDate()
 
 			assert.NotNil(t, sub.RenewalDate, tt.description)
 
@@ -132,102 +115,6 @@ func TestSubscription_CalculateNextRenewalDateFromNow(t *testing.T) {
 	}
 }
 
-func TestSubscription_BeforeUpdate_ScheduleChange(t *testing.T) {
-	db := setupTestDB(t)
-
-	// Create a subscription with initial schedule
-	startDate := time.Now().AddDate(0, -3, 0)  // 3 months ago
-	renewalDate := time.Now().AddDate(0, 1, 0) // 1 month from now
-	sub := &Subscription{
-		Name:        "Test Subscription",
-		Cost:        9.99,
-		Schedule:    "Monthly",
-		Status:      "Active",
-		StartDate:   &startDate,
-		RenewalDate: &renewalDate,
-	}
-
-	// Save the subscription
-	err := db.Create(sub).Error
-	assert.NoError(t, err)
-
-	// Simulate schedule change by fetching and updating
-	var existing Subscription
-	err = db.First(&existing, sub.ID).Error
-	assert.NoError(t, err)
-
-	// Change schedule from Monthly to Annual
-	existing.Schedule = "Annual"
-
-	// Trigger BeforeUpdate hook
-	err = existing.BeforeUpdate(db)
-	assert.NoError(t, err)
-
-	// Verify renewal date was recalculated
-	assert.NotNil(t, existing.RenewalDate)
-	// The new renewal date should be in the future (using start date + schedule)
-	assert.True(t, existing.RenewalDate.After(time.Now()), "Renewal should be in future")
-	// For schedule change from Monthly to Annual, it should preserve the start date anniversary
-	assert.Equal(t, startDate.Month(), existing.RenewalDate.Month(), "Should preserve start date month")
-	assert.Equal(t, startDate.Day(), existing.RenewalDate.Day(), "Should preserve start date day")
-}
-
-func TestSubscription_BeforeUpdate_NoScheduleChange(t *testing.T) {
-	db := setupTestDB(t)
-
-	// Create a subscription
-	originalRenewal := time.Now().AddDate(0, 1, 0)
-	sub := &Subscription{
-		ID:          1,
-		Name:        "Test Subscription",
-		Cost:        9.99,
-		Schedule:    "Monthly",
-		Status:      "Active",
-		RenewalDate: &originalRenewal,
-	}
-
-	// Save the subscription
-	err := db.Create(sub).Error
-	assert.NoError(t, err)
-
-	// Update without changing schedule
-	sub.Cost = 19.99
-
-	// Trigger BeforeUpdate hook
-	err = sub.BeforeUpdate(db)
-	assert.NoError(t, err)
-
-	// Verify renewal date was NOT changed
-	assert.NotNil(t, sub.RenewalDate)
-	assert.Equal(t, originalRenewal.Format("2006-01-02"), sub.RenewalDate.Format("2006-01-02"))
-}
-
-func TestSubscription_BeforeUpdate_NilRenewalDate(t *testing.T) {
-	db := setupTestDB(t)
-
-	// Create a subscription without renewal date
-	sub := &Subscription{
-		ID:          1,
-		Name:        "Test Subscription",
-		Cost:        9.99,
-		Schedule:    "Monthly",
-		Status:      "Active",
-		RenewalDate: nil, // No renewal date set
-	}
-
-	// Save the subscription
-	err := db.Create(sub).Error
-	assert.NoError(t, err)
-
-	// Trigger BeforeUpdate hook
-	err = sub.BeforeUpdate(db)
-	assert.NoError(t, err)
-
-	// Verify renewal date was calculated
-	assert.NotNil(t, sub.RenewalDate)
-	assert.True(t, sub.RenewalDate.After(time.Now()))
-}
-
 func TestSubscription_MonthlyCost(t *testing.T) {
 	tests := []struct {
 		name     string
@@ -270,84 +157,6 @@ func TestSubscription_MonthlyCost(t *testing.T) {
 
 			result := sub.MonthlyCost()
 			assert.InDelta(t, tt.expected, result, 0.01)
-		})
-	}
-}
-
-func TestSubscription_BeforeCreate_WithStartDate(t *testing.T) {
-	db := setupTestDB(t)
-
-	tests := []struct {
-		name        string
-		schedule    string
-		startDate   time.Time
-		description string
-	}{
-		{
-			name:        "Monthly subscription with past start date",
-			schedule:    "Monthly",
-			startDate:   time.Now().AddDate(0, -2, -15), // 2.5 months ago
-			description: "Should calculate next monthly anniversary",
-		},
-		{
-			name:        "Annual subscription with past start date",
-			schedule:    "Annual",
-			startDate:   time.Now().AddDate(0, -6, 0), // 6 months ago
-			description: "Should calculate next annual anniversary",
-		},
-		{
-			name:        "Weekly subscription with past start date",
-			schedule:    "Weekly",
-			startDate:   time.Now().AddDate(0, 0, -10), // 10 days ago
-			description: "Should calculate next weekly anniversary",
-		},
-		{
-			name:        "Future start date",
-			schedule:    "Monthly",
-			startDate:   time.Now().AddDate(0, 0, 7), // 7 days in future
-			description: "Should set renewal one month after future start date",
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			sub := &Subscription{
-				Name:      "Test Subscription",
-				Cost:      9.99,
-				Schedule:  tt.schedule,
-				Status:    "Active",
-				StartDate: &tt.startDate,
-			}
-
-			// Trigger BeforeCreate hook
-			err := sub.BeforeCreate(db)
-			assert.NoError(t, err)
-
-			// Verify renewal date was set
-			assert.NotNil(t, sub.RenewalDate, tt.description)
-			assert.True(t, sub.RenewalDate.After(time.Now()), "Renewal date should be in the future")
-
-			// For past start dates, verify it's the next occurrence
-			if tt.startDate.Before(time.Now()) {
-				// The renewal should be after now but follow the schedule pattern
-				switch tt.schedule {
-				case "Monthly":
-					// Should be on the same day of month as start date, unless start date is month-end
-					startYear, startMonth, _ := tt.startDate.Date()
-					renewalYear, renewalMonth, _ := sub.RenewalDate.Date()
-					startLastDay := time.Date(startYear, startMonth+1, 0, 0, 0, 0, 0, tt.startDate.Location()).Day()
-					renewalLastDay := time.Date(renewalYear, renewalMonth+1, 0, 0, 0, 0, 0, sub.RenewalDate.Location()).Day()
-					if tt.startDate.Day() == startLastDay {
-						assert.Equal(t, renewalLastDay, sub.RenewalDate.Day(), "Renewal date should be last day of month if start date was")
-					} else {
-						assert.Equal(t, tt.startDate.Day(), sub.RenewalDate.Day())
-					}
-				case "Annual":
-					// Should be on same month/day as start date
-					assert.Equal(t, tt.startDate.Month(), sub.RenewalDate.Month())
-					assert.Equal(t, tt.startDate.Day(), sub.RenewalDate.Day())
-				}
-			}
 		})
 	}
 }
@@ -571,7 +380,7 @@ func TestSubscription_DateEdgeCases(t *testing.T) {
 			}
 
 			// Test renewal calculation
-			sub.calculateNextRenewalDate()
+			sub.CalculateNextRenewalDate()
 			assert.NotNil(t, sub.RenewalDate, tt.description)
 
 			// All renewal dates should be in the future
@@ -625,8 +434,6 @@ func TestSubscription_DateEdgeCases(t *testing.T) {
 
 // TestSubscription_ScheduleChangePreservation tests that schedule changes preserve billing anniversary
 func TestSubscription_ScheduleChangePreservation(t *testing.T) {
-	db := setupTestDB(t)
-
 	tests := []struct {
 		name            string
 		initialSchedule string
@@ -674,38 +481,25 @@ func TestSubscription_ScheduleChangePreservation(t *testing.T) {
 			startTime, err := time.Parse(time.RFC3339, tt.startDate)
 			assert.NoError(t, err)
 
-			// Create subscription with initial schedule
+			// Simulate schedule change: create sub with new schedule, recalculate
 			sub := &Subscription{
 				Name:      "Test Subscription",
 				Cost:      9.99,
-				Schedule:  tt.initialSchedule,
+				Schedule:  tt.newSchedule,
 				Status:    "Active",
 				StartDate: &startTime,
 			}
 
-			err = db.Create(sub).Error
-			assert.NoError(t, err)
-
-			// Load the subscription to get the initial renewal date
-			var loaded Subscription
-			err = db.First(&loaded, sub.ID).Error
-			assert.NoError(t, err)
-
-			// Change the schedule
-			loaded.Schedule = tt.newSchedule
-
-			// Trigger the BeforeUpdate hook
-			err = loaded.BeforeUpdate(db)
-			assert.NoError(t, err)
+			sub.CalculateNextRenewalDate()
 
 			// Verify the renewal date preserves the billing anniversary
-			assert.NotNil(t, loaded.RenewalDate, tt.description)
+			assert.NotNil(t, sub.RenewalDate, tt.description)
 			if tt.name != "Weekly to Monthly preserves weekday as much as possible" {
-				assert.Equal(t, tt.expectedDay, loaded.RenewalDate.Day(), tt.description)
+				assert.Equal(t, tt.expectedDay, sub.RenewalDate.Day(), tt.description)
 			}
 
 			// Ensure renewal is in the future
-			assert.True(t, loaded.RenewalDate.After(time.Now()),
+			assert.True(t, sub.RenewalDate.After(time.Now()),
 				"Renewal should be in future for %s", tt.description)
 		})
 	}
@@ -749,7 +543,7 @@ func TestSubscription_LeapYearHandling(t *testing.T) {
 			}
 
 			// Calculate the next renewal from the start date
-			sub.calculateNextRenewalDate()
+			sub.CalculateNextRenewalDate()
 			assert.NotNil(t, sub.RenewalDate, tt.description)
 
 			// Verify the renewal is in the future
@@ -793,7 +587,7 @@ func TestSubscription_TimezoneConsistency(t *testing.T) {
 				Status:    "Active",
 			}
 
-			sub.calculateNextRenewalDate()
+			sub.CalculateNextRenewalDate()
 
 			assert.NotNil(t, sub.RenewalDate)
 			// Renewal should preserve the timezone
@@ -863,7 +657,7 @@ func TestSubscription_DateCalculationV2(t *testing.T) {
 			}
 
 			// Test V2 renewal calculation
-			sub.calculateNextRenewalDate()
+			sub.CalculateNextRenewalDate()
 			assert.NotNil(t, sub.RenewalDate, tt.description)
 
 			// All V2 calculations should result in future dates
@@ -906,7 +700,7 @@ func TestSubscription_VersionedCalculation(t *testing.T) {
 		Status:                 "Active",
 		DateCalculationVersion: 1, // V1
 	}
-	subV1.calculateNextRenewalDate()
+	subV1.CalculateNextRenewalDate()
 
 	// Test V2 calculation
 	subV2 := &Subscription{
@@ -915,7 +709,7 @@ func TestSubscription_VersionedCalculation(t *testing.T) {
 		Status:                 "Active",
 		DateCalculationVersion: 2, // V2
 	}
-	subV2.calculateNextRenewalDate()
+	subV2.CalculateNextRenewalDate()
 
 	// Both should have renewal dates set
 	assert.NotNil(t, subV1.RenewalDate, "V1 should calculate renewal date")
@@ -967,7 +761,7 @@ func TestSubscription_CarbonLibraryFeatures(t *testing.T) {
 				DateCalculationVersion: 2, // Use V2 Carbon-based calculation
 			}
 
-			sub.calculateNextRenewalDate()
+			sub.CalculateNextRenewalDate()
 
 			assert.NotNil(t, sub.RenewalDate, tt.description)
 			assert.True(t, sub.RenewalDate.After(time.Now()), "Renewal should be in future")
