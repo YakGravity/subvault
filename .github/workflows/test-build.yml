@@ -1,6 +1,15 @@
 name: Test Build
 
 on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'docker/Dockerfile'
+      - 'web/**'
+      - '.github/workflows/**'
   pull_request:
     branches: [ main ]
     paths:
