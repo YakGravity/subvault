@@ -12,7 +12,7 @@ import (
 
 // ListAPIKeys returns all API keys
 func (h *SettingsHandler) ListAPIKeys(c *gin.Context) {
-	keys, err := h.service.GetAllAPIKeys()
+	keys, err := h.apiKey.GetAllAPIKeys()
 	if err != nil {
 		slog.Error("failed to list API keys", "error", err)
 		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
@@ -55,7 +55,7 @@ func (h *SettingsHandler) CreateAPIKey(c *gin.Context) {
 	apiKey := "sk_" + hex.EncodeToString(keyBytes)
 
 	// Save the API key
-	newKey, err := h.service.CreateAPIKey(name, apiKey)
+	newKey, err := h.apiKey.CreateAPIKey(name, apiKey)
 	if err != nil {
 		slog.Error("failed to create API key", "error", err)
 		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
@@ -65,7 +65,7 @@ func (h *SettingsHandler) CreateAPIKey(c *gin.Context) {
 	}
 
 	// Get all keys including the new one
-	keys, err := h.service.GetAllAPIKeys()
+	keys, err := h.apiKey.GetAllAPIKeys()
 	if err != nil {
 		slog.Error("failed to list API keys after creation", "error", err)
 		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{
@@ -100,7 +100,7 @@ func (h *SettingsHandler) DeleteAPIKey(c *gin.Context) {
 		return
 	}
 
-	err = h.service.DeleteAPIKey(uint(id))
+	err = h.apiKey.DeleteAPIKey(uint(id))
 	if err != nil {
 		slog.Error("failed to delete API key", "error", err, "id", id)
 		c.HTML(http.StatusInternalServerError, "api-keys-list.html", mergeTemplateData(baseTemplateData(c), gin.H{

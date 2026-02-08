@@ -40,7 +40,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders(t *testing.T) {
 	currencyService := NewCurrencyService(exchangeRateRepo)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
+	preferencesService := NewPreferencesService(settingsService)
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
 
 	now := time.Now()
 
@@ -225,7 +226,9 @@ func TestEmailService_SendRenewalReminder_NoSMTP(t *testing.T) {
 	db := setupRenewalReminderTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	emailService := NewEmailService(settingsService)
+	preferencesService := NewPreferencesService(settingsService)
+	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
+	emailService := NewEmailService(preferencesService, notifConfigService)
 
 	subscription := &models.Subscription{
 		Name:            "Test Subscription",
@@ -245,7 +248,9 @@ func TestEmailService_SendRenewalReminder_WithSMTPConfig(t *testing.T) {
 	db := setupRenewalReminderTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	emailService := NewEmailService(settingsService)
+	preferencesService := NewPreferencesService(settingsService)
+	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
+	emailService := NewEmailService(preferencesService, notifConfigService)
 
 	// Configure SMTP (using invalid config - we're just testing the logic, not actual email sending)
 	smtpConfig := &models.SMTPConfig{
@@ -257,7 +262,7 @@ func TestEmailService_SendRenewalReminder_WithSMTPConfig(t *testing.T) {
 		FromName: "Test",
 		To:       "recipient@example.com",
 	}
-	settingsService.SaveSMTPConfig(smtpConfig)
+	notifConfigService.SaveSMTPConfig(smtpConfig)
 
 	subscription := &models.Subscription{
 		Name:            "Test Subscription",
@@ -283,7 +288,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DaysCalculation(t 
 	currencyService := NewCurrencyService(exchangeRateRepo)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
+	preferencesService := NewPreferencesService(settingsService)
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
 
 	now := time.Now()
 
@@ -320,7 +326,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_BoundaryCases(t *t
 	currencyService := NewCurrencyService(exchangeRateRepo)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
+	preferencesService := NewPreferencesService(settingsService)
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
 
 	now := time.Now()
 
@@ -398,7 +405,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DuplicatePreventio
 	currencyService := NewCurrencyService(exchangeRateRepo)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, settingsService)
+	preferencesService := NewPreferencesService(settingsService)
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
 
 	now := time.Now()
 	renewalDate := now.AddDate(0, 0, 5)

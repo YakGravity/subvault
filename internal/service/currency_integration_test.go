@@ -173,14 +173,15 @@ func TestSettingsService_GetCurrencySymbol_BDT(t *testing.T) {
 
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
+	preferencesService := NewPreferencesService(settingsService)
 
-	err = settingsService.SetCurrency("BDT")
+	err = preferencesService.SetCurrency("BDT")
 	assert.NoError(t, err)
 
-	symbol := settingsService.GetCurrencySymbol()
+	symbol := preferencesService.GetCurrencySymbol()
 	assert.Equal(t, "৳", symbol)
 
-	currency := settingsService.GetCurrency()
+	currency := preferencesService.GetCurrency()
 	assert.Equal(t, "BDT", currency)
 }
 
@@ -197,6 +198,7 @@ func TestSettingsService_SetCurrency_Validation(t *testing.T) {
 
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
+	preferencesService := NewPreferencesService(settingsService)
 
 	tests := []struct {
 		name           string
@@ -214,11 +216,11 @@ func TestSettingsService_SetCurrency_Validation(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := settingsService.SetCurrency(tt.currency)
+			err := preferencesService.SetCurrency(tt.currency)
 			if tt.shouldSucceed {
 				assert.NoError(t, err)
 				if tt.expectedSymbol != "" {
-					symbol := settingsService.GetCurrencySymbol()
+					symbol := preferencesService.GetCurrencySymbol()
 					assert.Equal(t, tt.expectedSymbol, symbol)
 				}
 			} else {

@@ -10,10 +10,10 @@ import (
 )
 
 // AuthMiddleware creates middleware that requires authentication
-func AuthMiddleware(settingsService *service.SettingsService, sessionService *service.SessionService) gin.HandlerFunc {
+func AuthMiddleware(authService service.AuthServiceInterface, sessionService *service.SessionService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Check if auth is enabled
-		if !settingsService.IsAuthEnabled() {
+		if !authService.IsAuthEnabled() {
 			c.Next()
 			return
 		}
@@ -81,7 +81,7 @@ func isHTMLRequest(r *http.Request) bool {
 }
 
 // APIKeyAuth creates middleware that requires API key authentication
-func APIKeyAuth(settingsService *service.SettingsService) gin.HandlerFunc {
+func APIKeyAuth(apiKeyService service.APIKeyServiceInterface) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		apiKey := c.GetHeader("X-API-Key")
 
@@ -100,7 +100,7 @@ func APIKeyAuth(settingsService *service.SettingsService) gin.HandlerFunc {
 		}
 
 		// Validate API key
-		_, err := settingsService.ValidateAPIKey(apiKey)
+		_, err := apiKeyService.ValidateAPIKey(apiKey)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid API key"})
 			c.Abort()

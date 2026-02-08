@@ -30,7 +30,7 @@ func (h *SubscriptionHandler) GetSubscriptions(c *gin.Context) {
 	data := baseTemplateData(c)
 	mergeTemplateData(data, gin.H{
 		"Subscriptions":  enrichedSubs,
-		"CurrencySymbol": h.settingsService.GetCurrencySymbol(),
+		"CurrencySymbol": h.preferences.GetCurrencySymbol(),
 		"SortBy":         sortBy,
 		"Order":          order,
 	})

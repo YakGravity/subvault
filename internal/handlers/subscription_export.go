@@ -215,7 +215,7 @@ func (h *SubscriptionHandler) ServeCalendarFeed(c *gin.Context) {
 		return
 	}
 
-	storedToken, err := h.settingsService.GetCalendarToken()
+	storedToken, err := h.calendarService.GetCalendarToken()
 	if err != nil || storedToken == "" || subtle.ConstantTimeCompare([]byte(storedToken), []byte(token)) != 1 {
 		c.Status(http.StatusNotFound)
 		return
@@ -251,7 +251,7 @@ func (h *SubscriptionHandler) generateICal(subscriptions []models.Subscription) 
 			uid := fmt.Sprintf("subtrackr-%d-%d@subtrackr", sub.ID, sub.RenewalDate.Unix())
 
 			summary := fmt.Sprintf("%s Renewal", sub.Name)
-			description := fmt.Sprintf("Subscription: %s\\nCost: %s%.2f\\nSchedule: %s", sub.Name, h.settingsService.GetCurrencySymbol(), sub.Cost, sub.Schedule)
+			description := fmt.Sprintf("Subscription: %s\\nCost: %s%.2f\\nSchedule: %s", sub.Name, h.preferences.GetCurrencySymbol(), sub.Cost, sub.Schedule)
 			if sub.URL != "" {
 				description += fmt.Sprintf("\\nURL: %s", sub.URL)
 			}

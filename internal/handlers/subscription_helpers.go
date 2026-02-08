@@ -10,8 +10,8 @@ import (
 
 // enrichWithCurrencyConversion adds currency conversion info to subscriptions
 func (h *SubscriptionHandler) enrichWithCurrencyConversion(subscriptions []models.Subscription) []SubscriptionWithConversion {
-	displayCurrency := h.settingsService.GetCurrency()
-	displaySymbol := h.settingsService.GetCurrencySymbol()
+	displayCurrency := h.preferences.GetCurrency()
+	displaySymbol := h.preferences.GetCurrencySymbol()
 
 	result := make([]SubscriptionWithConversion, len(subscriptions))
 
@@ -52,8 +52,8 @@ func (h *SubscriptionHandler) enrichWithCurrencyConversion(subscriptions []model
 // The threshold is in the user's display currency, so we convert the subscription's monthly cost
 // to the display currency before comparing
 func (h *SubscriptionHandler) isHighCostWithCurrency(subscription *models.Subscription) bool {
-	threshold := h.settingsService.GetFloatSettingWithDefault("high_cost_threshold", 50.0)
-	displayCurrency := h.settingsService.GetCurrency()
+	threshold := h.settings.GetFloatSettingWithDefault("high_cost_threshold", 50.0)
+	displayCurrency := h.preferences.GetCurrency()
 
 	// Get monthly cost in subscription's original currency
 	monthlyCost := subscription.MonthlyCost()
@@ -113,7 +113,7 @@ func (h *SubscriptionHandler) getScheduleMultiplier(schedule string) float64 {
 
 // checkBudgetExceeded checks if the monthly budget has been exceeded and sends alerts
 func (h *SubscriptionHandler) checkBudgetExceeded() {
-	budget := h.settingsService.GetFloatSettingWithDefault("monthly_budget", 0)
+	budget := h.settings.GetFloatSettingWithDefault("monthly_budget", 0)
 	if budget <= 0 {
 		return
 	}
@@ -124,7 +124,7 @@ func (h *SubscriptionHandler) checkBudgetExceeded() {
 	}
 
 	if stats.TotalMonthlySpend > budget {
-		currencySymbol := h.settingsService.GetCurrencySymbol()
+		currencySymbol := h.preferences.GetCurrencySymbol()
 		if h.emailService != nil {
 			go h.emailService.SendBudgetExceededAlert(stats.TotalMonthlySpend, budget, currencySymbol)
 		}

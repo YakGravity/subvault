@@ -39,11 +39,18 @@ func setupShoutrrrTestDB(t *testing.T) *gorm.DB {
 	return db
 }
 
-func TestShoutrrrService_SendHighCostAlert_NoConfig(t *testing.T) {
+func setupShoutrrrServices(t *testing.T) (*SettingsService, *PreferencesService, *NotificationConfigService, *ShoutrrrService) {
 	db := setupShoutrrrTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	shoutrrrService := NewShoutrrrService(settingsService)
+	preferencesService := NewPreferencesService(settingsService)
+	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
+	shoutrrrService := NewShoutrrrService(preferencesService, notifConfigService)
+	return settingsService, preferencesService, notifConfigService, shoutrrrService
+}
+
+func TestShoutrrrService_SendHighCostAlert_NoConfig(t *testing.T) {
+	_, _, _, shoutrrrService := setupShoutrrrServices(t)
 
 	subscription := &models.Subscription{
 		Name:     "Test Subscription",
@@ -58,13 +65,10 @@ func TestShoutrrrService_SendHighCostAlert_NoConfig(t *testing.T) {
 }
 
 func TestShoutrrrService_SendHighCostAlert_EnabledButNoConfig(t *testing.T) {
-	db := setupShoutrrrTestDB(t)
-	settingsRepo := repository.NewSettingsRepository(db)
-	settingsService := NewSettingsService(settingsRepo)
-	shoutrrrService := NewShoutrrrService(settingsService)
+	settingsService, preferencesService, _, shoutrrrService := setupShoutrrrServices(t)
 
 	settingsService.SetBoolSetting("high_cost_alerts", true)
-	settingsService.SetCurrency("USD")
+	preferencesService.SetCurrency("USD")
 
 	subscription := &models.Subscription{
 		Name:     "Test Subscription",
@@ -79,10 +83,7 @@ func TestShoutrrrService_SendHighCostAlert_EnabledButNoConfig(t *testing.T) {
 }
 
 func TestShoutrrrService_SendRenewalReminder_NoConfig(t *testing.T) {
-	db := setupShoutrrrTestDB(t)
-	settingsRepo := repository.NewSettingsRepository(db)
-	settingsService := NewSettingsService(settingsRepo)
-	shoutrrrService := NewShoutrrrService(settingsService)
+	_, _, _, shoutrrrService := setupShoutrrrServices(t)
 
 	subscription := &models.Subscription{
 		Name:        "Test Subscription",
@@ -98,13 +99,10 @@ func TestShoutrrrService_SendRenewalReminder_NoConfig(t *testing.T) {
 }
 
 func TestShoutrrrService_SendRenewalReminder_EnabledButNoConfig(t *testing.T) {
-	db := setupShoutrrrTestDB(t)
-	settingsRepo := repository.NewSettingsRepository(db)
-	settingsService := NewSettingsService(settingsRepo)
-	shoutrrrService := NewShoutrrrService(settingsService)
+	settingsService, preferencesService, _, shoutrrrService := setupShoutrrrServices(t)
 
 	settingsService.SetBoolSetting("renewal_reminders", true)
-	settingsService.SetCurrency("USD")
+	preferencesService.SetCurrency("USD")
 
 	subscription := &models.Subscription{
 		Name:        "Test Subscription",
@@ -120,10 +118,7 @@ func TestShoutrrrService_SendRenewalReminder_EnabledButNoConfig(t *testing.T) {
 }
 
 func TestShoutrrrService_SendCancellationReminder_NoConfig(t *testing.T) {
-	db := setupShoutrrrTestDB(t)
-	settingsRepo := repository.NewSettingsRepository(db)
-	settingsService := NewSettingsService(settingsRepo)
-	shoutrrrService := NewShoutrrrService(settingsService)
+	_, _, _, shoutrrrService := setupShoutrrrServices(t)
 
 	subscription := &models.Subscription{
 		Name:             "Test Subscription",
@@ -139,17 +134,14 @@ func TestShoutrrrService_SendCancellationReminder_NoConfig(t *testing.T) {
 }
 
 func TestShoutrrrService_SendHighCostAlert_WithInvalidURL(t *testing.T) {
-	db := setupShoutrrrTestDB(t)
-	settingsRepo := repository.NewSettingsRepository(db)
-	settingsService := NewSettingsService(settingsRepo)
-	shoutrrrService := NewShoutrrrService(settingsService)
+	settingsService, preferencesService, notifConfigService, shoutrrrService := setupShoutrrrServices(t)
 
 	config := &models.ShoutrrrConfig{
 		URLs: []string{"pushover://shoutrrr:invalidtoken@invaliduser/"},
 	}
-	settingsService.SaveShoutrrrConfig(config)
+	notifConfigService.SaveShoutrrrConfig(config)
 	settingsService.SetBoolSetting("high_cost_alerts", true)
-	settingsService.SetCurrency("USD")
+	preferencesService.SetCurrency("USD")
 
 	subscription := &models.Subscription{
 		Name:        "Netflix",
@@ -169,16 +161,17 @@ func TestShoutrrrService_MigratePushoverToShoutrrr(t *testing.T) {
 	db := setupShoutrrrTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
+	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
 
 	// Save old Pushover config
 	settingsRepo.Set("pushover_config", `{"pushover_user_key":"testuser123","pushover_app_token":"testtoken456"}`)
 
 	// Run migration
-	err := settingsService.MigratePushoverToShoutrrr()
+	err := notifConfigService.MigratePushoverToShoutrrr()
 	assert.NoError(t, err, "Migration should succeed")
 
 	// Verify new config
-	config, err := settingsService.GetShoutrrrConfig()
+	config, err := notifConfigService.GetShoutrrrConfig()
 	assert.NoError(t, err, "Should get Shoutrrr config after migration")
 	assert.Len(t, config.URLs, 1, "Should have one URL")
 	assert.Equal(t, "pushover://shoutrrr:testtoken456@testuser123/", config.URLs[0])
@@ -192,9 +185,10 @@ func TestShoutrrrService_MigratePushoverToShoutrrr_NoPushoverConfig(t *testing.T
 	db := setupShoutrrrTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
+	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
 
 	// No Pushover config exists
-	err := settingsService.MigratePushoverToShoutrrr()
+	err := notifConfigService.MigratePushoverToShoutrrr()
 	assert.NoError(t, err, "Migration should succeed silently when no Pushover config exists")
 }
 
@@ -202,21 +196,22 @@ func TestShoutrrrService_MigratePushoverToShoutrrr_AlreadyMigrated(t *testing.T)
 	db := setupShoutrrrTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
+	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
 
 	// Save old Pushover config
 	settingsRepo.Set("pushover_config", `{"pushover_user_key":"testuser","pushover_app_token":"testtoken"}`)
 
 	// Save existing Shoutrrr config
-	settingsService.SaveShoutrrrConfig(&models.ShoutrrrConfig{
+	notifConfigService.SaveShoutrrrConfig(&models.ShoutrrrConfig{
 		URLs: []string{"slack://token@channel"},
 	})
 
 	// Run migration
-	err := settingsService.MigratePushoverToShoutrrr()
+	err := notifConfigService.MigratePushoverToShoutrrr()
 	assert.NoError(t, err, "Migration should skip silently when Shoutrrr config already exists")
 
 	// Verify existing config was not overwritten
-	config, err := settingsService.GetShoutrrrConfig()
+	config, err := notifConfigService.GetShoutrrrConfig()
 	assert.NoError(t, err)
 	assert.Len(t, config.URLs, 1)
 	assert.Equal(t, "slack://token@channel", config.URLs[0])
@@ -229,17 +224,14 @@ func TestShoutrrrService_SendHighCostAlert_Integration(t *testing.T) {
 		t.Skip("Skipping integration test: SHOUTRRR_URL environment variable not set")
 	}
 
-	db := setupShoutrrrTestDB(t)
-	settingsRepo := repository.NewSettingsRepository(db)
-	settingsService := NewSettingsService(settingsRepo)
-	shoutrrrService := NewShoutrrrService(settingsService)
+	settingsService, preferencesService, notifConfigService, shoutrrrService := setupShoutrrrServices(t)
 
 	config := &models.ShoutrrrConfig{
 		URLs: []string{shoutrrrURL},
 	}
-	settingsService.SaveShoutrrrConfig(config)
+	notifConfigService.SaveShoutrrrConfig(config)
 	settingsService.SetBoolSetting("high_cost_alerts", true)
-	settingsService.SetCurrency("USD")
+	preferencesService.SetCurrency("USD")
 
 	subscription := &models.Subscription{
 		Name:        "Test High Cost Subscription",
