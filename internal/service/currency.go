@@ -267,16 +267,21 @@ func (s *CurrencyService) RefreshRates() error {
 	err := s.fetchAndCacheRatesLocked()
 	if err != nil {
 		s.lastError = err
-	}
-	s.mu.Unlock()
-	if err != nil {
+		s.mu.Unlock()
 		return fmt.Errorf("failed to refresh rates: %w", err)
 	}
-	return s.repo.DeleteStaleRates(7 * 24 * time.Hour)
+	deleteErr := s.repo.DeleteStaleRates(7 * 24 * time.Hour)
+	s.mu.Unlock()
+	if deleteErr != nil {
+		slog.Warn("failed to delete stale rates", "error", deleteErr)
+	}
+	return nil
 }
 
 // GetStatus returns the current exchange rate status
 func (s *CurrencyService) GetStatus() ExchangeRateStatus {
+	intervalH := s.settings.GetIntSettingWithDefault(SettingKeyCurrencyRefreshHours, 24)
+
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -285,7 +290,7 @@ func (s *CurrencyService) GetStatus() ExchangeRateStatus {
 		RateDate:  s.rateDate,
 		RateCount: len(s.eurRates),
 		Source:    s.rateSource,
-		IntervalH: s.settings.GetIntSettingWithDefault(SettingKeyCurrencyRefreshHours, 24),
+		IntervalH: intervalH,
 	}
 
 	if status.Source == "" {
