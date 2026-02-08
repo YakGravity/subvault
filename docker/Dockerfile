@@ -47,7 +47,6 @@ WORKDIR /app
 COPY --from=builder /app/subvault .
 
 # Copy templates and static assets
-COPY templates/ ./templates/
 COPY web/ ./web/
 
 # Create data directory with correct ownership

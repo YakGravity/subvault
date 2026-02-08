@@ -124,7 +124,7 @@ func main() {
 	} else {
 		slog.Warn("template loading failed, using fallback")
 		// Fallback to LoadHTMLGlob for compatibility
-		router.LoadHTMLGlob("templates/*")
+		router.LoadHTMLGlob("web/templates/**/*")
 	}
 
 	// Serve static files with cache headers
@@ -251,7 +251,7 @@ func loadTemplates() *template.Template {
 
 	// Load partials first (they define reusable template blocks)
 	partialFiles := []string{
-		"templates/partials/sidebar.html",
+		"web/templates/partials/sidebar.html",
 	}
 	for _, file := range partialFiles {
 		if _, err := tmpl.ParseFiles(file); err != nil {
@@ -261,40 +261,43 @@ func loadTemplates() *template.Template {
 
 	// Critical templates required for basic functionality
 	criticalTemplates := []string{
-		"templates/dashboard.html",
-		"templates/subscriptions.html",
-		"templates/error.html",
+		"web/templates/subscription/dashboard.html",
+		"web/templates/subscription/subscriptions.html",
+		"web/templates/error.html",
 	}
 
 	// All template files to load
 	templateFiles := []string{
-		"templates/dashboard.html",
-		"templates/subscriptions.html",
-		"templates/calendar.html",
-		"templates/settings-general.html",
-		"templates/settings-notifications.html",
-		"templates/settings-data.html",
-		"templates/settings-security.html",
-		"templates/settings-appearance.html",
-		"templates/api-docs.html",
-		"templates/subscription-form.html",
-		"templates/subscription-list.html",
-		"templates/categories-list.html",
-		"templates/api-keys-list.html",
-		"templates/smtp-message.html",
-		"templates/form-errors.html",
-		"templates/error.html",
-		"templates/login.html",
-		"templates/login-error.html",
-		"templates/forgot-password.html",
-		"templates/forgot-password-error.html",
-		"templates/forgot-password-success.html",
-		"templates/reset-password.html",
-		"templates/reset-password-error.html",
-		"templates/reset-password-success.html",
-		"templates/auth-message.html",
-		"templates/import-result.html",
-		"templates/exchange-rate-status.html",
+		// Subscription pages
+		"web/templates/subscription/dashboard.html",
+		"web/templates/subscription/subscriptions.html",
+		"web/templates/subscription/calendar.html",
+		"web/templates/subscription/subscription-form.html",
+		"web/templates/subscription/subscription-list.html",
+		"web/templates/subscription/form-errors.html",
+		"web/templates/subscription/import-result.html",
+		// Settings pages
+		"web/templates/settings/settings-general.html",
+		"web/templates/settings/settings-notifications.html",
+		"web/templates/settings/settings-data.html",
+		"web/templates/settings/settings-security.html",
+		"web/templates/settings/settings-appearance.html",
+		"web/templates/settings/api-docs.html",
+		"web/templates/settings/api-keys-list.html",
+		"web/templates/settings/smtp-message.html",
+		"web/templates/settings/exchange-rate-status.html",
+		// Auth pages
+		"web/templates/auth/login.html",
+		"web/templates/auth/login-error.html",
+		"web/templates/auth/forgot-password.html",
+		"web/templates/auth/forgot-password-error.html",
+		"web/templates/auth/forgot-password-success.html",
+		"web/templates/auth/reset-password.html",
+		"web/templates/auth/reset-password-error.html",
+		"web/templates/auth/reset-password-success.html",
+		"web/templates/auth/auth-message.html",
+		// Shared
+		"web/templates/error.html",
 	}
 
 	var parsedCount int
