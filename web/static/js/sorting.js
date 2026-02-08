@@ -46,7 +46,7 @@ function extractSortParams(url) {
     return null;
 }
 
-// Apply saved sort preference on page load
+// Apply saved sort preference on page load (local DOM sorting, no HTMX request)
 function applySavedSortPreference() {
     const preference = getSortPreference();
     if (!preference) return;
@@ -54,21 +54,16 @@ function applySavedSortPreference() {
     const subscriptionList = document.getElementById('sub-grid');
     if (!subscriptionList) return;
 
-    // Check if we're on the subscriptions page and not already sorted
-    const currentUrl = new URL(window.location.href);
-    const currentSort = currentUrl.searchParams.get('sort');
-
     // Validate preference before using
     if (!isValidSortPreference(preference.sortBy, preference.order)) return;
 
-    // Only apply if no sort is currently specified in URL
-    if (!currentSort && typeof htmx !== 'undefined') {
-        // Trigger HTMX request with saved sort preference
-        const sortUrl = `/api/subscriptions?sort=${encodeURIComponent(preference.sortBy)}&order=${encodeURIComponent(preference.order)}`;
-        htmx.ajax('GET', sortUrl, {
-            target: '#sub-grid',
-            swap: 'outerHTML'
-        });
+    // Use local sorting via toggleSort if available (defined in page script)
+    if (typeof toggleSort === 'function') {
+        const btn = document.querySelector('.sort-btn[data-sort="' + preference.sortBy + '"]');
+        if (btn) {
+            btn.dataset.order = preference.order;
+            toggleSort(btn);
+        }
     }
 }
 
