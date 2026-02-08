@@ -4,6 +4,7 @@
 [![Lizenz: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-ghcr.io-2496ED?logo=docker&logoColor=white)](https://ghcr.io/yakgravity/subvault)
 [![Build](https://github.com/YakGravity/subvault/actions/workflows/test-build.yml/badge.svg)](https://github.com/YakGravity/subvault/actions/workflows/test-build.yml)
+[![Built with Claude](https://img.shields.io/badge/built%20with-Claude%20Code-cc785c?logo=anthropic&logoColor=white)](https://claude.ai/claude-code)
 
 Eine selbst gehostete Abo-Verwaltung, gebaut mit Go und HTMX. Verfolge wiederkehrende Ausgaben, visualisiere Analysen und erhalte Verlängerungserinnerungen — alles auf deinem eigenen Server.
 
@@ -96,6 +97,10 @@ docker compose up -d
 | Auth | Session-basiert + API-Keys, CSRF-Schutz |
 | i18n | go-i18n (Englisch, Deutsch) |
 | Container | Multi-Arch Docker (amd64, arm64) |
+
+## Mit KI entwickelt
+
+Dieses Projekt wird hauptsächlich mit [Claude Code](https://claude.ai/claude-code) (Anthropics Claude) entwickelt. Architektur, Implementierung, Debugging und Dokumentation sind KI-generiert mit menschlicher Steuerung und Review. Jeder Commit ist von Claude co-authored — die Git-Historie zeigt volle Transparenz.
 
 ## Herkunft
 

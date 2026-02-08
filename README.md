@@ -4,6 +4,7 @@
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-green)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-ghcr.io-2496ED?logo=docker&logoColor=white)](https://ghcr.io/yakgravity/subvault)
 [![Build](https://github.com/YakGravity/subvault/actions/workflows/test-build.yml/badge.svg)](https://github.com/YakGravity/subvault/actions/workflows/test-build.yml)
+[![Built with Claude](https://img.shields.io/badge/built%20with-Claude%20Code-cc785c?logo=anthropic&logoColor=white)](https://claude.ai/claude-code)
 
 A self-hosted subscription management application built with Go and HTMX. Track recurring expenses, visualize spending analytics, and get renewal reminders — all on your own server.
 
@@ -96,6 +97,10 @@ Open [http://localhost:8080](http://localhost:8080) — no initial setup require
 | Auth | Session-based + API keys, CSRF protection |
 | i18n | go-i18n (English, German) |
 | Container | Multi-arch Docker (amd64, arm64) |
+
+## Built with AI
+
+This project is primarily developed using [Claude Code](https://claude.ai/claude-code) (Anthropic's Claude). Architecture, implementation, debugging, and documentation are AI-generated with human direction and review. Every commit is co-authored by Claude — check the git history for full transparency.
 
 ## Attribution
 
