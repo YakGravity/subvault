@@ -102,7 +102,7 @@
                         </div>
                         <div>
                             <div class="renewal-cost">{{if .ShowConversion}}{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}}{{else}}{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}{{end}}</div>
-                            <div class="renewal-schedule">/{{.Schedule}}</div>
+                            <div class="renewal-schedule">{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</div>
                         </div>
                     </div>
                     {{else}}

@@ -13,14 +13,12 @@ func (h *SettingsHandler) UpdateCurrency(c *gin.Context) {
 
 	err := h.preferences.SetCurrency(currency)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		slog.Error("failed to set currency", "error", err)
+		c.String(http.StatusBadRequest, "Invalid currency")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"currency": currency,
-		"symbol":   h.preferences.GetCurrencySymbol(),
-	})
+	c.Status(http.StatusNoContent)
 }
 
 // UpdateLanguage updates the language preference

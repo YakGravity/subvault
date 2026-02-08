@@ -103,7 +103,7 @@
                         {{else}}
                         <div class="sub-card-cost"{{if eq .Status "Cancelled"}} style="opacity:.6;text-decoration:line-through;"{{end}}>{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}</div>
                         {{end}}
-                        <div class="sub-card-schedule">/{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</div>
+                        <div class="sub-card-schedule">{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</div>
                     </div>
                 </div>
                 <div class="sub-card-bottom">
@@ -150,7 +150,8 @@
                         </td>
                         <td>{{if .Category.Name}}{{.Category.Name}}{{else}}—{{end}}</td>
                         <td style="text-align:right;font-family:var(--mono);{{if eq .Status "Cancelled"}}text-decoration:line-through;{{end}}"{{if eq .Status "Cancelled"}} class="text-muted"{{end}}>
-                            {{if .ShowConversion}}{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}} <span class="text-muted" style="font-size:11px;">({{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}})</span>{{else}}{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}{{end}}
+                            <div>{{if .ShowConversion}}{{.DisplayCurrencySymbol}}{{printf "%.2f" .ConvertedCost}}{{else}}{{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}}{{end}}</div>
+                            {{if .ShowConversion}}<div class="text-muted" style="font-size:11px;">({{.OriginalCurrencySymbol}}{{printf "%.2f" .Cost}})</div>{{end}}
                         </td>
                         <td>{{if eq .Schedule "Monthly"}}{{$.T.Tr "schedule_monthly"}}{{else if eq .Schedule "Quarterly"}}{{$.T.Tr "schedule_quarterly"}}{{else if eq .Schedule "Annual"}}{{$.T.Tr "schedule_annual"}}{{else if eq .Schedule "Weekly"}}{{$.T.Tr "schedule_weekly"}}{{else if eq .Schedule "Daily"}}{{$.T.Tr "schedule_daily"}}{{else}}{{.Schedule}}{{end}}</td>
                         <td>
