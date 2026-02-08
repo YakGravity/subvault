@@ -64,7 +64,7 @@ make build
 ./subvault
 
 # Or with Docker
-docker compose up -d --build
+make docker-build && make docker-up
 ```
 
 ## Configuration

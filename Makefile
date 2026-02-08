@@ -3,6 +3,7 @@ GIT_COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 GIT_TAG := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "dev")
 BUILD_TIME := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 LDFLAGS := -X 'subvault/internal/version.GitCommit=$(GIT_COMMIT)' -X 'subvault/internal/version.Version=$(GIT_TAG)'
+COMPOSE := docker compose -f docker/docker-compose.yml
 
 # Default target
 .PHONY: all
@@ -52,14 +53,43 @@ build-all:
 	GOOS=linux GOARCH=arm64 go build -ldflags "$(LDFLAGS)" -o dist/subvault-linux-arm64 cmd/server/main.go
 	GOOS=windows GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o dist/subvault-windows-amd64.exe cmd/server/main.go
 
+# Docker targets
+.PHONY: docker-build
+docker-build:
+	$(COMPOSE) build --build-arg GIT_TAG=$(GIT_TAG) --build-arg GIT_COMMIT=$(GIT_COMMIT)
+
+.PHONY: docker-up
+docker-up:
+	$(COMPOSE) up -d
+
+.PHONY: docker-down
+docker-down:
+	$(COMPOSE) down
+
+.PHONY: docker-logs
+docker-logs:
+	$(COMPOSE) logs -f
+
+.PHONY: docker-restart
+docker-restart:
+	$(COMPOSE) down && $(COMPOSE) up -d
+
 .PHONY: help
 help:
 	@echo "Available targets:"
-	@echo "  make build    - Build the application with git commit SHA"
-	@echo "  make run      - Build and run the application"
-	@echo "  make clean    - Remove build artifacts"
-	@echo "  make test     - Run tests"
-	@echo "  make vet      - Run go vet"
-	@echo "  make fmt      - Format code"
-	@echo "  make build-all - Build for multiple platforms"
-	@echo "  make help     - Show this help message"
+	@echo "  make build      - Build the application with git commit SHA"
+	@echo "  make run        - Build and run the application"
+	@echo "  make clean      - Remove build artifacts"
+	@echo "  make test       - Run tests"
+	@echo "  make vet        - Run go vet"
+	@echo "  make fmt        - Format code"
+	@echo "  make build-all  - Build for multiple platforms"
+	@echo ""
+	@echo "Docker:"
+	@echo "  make docker-build   - Build Docker image"
+	@echo "  make docker-up      - Start containers"
+	@echo "  make docker-down    - Stop containers"
+	@echo "  make docker-logs    - Follow container logs"
+	@echo "  make docker-restart - Restart containers"
+	@echo ""
+	@echo "  make help       - Show this help message"
