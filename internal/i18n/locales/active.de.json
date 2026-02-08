@@ -1177,6 +1177,15 @@
   "settings_dateformat_desc": {
     "other": "Wie Datumsangaben in der Anwendung angezeigt werden"
   },
+  "dateformat_dmy": {
+    "other": "TT.MM.JJJJ"
+  },
+  "dateformat_mdy": {
+    "other": "MM/TT/JJJJ"
+  },
+  "dateformat_ymd": {
+    "other": "JJJJ-MM-TT"
+  },
   "theme_nord_desc": {
     "other": "Kühle arktische Blautöne"
   },

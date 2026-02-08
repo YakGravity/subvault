@@ -1177,6 +1177,15 @@
   "settings_dateformat_desc": {
     "other": "How dates are displayed throughout the application"
   },
+  "dateformat_dmy": {
+    "other": "DD.MM.YYYY"
+  },
+  "dateformat_mdy": {
+    "other": "MM/DD/YYYY"
+  },
+  "dateformat_ymd": {
+    "other": "YYYY-MM-DD"
+  },
   "theme_nord_desc": {
     "other": "Cool arctic blue tones"
   },
