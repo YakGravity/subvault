@@ -8,13 +8,13 @@ SubVault is a self-hosted subscription tracking application, originally based on
 
 ### Prerequisites
 
-- Go 1.21+
+- Go 1.24+
 - SQLite3
 
 ### Running locally
 
 ```bash
-PORT=23457 DATABASE_PATH=./data/subvault.db go run ./cmd/server/
+go run ./cmd/server/
 ```
 
 ### Building
@@ -26,20 +26,19 @@ go build -o subvault ./cmd/server/
 ### Docker
 
 ```bash
-docker build -t subvault .
-docker run -p 23457:23457 -v subvault-data:/app/data subvault
+docker compose -f docker/docker-compose.yml up -d
 ```
 
 ## Project Structure
 
 - `cmd/server/` - Application entry point
-- `internal/handler/` - HTTP handlers (settings, subscription, API)
+- `internal/handlers/` - HTTP handlers (settings, subscription, API)
 - `internal/service/` - Business logic (interfaces in `interfaces.go`)
 - `internal/database/` - SQLite database layer
 - `internal/models/` - Data models
 - `internal/i18n/` - Internationalization (EN/DE)
-- `static/` - CSS, JS (HTMX 1.9.10 self-hosted), images
-- `templates/` - Go HTML templates
+- `web/static/` - CSS, JS (HTMX 1.9.10 self-hosted), images
+- `web/templates/` - Go HTML templates (auth/, settings/, subscription/, partials/)
 
 ## Code Style
 
