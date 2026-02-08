@@ -30,16 +30,14 @@ RUN CGO_ENABLED=1 GOOS=linux go build \
 # Final stage
 FROM debian:bookworm-slim
 
-# Install runtime dependencies in a single layer
+# Install runtime dependencies and gosu for PUID/PGID support
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
     sqlite3 \
     tzdata \
+    gosu \
     && rm -rf /var/lib/apt/lists/*
-
-# Create non-root user
-RUN groupadd -r subvault && useradd -r -g subvault -d /app -s /sbin/nologin subvault
 
 WORKDIR /app
 
@@ -49,11 +47,12 @@ COPY --from=builder /app/subvault .
 # Copy templates and static assets
 COPY web/ ./web/
 
-# Create data directory with correct ownership
-RUN mkdir -p /app/data && chown -R subvault:subvault /app
+# Create data directory
+RUN mkdir -p /app/data
 
-# Switch to non-root user
-USER subvault
+# Copy entrypoint script
+COPY docker/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Expose port
 EXPOSE 8080
@@ -61,10 +60,12 @@ EXPOSE 8080
 # Set environment variables
 ENV GIN_MODE=release
 ENV DATABASE_PATH=/app/data/subvault.db
+ENV PUID=99
+ENV PGID=100
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8080/healthz || exit 1
 
-# Run the application
-CMD ["./subvault"]
+# Container starts as root, entrypoint drops privileges via gosu
+ENTRYPOINT ["/app/entrypoint.sh"]

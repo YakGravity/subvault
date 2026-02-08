@@ -11,6 +11,8 @@ services:
       - GIN_MODE=release
       - DATABASE_PATH=/app/data/subvault.db
       - PORT=8080
+      - PUID=99
+      - PGID=100
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]

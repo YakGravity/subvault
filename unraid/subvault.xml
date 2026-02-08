@@ -95,6 +95,26 @@ Features:
     Mask="false">false</Config>
 
   <Config
+    Name="PUID"
+    Target="PUID"
+    Default="99"
+    Description="User ID for file permissions (default: nobody)"
+    Type="Variable"
+    Display="always"
+    Required="false"
+    Mask="false">99</Config>
+
+  <Config
+    Name="PGID"
+    Target="PGID"
+    Default="100"
+    Description="Group ID for file permissions (default: users)"
+    Type="Variable"
+    Display="always"
+    Required="false"
+    Mask="false">100</Config>
+
+  <Config
     Name="TZ"
     Target="TZ"
     Default="Europe/Berlin"
