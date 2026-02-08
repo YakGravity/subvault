@@ -243,15 +243,24 @@ func (h *SubscriptionHandler) generateICal(subscriptions []models.Subscription) 
 	icalContent += "METHOD:PUBLISH\r\n"
 
 	now := time.Now()
+	dtStamp := now.Format("20060102T150000Z")
+
 	for _, sub := range subscriptions {
-		if sub.RenewalDate != nil && sub.Status == "Active" {
-			dtStart := sub.RenewalDate.Format("20060102T150000Z")
-			dtEnd := sub.RenewalDate.Add(1 * time.Hour).Format("20060102T150000Z")
-			dtStamp := now.Format("20060102T150000Z")
-			uid := fmt.Sprintf("subvault-%d-%d@subvault", sub.ID, sub.RenewalDate.Unix())
+		currency := sub.OriginalCurrency
+		if currency == "" {
+			currency = "USD"
+		}
+
+		// Renewal events for Active, Trial and Paused subscriptions
+		if sub.RenewalDate != nil && (sub.Status == "Active" || sub.Status == "Trial" || sub.Status == "Paused") {
+			dtStart := sub.RenewalDate.Format("20060102")
+			uid := fmt.Sprintf("subvault-renewal-%d-%d@subvault", sub.ID, sub.RenewalDate.Unix())
 
 			summary := fmt.Sprintf("%s Renewal", sub.Name)
-			description := fmt.Sprintf("Subscription: %s\\nCost: %s%.2f\\nSchedule: %s", sub.Name, h.preferences.GetCurrencySymbol(), sub.Cost, sub.Schedule)
+			if sub.Status != "Active" {
+				summary = fmt.Sprintf("%s Renewal (%s)", sub.Name, sub.Status)
+			}
+			description := fmt.Sprintf("Subscription: %s\\nCost: %s %.2f\\nSchedule: %s", sub.Name, currency, sub.Cost, sub.Schedule)
 			if sub.URL != "" {
 				description += fmt.Sprintf("\\nURL: %s", sub.URL)
 			}
@@ -259,26 +268,49 @@ func (h *SubscriptionHandler) generateICal(subscriptions []models.Subscription) 
 			icalContent += "BEGIN:VEVENT\r\n"
 			icalContent += fmt.Sprintf("UID:%s\r\n", uid)
 			icalContent += fmt.Sprintf("DTSTAMP:%s\r\n", dtStamp)
-			icalContent += fmt.Sprintf("DTSTART:%s\r\n", dtStart)
-			icalContent += fmt.Sprintf("DTEND:%s\r\n", dtEnd)
+			icalContent += fmt.Sprintf("DTSTART;VALUE=DATE:%s\r\n", dtStart)
+			icalContent += fmt.Sprintf("DTEND;VALUE=DATE:%s\r\n", sub.RenewalDate.AddDate(0, 0, 1).Format("20060102"))
 			icalContent += fmt.Sprintf("SUMMARY:%s\r\n", summary)
 			icalContent += fmt.Sprintf("DESCRIPTION:%s\r\n", description)
 			icalContent += "STATUS:CONFIRMED\r\n"
 			icalContent += "SEQUENCE:0\r\n"
 
-			switch sub.Schedule {
-			case "Daily":
-				icalContent += "RRULE:FREQ=DAILY;INTERVAL=1\r\n"
-			case "Weekly":
-				icalContent += "RRULE:FREQ=WEEKLY;INTERVAL=1\r\n"
-			case "Monthly":
-				icalContent += "RRULE:FREQ=MONTHLY;INTERVAL=1\r\n"
-			case "Quarterly":
-				icalContent += "RRULE:FREQ=MONTHLY;INTERVAL=3\r\n"
-			case "Annual":
-				icalContent += "RRULE:FREQ=YEARLY;INTERVAL=1\r\n"
+			// Add recurrence rule for active subscriptions
+			if sub.Status == "Active" {
+				switch sub.Schedule {
+				case "Daily":
+					icalContent += "RRULE:FREQ=DAILY;INTERVAL=1\r\n"
+				case "Weekly":
+					icalContent += "RRULE:FREQ=WEEKLY;INTERVAL=1\r\n"
+				case "Monthly":
+					icalContent += "RRULE:FREQ=MONTHLY;INTERVAL=1\r\n"
+				case "Quarterly":
+					icalContent += "RRULE:FREQ=MONTHLY;INTERVAL=3\r\n"
+				case "Annual":
+					icalContent += "RRULE:FREQ=YEARLY;INTERVAL=1\r\n"
+				}
 			}
 
+			icalContent += "END:VEVENT\r\n"
+		}
+
+		// Cancellation date events (for any subscription with a cancellation date)
+		if sub.CancellationDate != nil {
+			dtStart := sub.CancellationDate.Format("20060102")
+			uid := fmt.Sprintf("subvault-cancel-%d-%d@subvault", sub.ID, sub.CancellationDate.Unix())
+
+			summary := fmt.Sprintf("%s - Cancel By", sub.Name)
+			description := fmt.Sprintf("Reminder: Cancel %s before this date\\nCost: %s %.2f\\nSchedule: %s", sub.Name, currency, sub.Cost, sub.Schedule)
+
+			icalContent += "BEGIN:VEVENT\r\n"
+			icalContent += fmt.Sprintf("UID:%s\r\n", uid)
+			icalContent += fmt.Sprintf("DTSTAMP:%s\r\n", dtStamp)
+			icalContent += fmt.Sprintf("DTSTART;VALUE=DATE:%s\r\n", dtStart)
+			icalContent += fmt.Sprintf("DTEND;VALUE=DATE:%s\r\n", sub.CancellationDate.AddDate(0, 0, 1).Format("20060102"))
+			icalContent += fmt.Sprintf("SUMMARY:%s\r\n", summary)
+			icalContent += fmt.Sprintf("DESCRIPTION:%s\r\n", description)
+			icalContent += "STATUS:CONFIRMED\r\n"
+			icalContent += "SEQUENCE:0\r\n"
 			icalContent += "END:VEVENT\r\n"
 		}
 	}
