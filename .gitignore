@@ -1,0 +1,81 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+subtrackr
+main
+
+# Beads (keep issues.jsonl and interactions.jsonl for syncing)
+.beads/beads.db
+.beads/config.yaml
+.beads/metadata.json
+.beads/README.md
+.beads/.gitignore
+.beads/export-state/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+
+# Database files
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Plans (not committed yet)
+plans/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# Build directories
+dist/
+build/
+
+# Docker volumes (if running locally)
+docker-data/
+
+# Project specific
+product-spec.md
+CleanShot*.png
+.playwright-mcp/
+node_modules/
+server.log
+server
+*.db
+data/
+subtrackr
+
+# Release notes (draft files, not committed)
+RELEASE_NOTES*.md
