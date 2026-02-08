@@ -8,7 +8,6 @@ on:
       - 'go.mod'
       - 'go.sum'
       - 'docker/Dockerfile'
-      - 'templates/**'
       - 'web/**'
       - '.github/workflows/**'
 
