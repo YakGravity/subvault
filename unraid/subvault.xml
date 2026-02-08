@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>subvault</Name>
+  <Repository>ghcr.io/yakgravity/subvault:latest</Repository>
+  <Registry>https://github.com/YakGravity/subvault/pkgs/container/subvault</Registry>
+  <Branch>
+    <Tag>latest</Tag>
+    <TagDescription>Latest stable release</TagDescription>
+  </Branch>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/YakGravity/subvault/issues</Support>
+  <Project>https://github.com/YakGravity/subvault</Project>
+  <Overview>
+SubVault is a self-hosted subscription management application built with Go and HTMX.
+Track recurring expenses, visualize spending analytics, and get renewal reminders — all on your own server.
+
+Features:
+- Dashboard with monthly/annual spending overview
+- Subscription tracking with automatic logo fetching
+- Calendar view with iCal export
+- Multi-currency support (30+ currencies via ECB exchange rates)
+- 12 themes (6 palettes x light/dark mode)
+- Email and push notifications (via Shoutrrr)
+- REST API with key-based authentication
+- Data export (CSV, JSON, iCal, encrypted backup)
+- Internationalization (English, German)
+  </Overview>
+  <Category>Productivity: Finance</Category>
+  <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+  <Icon>https://raw.githubusercontent.com/YakGravity/subvault/main/web/static/images/icon-512.png</Icon>
+  <Screenshot>https://raw.githubusercontent.com/YakGravity/subvault/main/screenshots/dashboard-light.png</Screenshot>
+  <Screenshot>https://raw.githubusercontent.com/YakGravity/subvault/main/screenshots/dashboard-dark.png</Screenshot>
+  <ExtraSearchTerms>subscription tracker expense budget finance recurring payments</ExtraSearchTerms>
+  <Requires/>
+  <Shell>bash</Shell>
+  <Changes>
+### v1.3.1
+- Fixed Wallos import format compatibility
+- Added German README
+- Documented ECB exchange rate source
+
+### v1.3.0
+- Import/category display fixes
+- Version tracking improvements
+
+### v1.2.0
+- Calendar view with iCal export
+- 12 themes with light/dark mode
+
+### v1.1.0
+- Multi-currency with ECB exchange rates
+- Push notifications via Shoutrrr
+  </Changes>
+
+  <Config
+    Name="Web Port"
+    Target="8080"
+    Default="8080"
+    Mode="tcp"
+    Description="Port for the SubVault web interface"
+    Type="Port"
+    Display="always"
+    Required="true"
+    Mask="false">8080</Config>
+
+  <Config
+    Name="Data Path"
+    Target="/app/data"
+    Default="/mnt/user/appdata/subvault"
+    Description="Path to store the SQLite database and application data"
+    Type="Path"
+    Display="always"
+    Required="true"
+    Mask="false">/mnt/user/appdata/subvault</Config>
+
+  <Config
+    Name="GIN_MODE"
+    Target="GIN_MODE"
+    Default="release"
+    Description="Gin framework mode (release or debug)"
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">release</Config>
+
+  <Config
+    Name="HTTPS_ENABLED"
+    Target="HTTPS_ENABLED"
+    Default="false"
+    Description="Set to true when running behind a TLS-terminating reverse proxy (required for secure CSRF cookies)"
+    Type="Variable"
+    Display="always"
+    Required="false"
+    Mask="false">false</Config>
+
+  <Config
+    Name="TZ"
+    Target="TZ"
+    Default="Europe/Berlin"
+    Description="Container timezone"
+    Type="Variable"
+    Display="always"
+    Required="false"
+    Mask="false">Europe/Berlin</Config>
+</Container>
