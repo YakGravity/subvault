@@ -28,20 +28,7 @@ tea releases ls --login local --limit 1
 git checkout -b v0.X.Y
 ```
 
-### 2. Track Work with Beads
-
-```bash
-# Create beads issues for work items
-bd create --title="Feature description (#issue)" --type=feature --priority=2
-
-# Update status when starting work
-bd update <issue-id> --status=in_progress
-
-# Close when complete
-bd close <issue-id> --reason="Implemented in vX.Y.Z"
-```
-
-### 3. Create Draft Release Before Committing
+### 2. Create Draft Release Before Committing
 
 ```bash
 # Create draft release with release notes
@@ -59,14 +46,14 @@ EOF
 )"
 ```
 
-### 4. Code Review
+### 3. Code Review
 
 Before committing, run the code review agent:
 - Check for code quality issues
 - Verify security concerns
 - Ensure best practices
 
-### 5. Commit and Push
+### 4. Commit and Push
 
 ```bash
 # Stage changes
@@ -82,7 +69,7 @@ git commit -m "vX.Y.Z - Release Title
 git push -u origin vX.Y.Z
 ```
 
-### 6. Create Pull Request
+### 5. Create Pull Request
 
 ```bash
 tea pr create --login local \
@@ -102,14 +89,14 @@ EOF
 )"
 ```
 
-### 7. Comment on Issues
+### 6. Comment on Issues
 
 ```bash
 # Notify issue reporters
 tea comment --login local <issue-number> "Fixed in PR #XX. Description of fix."
 ```
 
-### 8. Merge
+### 7. Merge
 
 ```bash
 # Merge when ready
@@ -119,7 +106,7 @@ tea pr merge <pr-number> --login local --style merge
 git checkout main && git pull
 ```
 
-### 9. Publish Release
+### 8. Publish Release
 
 ```bash
 # Publish the draft release
@@ -128,22 +115,6 @@ tea releases edit vX.Y.Z --login local --draft false
 # Verify
 tea releases ls --login local --limit 1
 ```
-
-## Beads Integration
-
-This project uses beads for local issue tracking across sessions.
-
-### Files
-- `.beads/issues.jsonl` - Issue data (committed)
-- `.beads/interactions.jsonl` - Audit log (committed)
-- `.beads/beads.db` - Local cache (gitignored)
-
-### Commands
-- `bd ready` - Find available work
-- `bd create` - Create new issue
-- `bd update` - Update issue status
-- `bd close` - Close completed issues
-- `bd sync --from-main` - Sync from main branch
 
 ## Git Commit Guidelines
 
