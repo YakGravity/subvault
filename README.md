@@ -32,7 +32,7 @@ A self-hosted subscription management application built with Go and HTMX. Track 
 ```yaml
 services:
   subvault:
-    image: ghcr.io/yourusername/subvault:latest
+    image: ghcr.io/YakGravity/subvault:latest
     ports:
       - "8080:8080"
     volumes:
@@ -56,7 +56,7 @@ Open http://localhost:8080.
 ### Build from Source
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/YakGravity/subvault.git
 cd subvault
 
 # Build and run
