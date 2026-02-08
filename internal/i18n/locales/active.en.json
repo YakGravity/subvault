@@ -1194,5 +1194,53 @@
   },
   "theme_gruvbox_desc": {
     "other": "Warm retro earth tones"
+  },
+  "settings_exchange_rates_title": {
+    "other": "Exchange Rates"
+  },
+  "settings_exchange_rates_desc": {
+    "other": "ECB exchange rate status and configuration"
+  },
+  "exchange_rate_source_ecb": {
+    "other": "Current (ECB)"
+  },
+  "exchange_rate_source_db_cache": {
+    "other": "Cached"
+  },
+  "exchange_rate_source_db_stale": {
+    "other": "Outdated (offline fallback)"
+  },
+  "exchange_rate_source_none": {
+    "other": "No rates available"
+  },
+  "exchange_rate_last_update": {
+    "other": "Last update"
+  },
+  "exchange_rate_count": {
+    "other": "Currencies"
+  },
+  "exchange_rate_refresh_interval": {
+    "other": "Refresh interval"
+  },
+  "exchange_rate_refresh_hours": {
+    "other": "hours"
+  },
+  "exchange_rate_refresh_now": {
+    "other": "Refresh now"
+  },
+  "exchange_rate_refresh_success": {
+    "other": "Rates updated successfully"
+  },
+  "exchange_rate_refresh_error": {
+    "other": "Failed to update rates"
+  },
+  "exchange_rate_error_label": {
+    "other": "Error"
+  },
+  "exchange_rate_show_rates": {
+    "other": "Show exchange rates"
+  },
+  "exchange_rate_base": {
+    "other": "Base: 1 EUR"
   }
 }

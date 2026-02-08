@@ -18,7 +18,7 @@ func setupTestDB(t *testing.T) *gorm.DB {
 	}
 
 	// Migrate the schema
-	err = db.AutoMigrate(&models.ExchangeRate{})
+	err = db.AutoMigrate(&models.ExchangeRate{}, &models.Settings{})
 	if err != nil {
 		t.Fatalf("Failed to migrate test database: %v", err)
 	}
@@ -26,10 +26,16 @@ func setupTestDB(t *testing.T) *gorm.DB {
 	return db
 }
 
+func setupCurrencyService(t *testing.T, db *gorm.DB) *CurrencyService {
+	repo := repository.NewExchangeRateRepository(db)
+	settingsRepo := repository.NewSettingsRepository(db)
+	settingsService := NewSettingsService(settingsRepo)
+	return NewCurrencyService(repo, settingsService)
+}
+
 func TestCurrencyService_ConvertAmount_SameCurrency(t *testing.T) {
 	db := setupTestDB(t)
-	repo := repository.NewExchangeRateRepository(db)
-	service := NewCurrencyService(repo)
+	service := setupCurrencyService(t, db)
 
 	result, err := service.ConvertAmount(100.0, "USD", "USD")
 
@@ -39,8 +45,8 @@ func TestCurrencyService_ConvertAmount_SameCurrency(t *testing.T) {
 
 func TestCurrencyService_ConvertAmount_WithCachedRate(t *testing.T) {
 	db := setupTestDB(t)
+	service := setupCurrencyService(t, db)
 	repo := repository.NewExchangeRateRepository(db)
-	service := NewCurrencyService(repo)
 
 	// Create EUR-based cached rates (matches ECB format)
 	err := repo.SaveRates([]models.ExchangeRate{
@@ -58,8 +64,7 @@ func TestCurrencyService_ConvertAmount_WithCachedRate(t *testing.T) {
 
 func TestCurrencyService_ConvertAmount_NoECBRate(t *testing.T) {
 	db := setupTestDB(t)
-	repo := repository.NewExchangeRateRepository(db)
-	service := NewCurrencyService(repo)
+	service := setupCurrencyService(t, db)
 
 	// RUB has no ECB rate, conversion should fail
 	result, err := service.ConvertAmount(100.0, "RUB", "EUR")
@@ -71,8 +76,8 @@ func TestCurrencyService_ConvertAmount_NoECBRate(t *testing.T) {
 
 func TestCurrencyService_ConvertAmount_InvalidAmount(t *testing.T) {
 	db := setupTestDB(t)
+	service := setupCurrencyService(t, db)
 	repo := repository.NewExchangeRateRepository(db)
-	service := NewCurrencyService(repo)
 
 	// Pre-cache EUR-based rates
 	repo.SaveRates([]models.ExchangeRate{
@@ -101,8 +106,7 @@ func TestCurrencyService_ConvertAmount_InvalidAmount(t *testing.T) {
 
 func TestCurrencyService_SupportedCurrencies(t *testing.T) {
 	db := setupTestDB(t)
-	repo := repository.NewExchangeRateRepository(db)
-	service := NewCurrencyService(repo)
+	service := setupCurrencyService(t, db)
 
 	// Test that same-currency conversion works for all supported currencies
 	for _, currency := range SupportedCurrencies {
@@ -139,8 +143,7 @@ func TestHasECBRate(t *testing.T) {
 
 func TestCurrencyService_BDTCurrency(t *testing.T) {
 	db := setupTestDB(t)
-	repo := repository.NewExchangeRateRepository(db)
-	service := NewCurrencyService(repo)
+	service := setupCurrencyService(t, db)
 
 	t.Run("BDT same currency conversion", func(t *testing.T) {
 		result, err := service.ConvertAmount(100.0, "BDT", "BDT")

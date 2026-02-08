@@ -108,6 +108,32 @@
         </div>
     </div>
 
+    <!-- Exchange Rates -->
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_exchange_rates_title"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_exchange_rates_desc"}}</p>
+
+            <div id="exchange-rate-status" style="margin-bottom:16px;">
+                {{template "exchange-rate-status.html" .}}
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <label style="font-size:13px;color:var(--text);font-weight:500;">{{.T.Tr "exchange_rate_refresh_interval"}}:</label>
+                    <input type="number" min="1" max="168" value="{{.RateStatus.IntervalH}}"
+                           class="form-input" style="width:80px;"
+                           onchange="htmx.ajax('POST', '/api/settings/currency-refresh', {values: {hours: this.value}})">
+                    <span style="font-size:13px;color:var(--text-secondary);">{{.T.Tr "exchange_rate_refresh_hours"}}</span>
+                </div>
+                <button type="button" class="btn btn-secondary" style="font-size:13px;padding:6px 14px;"
+                        onclick="htmx.ajax('POST', '/api/settings/exchange-rates/refresh', {target: '#exchange-rate-status', swap: 'innerHTML'})">
+                    {{.T.Tr "exchange_rate_refresh_now"}}
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Date Format -->
     <div class="card">
         <div style="padding:20px;">

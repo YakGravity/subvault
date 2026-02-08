@@ -19,3 +19,8 @@ type ExchangeRate struct {
 func (er *ExchangeRate) IsStale() bool {
 	return time.Since(er.Date) > 24*time.Hour
 }
+
+// IsStaleAfter checks if the exchange rate is older than the given duration
+func (er *ExchangeRate) IsStaleAfter(d time.Duration) bool {
+	return time.Since(er.Date) > d
+}

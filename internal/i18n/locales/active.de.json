@@ -1194,5 +1194,53 @@
   },
   "theme_gruvbox_desc": {
     "other": "Warme Retro-Erdtöne"
+  },
+  "settings_exchange_rates_title": {
+    "other": "Wechselkurse"
+  },
+  "settings_exchange_rates_desc": {
+    "other": "Status und Konfiguration der EZB-Wechselkurse"
+  },
+  "exchange_rate_source_ecb": {
+    "other": "Aktuell (EZB)"
+  },
+  "exchange_rate_source_db_cache": {
+    "other": "Zwischengespeichert"
+  },
+  "exchange_rate_source_db_stale": {
+    "other": "Veraltet (Offline-Fallback)"
+  },
+  "exchange_rate_source_none": {
+    "other": "Keine Kurse verfügbar"
+  },
+  "exchange_rate_last_update": {
+    "other": "Letztes Update"
+  },
+  "exchange_rate_count": {
+    "other": "Währungen"
+  },
+  "exchange_rate_refresh_interval": {
+    "other": "Aktualisierungsintervall"
+  },
+  "exchange_rate_refresh_hours": {
+    "other": "Stunden"
+  },
+  "exchange_rate_refresh_now": {
+    "other": "Jetzt aktualisieren"
+  },
+  "exchange_rate_refresh_success": {
+    "other": "Kurse erfolgreich aktualisiert"
+  },
+  "exchange_rate_refresh_error": {
+    "other": "Aktualisierung fehlgeschlagen"
+  },
+  "exchange_rate_error_label": {
+    "other": "Fehler"
+  },
+  "exchange_rate_show_rates": {
+    "other": "Wechselkurse anzeigen"
+  },
+  "exchange_rate_base": {
+    "other": "Basis: 1 EUR"
   }
 }

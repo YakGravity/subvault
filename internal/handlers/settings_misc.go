@@ -3,6 +3,8 @@ package handlers
 import (
 	"log/slog"
 	"net/http"
+	"strconv"
+	"subtrackr/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -57,4 +59,46 @@ func (h *SettingsHandler) RevokeCalendarToken(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"success": true})
+}
+
+// RefreshExchangeRates manually refreshes exchange rates from ECB
+func (h *SettingsHandler) RefreshExchangeRates(c *gin.Context) {
+	err := h.currency.RefreshRates()
+	status := h.currency.GetStatus()
+
+	data := baseTemplateData(c)
+	mergeTemplateData(data, gin.H{
+		"RateStatus": status,
+	})
+
+	if err != nil {
+		slog.Warn("manual exchange rate refresh failed", "error", err)
+		mergeTemplateData(data, gin.H{
+			"RefreshError": true,
+		})
+	} else {
+		mergeTemplateData(data, gin.H{
+			"RefreshSuccess": true,
+		})
+	}
+
+	c.HTML(http.StatusOK, "exchange-rate-status.html", data)
+}
+
+// UpdateCurrencyRefreshInterval updates the exchange rate refresh interval
+func (h *SettingsHandler) UpdateCurrencyRefreshInterval(c *gin.Context) {
+	hoursStr := c.PostForm("hours")
+	hours, err := strconv.Atoi(hoursStr)
+	if err != nil || hours < 1 || hours > 168 {
+		c.String(http.StatusBadRequest, "Invalid interval (1-168 hours)")
+		return
+	}
+
+	if err := h.settings.SetIntSetting(service.SettingKeyCurrencyRefreshHours, hours); err != nil {
+		slog.Error("failed to save currency refresh interval", "error", err)
+		c.String(http.StatusInternalServerError, "Internal server error")
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }

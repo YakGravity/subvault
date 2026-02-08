@@ -13,9 +13,10 @@ type SettingsHandler struct {
 	preferences service.PreferencesServiceInterface
 	notifConfig service.NotificationConfigServiceInterface
 	calendar    service.CalendarServiceInterface
+	currency    service.CurrencyServiceInterface
 }
 
-func NewSettingsHandler(settings service.SettingsServiceInterface, auth service.AuthServiceInterface, apiKey service.APIKeyServiceInterface, preferences service.PreferencesServiceInterface, notifConfig service.NotificationConfigServiceInterface, calendar service.CalendarServiceInterface) *SettingsHandler {
+func NewSettingsHandler(settings service.SettingsServiceInterface, auth service.AuthServiceInterface, apiKey service.APIKeyServiceInterface, preferences service.PreferencesServiceInterface, notifConfig service.NotificationConfigServiceInterface, calendar service.CalendarServiceInterface, currency service.CurrencyServiceInterface) *SettingsHandler {
 	return &SettingsHandler{
 		settings:    settings,
 		auth:        auth,
@@ -23,6 +24,7 @@ func NewSettingsHandler(settings service.SettingsServiceInterface, auth service.
 		preferences: preferences,
 		notifConfig: notifConfig,
 		calendar:    calendar,
+		currency:    currency,
 	}
 }
 

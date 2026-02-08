@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"sort"
 	"subtrackr/internal/models"
 	"subtrackr/internal/repository"
 	"sync"
@@ -53,24 +54,57 @@ type ecbRate struct {
 	Rate     float64 `xml:"rate,attr"`
 }
 
-type CurrencyService struct {
-	repo     *repository.ExchangeRateRepository
-	mu       sync.RWMutex
-	eurRates map[string]float64 // currency -> rate (EUR-based)
-	rateDate time.Time
+// ExchangeRateEntry represents a single rate for template rendering
+type ExchangeRateEntry struct {
+	Currency string
+	Rate     float64
 }
 
-func NewCurrencyService(repo *repository.ExchangeRateRepository) *CurrencyService {
+// ExchangeRateStatus holds the current status of exchange rate data
+type ExchangeRateStatus struct {
+	LastFetch time.Time
+	RateDate  time.Time
+	RateCount int
+	Source    string // "ecb", "db_cache", "db_stale", "none"
+	LastError string
+	IntervalH int
+	Rates     []ExchangeRateEntry
+}
+
+type CurrencyService struct {
+	repo       *repository.ExchangeRateRepository
+	settings   SettingsServiceInterface
+	mu         sync.RWMutex
+	eurRates   map[string]float64 // currency -> rate (EUR-based)
+	rateDate   time.Time
+	rateSource string    // "ecb", "db_cache", "db_stale"
+	lastError  error     // last fetch error
+	lastFetch  time.Time // last successful ECB fetch
+}
+
+func NewCurrencyService(repo *repository.ExchangeRateRepository, settings SettingsServiceInterface) *CurrencyService {
 	return &CurrencyService{
 		repo:     repo,
+		settings: settings,
 		eurRates: make(map[string]float64),
 	}
 }
 
-// ensureRates loads exchange rates into memory if needed
+// getRefreshInterval returns the configured refresh interval
+func (s *CurrencyService) getRefreshInterval() time.Duration {
+	hours := s.settings.GetIntSettingWithDefault(SettingKeyCurrencyRefreshHours, 24)
+	if hours < 1 {
+		hours = 1
+	}
+	return time.Duration(hours) * time.Hour
+}
+
+// ensureRates loads exchange rates into memory if needed, with fallback to stale DB rates
 func (s *CurrencyService) ensureRates() error {
+	interval := s.getRefreshInterval()
+
 	s.mu.RLock()
-	if len(s.eurRates) > 0 && time.Since(s.rateDate) < 24*time.Hour {
+	if len(s.eurRates) > 0 && time.Since(s.rateDate) < interval {
 		s.mu.RUnlock()
 		return nil
 	}
@@ -80,24 +114,46 @@ func (s *CurrencyService) ensureRates() error {
 	defer s.mu.Unlock()
 
 	// Double-check after write lock
-	if len(s.eurRates) > 0 && time.Since(s.rateDate) < 24*time.Hour {
+	if len(s.eurRates) > 0 && time.Since(s.rateDate) < interval {
 		return nil
 	}
 
-	// Try loading from DB first
+	// Try loading fresh DB rates
 	rates, err := s.repo.GetLatestRates("EUR")
-	if err == nil && len(rates) > 0 && !rates[0].IsStale() {
-		s.eurRates = make(map[string]float64, len(rates)+1)
-		s.eurRates["EUR"] = 1.0
-		for _, r := range rates {
-			s.eurRates[r.Currency] = r.Rate
-		}
-		s.rateDate = rates[0].Date
+	if err == nil && len(rates) > 0 && !rates[0].IsStaleAfter(interval) {
+		s.loadRatesLocked(rates, "db_cache")
 		return nil
 	}
 
 	// Fetch fresh rates from ECB
-	return s.fetchAndCacheRatesLocked()
+	if err := s.fetchAndCacheRatesLocked(); err != nil {
+		s.lastError = err
+		slog.Warn("ECB fetch failed, trying stale DB rates as fallback", "error", err)
+
+		// Fallback: use stale DB rates if available
+		if rates != nil && len(rates) > 0 {
+			s.loadRatesLocked(rates, "db_stale")
+			slog.Warn("using stale exchange rates as fallback",
+				"rate_date", rates[0].Date,
+				"age", time.Since(rates[0].Date).Round(time.Minute))
+			return nil
+		}
+
+		return fmt.Errorf("no exchange rates available: %w", err)
+	}
+
+	return nil
+}
+
+// loadRatesLocked populates the in-memory cache from DB rates. Caller must hold write lock.
+func (s *CurrencyService) loadRatesLocked(rates []models.ExchangeRate, source string) {
+	s.eurRates = make(map[string]float64, len(rates)+1)
+	s.eurRates["EUR"] = 1.0
+	for _, r := range rates {
+		s.eurRates[r.Currency] = r.Rate
+	}
+	s.rateDate = rates[0].Date
+	s.rateSource = source
 }
 
 // getCrossRate computes a cross-rate via EUR. Caller must ensure rates are loaded.
@@ -184,6 +240,9 @@ func (s *CurrencyService) fetchAndCacheRatesLocked() error {
 		s.eurRates[r.Currency] = r.Rate
 	}
 	s.rateDate = rateDate
+	s.rateSource = "ecb"
+	s.lastFetch = rateDate
+	s.lastError = nil
 
 	// Persist to DB for restart recovery
 	var ratesToSave []models.ExchangeRate
@@ -206,9 +265,50 @@ func (s *CurrencyService) fetchAndCacheRatesLocked() error {
 func (s *CurrencyService) RefreshRates() error {
 	s.mu.Lock()
 	err := s.fetchAndCacheRatesLocked()
+	if err != nil {
+		s.lastError = err
+	}
 	s.mu.Unlock()
 	if err != nil {
 		return fmt.Errorf("failed to refresh rates: %w", err)
 	}
 	return s.repo.DeleteStaleRates(7 * 24 * time.Hour)
+}
+
+// GetStatus returns the current exchange rate status
+func (s *CurrencyService) GetStatus() ExchangeRateStatus {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	status := ExchangeRateStatus{
+		LastFetch: s.lastFetch,
+		RateDate:  s.rateDate,
+		RateCount: len(s.eurRates),
+		Source:    s.rateSource,
+		IntervalH: s.settings.GetIntSettingWithDefault(SettingKeyCurrencyRefreshHours, 24),
+	}
+
+	if status.Source == "" {
+		status.Source = "none"
+	}
+	if s.lastError != nil {
+		status.LastError = s.lastError.Error()
+	}
+
+	// Collect rates sorted by currency code
+	if len(s.eurRates) > 0 {
+		rates := make([]ExchangeRateEntry, 0, len(s.eurRates))
+		for currency, rate := range s.eurRates {
+			if currency == "EUR" {
+				continue
+			}
+			rates = append(rates, ExchangeRateEntry{Currency: currency, Rate: rate})
+		}
+		sort.Slice(rates, func(i, j int) bool {
+			return rates[i].Currency < rates[j].Currency
+		})
+		status.Rates = rates
+	}
+
+	return status
 }
