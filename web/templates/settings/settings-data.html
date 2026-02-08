@@ -234,7 +234,7 @@ function renderCategories(categories) {
     });
 }
 function loadCategories() {
-    fetch('/api/categories').then(r => r.json()).then(renderCategories);
+    fetch('/api/categories').then(r => r.json()).then(data => renderCategories(data.data || data));
 }
 function addCategory(e) {
     e.preventDefault();

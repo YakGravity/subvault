@@ -235,6 +235,8 @@ func (h *ImportHandler) importSubTrackr(data []byte) ImportResult {
 		// Reset ID and timestamps for re-import
 		newSub := sub
 		newSub.ID = 0
+		newSub.Category = models.Category{}
+		newSub.CategoryID = 0
 		newSub.CreatedAt = time.Time{}
 		newSub.UpdatedAt = time.Time{}
 		newSub.LastReminderSent = nil

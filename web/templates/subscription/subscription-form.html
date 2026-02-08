@@ -55,9 +55,9 @@
                 </div>
                 <!-- Inline new category input (hidden by default) -->
                 <div id="new-category-container" class="hidden" style="margin-top:8px;">
+                    <input type="text" id="new-category-name" placeholder="{{.T.Tr "placeholder_new_category"}}"
+                           class="form-input" style="width:100%;margin-bottom:8px;">
                     <div style="display:flex;gap:8px;">
-                        <input type="text" id="new-category-name" placeholder="{{.T.Tr "placeholder_new_category"}}"
-                               class="form-input" style="flex:1;">
                         <button type="button" onclick="createNewCategory()"
                                 class="btn btn-primary">
                             {{.T.Tr "btn_add"}}
