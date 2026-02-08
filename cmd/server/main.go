@@ -472,6 +472,13 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 		v1.GET("/stats", handler.GetStats)
 		v1.GET("/export/csv", handler.ExportCSV)
 		v1.GET("/export/json", handler.ExportJSON)
+		v1.GET("/export/ical", handler.ExportICal)
+
+		// Category endpoints
+		v1.GET("/categories", categoryHandler.ListCategories)
+		v1.POST("/categories", categoryHandler.CreateCategory)
+		v1.PUT("/categories/:id", categoryHandler.UpdateCategory)
+		v1.DELETE("/categories/:id", categoryHandler.DeleteCategory)
 	}
 }
 

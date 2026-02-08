@@ -118,6 +118,11 @@ curl -H "Authorization: Bearer sk_your_api_key_here" http://localhost:8080/api/v
 | GET | `/api/v1/stats` | Get subscription statistics |
 | GET | `/api/v1/export/csv` | Export as CSV |
 | GET | `/api/v1/export/json` | Export as JSON |
+| GET | `/api/v1/export/ical` | Export as iCal |
+| GET | `/api/v1/categories` | List all categories |
+| POST | `/api/v1/categories` | Create a new category |
+| PUT | `/api/v1/categories/:id` | Update category |
+| DELETE | `/api/v1/categories/:id` | Delete category |
 
 ## Development
 
