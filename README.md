@@ -7,12 +7,35 @@
 
 A self-hosted subscription management application built with Go and HTMX. Track recurring expenses, visualize spending analytics, and get renewal reminders — all on your own server.
 
-<!-- TODO: Add screenshots
 ## Screenshots
 
-![Dashboard](screenshots/dashboard-light.png)
-![Dark Mode](screenshots/dashboard-dark.png)
--->
+<details open>
+<summary>Dashboard</summary>
+
+![Dashboard Light](screenshots/dashboard-light.png)
+![Dashboard Dark](screenshots/dashboard-dark.png)
+</details>
+
+<details>
+<summary>Subscriptions</summary>
+
+![Subscriptions Grid Light](screenshots/subscriptions-grid-light.png)
+![Subscriptions List Dark](screenshots/subscriptions-list-dark.png)
+</details>
+
+<details>
+<summary>Calendar</summary>
+
+![Calendar Light](screenshots/calendar-light.png)
+![Calendar Dark](screenshots/calendar-dark.png)
+</details>
+
+<details>
+<summary>Settings</summary>
+
+![Settings Light](screenshots/settings-light.png)
+![Settings Dark](screenshots/settings-dark.png)
+</details>
 
 ## Features
 
