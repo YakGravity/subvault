@@ -23,6 +23,10 @@ func (s *CategoryService) GetAll() ([]models.Category, error) {
 	return s.repo.GetAll()
 }
 
+func (s *CategoryService) GetAllPaginated(limit, offset int) ([]models.Category, int64, error) {
+	return s.repo.GetAllPaginated(limit, offset)
+}
+
 func (s *CategoryService) GetByID(id uint) (*models.Category, error) {
 	return s.repo.GetByID(id)
 }

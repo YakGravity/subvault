@@ -6,6 +6,7 @@ import "subvault/internal/models"
 type SubscriptionServiceInterface interface {
 	Create(subscription *models.Subscription) (*models.Subscription, error)
 	GetAll() ([]models.Subscription, error)
+	GetAllPaginated(limit, offset int) ([]models.Subscription, int64, error)
 	GetAllSorted(sortBy, order string) ([]models.Subscription, error)
 	GetByID(id uint) (*models.Subscription, error)
 	Update(id uint, subscription *models.Subscription) (*models.Subscription, error)
@@ -100,6 +101,7 @@ type CurrencyServiceInterface interface {
 type CategoryServiceInterface interface {
 	Create(category *models.Category) (*models.Category, error)
 	GetAll() ([]models.Category, error)
+	GetAllPaginated(limit, offset int) ([]models.Category, int64, error)
 	GetByID(id uint) (*models.Category, error)
 	Update(id uint, category *models.Category) (*models.Category, error)
 	Delete(id uint) error

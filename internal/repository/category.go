@@ -29,6 +29,20 @@ func (r *CategoryRepository) GetAll() ([]models.Category, error) {
 	return categories, nil
 }
 
+// GetAllPaginated returns categories with pagination support.
+func (r *CategoryRepository) GetAllPaginated(limit, offset int) ([]models.Category, int64, error) {
+	var total int64
+	if err := r.db.Model(&models.Category{}).Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	var categories []models.Category
+	if err := r.db.Order("name ASC").Limit(limit).Offset(offset).Find(&categories).Error; err != nil {
+		return nil, 0, err
+	}
+	return categories, total, nil
+}
+
 func (r *CategoryRepository) GetByID(id uint) (*models.Category, error) {
 	var category models.Category
 	if err := r.db.First(&category, id).Error; err != nil {

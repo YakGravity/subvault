@@ -37,28 +37,38 @@ func (h *SubscriptionHandler) GetSubscriptions(c *gin.Context) {
 	c.HTML(http.StatusOK, "subscription-list.html", data)
 }
 
-// GetSubscriptionsAPI returns subscriptions as JSON for API calls
+// GetSubscriptionsAPI returns subscriptions as JSON for API calls with pagination.
 func (h *SubscriptionHandler) GetSubscriptionsAPI(c *gin.Context) {
-	subscriptions, err := h.service.GetAll()
+	limit, offset := parsePagination(c)
+
+	subscriptions, total, err := h.service.GetAllPaginated(limit, offset)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to get subscriptions via API", "error", err)
+		apiInternalError(c, "Failed to retrieve subscriptions")
 		return
 	}
 
-	c.JSON(http.StatusOK, subscriptions)
+	c.JSON(http.StatusOK, PaginatedResponse{
+		Data: subscriptions,
+		Pagination: PaginationMeta{
+			Limit:  limit,
+			Offset: offset,
+			Total:  total,
+		},
+	})
 }
 
 // GetSubscription returns a single subscription
 func (h *SubscriptionHandler) GetSubscription(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": ErrInvalidID})
+		apiBadRequest(c, ErrInvalidID)
 		return
 	}
 
 	subscription, err := h.service.GetByID(uint(id))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": ErrSubscriptionNotFound})
+		apiNotFound(c, ErrSubscriptionNotFound)
 		return
 	}
 

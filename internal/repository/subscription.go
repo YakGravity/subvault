@@ -88,6 +88,21 @@ func (r *SubscriptionRepository) GetAll() ([]models.Subscription, error) {
 	return subscriptions, nil
 }
 
+// GetAllPaginated returns subscriptions with pagination support.
+// Returns the subscriptions for the requested page and the total count.
+func (r *SubscriptionRepository) GetAllPaginated(limit, offset int) ([]models.Subscription, int64, error) {
+	var total int64
+	if err := r.db.Model(&models.Subscription{}).Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	var subscriptions []models.Subscription
+	if err := r.db.Preload("Category").Order("created_at DESC").Limit(limit).Offset(offset).Find(&subscriptions).Error; err != nil {
+		return nil, 0, err
+	}
+	return subscriptions, total, nil
+}
+
 // GetAllSorted returns all subscriptions sorted by the specified column and order
 // sortBy: name, cost, status, renewal_date, schedule, category, created_at
 // order: asc, desc

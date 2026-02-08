@@ -13,58 +13,58 @@ import (
 // CreateSubscriptionRequest is the DTO for creating a subscription via API.
 // Required fields are enforced via binding tags.
 type CreateSubscriptionRequest struct {
-	Name                     string     `json:"name" binding:"required"`
-	Cost                     float64    `json:"cost" binding:"required,gt=0"`
+	Name                     string     `json:"name" binding:"required,max=255"`
+	Cost                     float64    `json:"cost" binding:"required,gt=0,max=1000000"`
 	Schedule                 string     `json:"schedule" binding:"required,oneof=Monthly Annual Weekly Daily Quarterly"`
 	Status                   string     `json:"status" binding:"required,oneof=Active Cancelled Paused Trial"`
-	OriginalCurrency         string     `json:"original_currency"`
+	OriginalCurrency         string     `json:"original_currency" binding:"omitempty,max=10"`
 	CategoryID               uint       `json:"category_id"`
-	PaymentMethod            string     `json:"payment_method"`
-	LoginName                string     `json:"login_name"`
-	TaxRate                  float64    `json:"tax_rate"`
-	PriceType                string     `json:"price_type"`
-	CustomerNumber           string     `json:"customer_number"`
-	ContractNumber           string     `json:"contract_number"`
+	PaymentMethod            string     `json:"payment_method" binding:"omitempty,max=255"`
+	LoginName                string     `json:"login_name" binding:"omitempty,max=255"`
+	TaxRate                  float64    `json:"tax_rate" binding:"omitempty,min=0,max=100"`
+	PriceType                string     `json:"price_type" binding:"omitempty,oneof=gross net"`
+	CustomerNumber           string     `json:"customer_number" binding:"omitempty,max=255"`
+	ContractNumber           string     `json:"contract_number" binding:"omitempty,max=255"`
 	StartDate                *time.Time `json:"start_date"`
 	RenewalDate              *time.Time `json:"renewal_date"`
 	CancellationDate         *time.Time `json:"cancellation_date"`
-	URL                      string     `json:"url"`
-	IconURL                  string     `json:"icon_url"`
-	Notes                    string     `json:"notes"`
+	URL                      string     `json:"url" binding:"omitempty,url,max=2048"`
+	IconURL                  string     `json:"icon_url" binding:"omitempty,url,max=2048"`
+	Notes                    string     `json:"notes" binding:"omitempty,max=5000"`
 	Usage                    string     `json:"usage" binding:"omitempty,oneof=High Medium Low None"`
 	RenewalReminder          bool       `json:"renewal_reminder"`
-	RenewalReminderDays      int        `json:"renewal_reminder_days"`
+	RenewalReminderDays      int        `json:"renewal_reminder_days" binding:"omitempty,min=1,max=365"`
 	CancellationReminder     bool       `json:"cancellation_reminder"`
-	CancellationReminderDays int        `json:"cancellation_reminder_days"`
+	CancellationReminderDays int        `json:"cancellation_reminder_days" binding:"omitempty,min=1,max=365"`
 	HighCostAlert            bool       `json:"high_cost_alert"`
 }
 
 // UpdateSubscriptionRequest is the DTO for partial updates via API.
 // All fields are pointers so we can distinguish between "not provided" (nil) and "set to zero value".
 type UpdateSubscriptionRequest struct {
-	Name                     *string    `json:"name"`
-	Cost                     *float64   `json:"cost" binding:"omitempty,gt=0"`
+	Name                     *string    `json:"name" binding:"omitempty,max=255"`
+	Cost                     *float64   `json:"cost" binding:"omitempty,gt=0,max=1000000"`
 	Schedule                 *string    `json:"schedule" binding:"omitempty,oneof=Monthly Annual Weekly Daily Quarterly"`
 	Status                   *string    `json:"status" binding:"omitempty,oneof=Active Cancelled Paused Trial"`
-	OriginalCurrency         *string    `json:"original_currency"`
+	OriginalCurrency         *string    `json:"original_currency" binding:"omitempty,max=10"`
 	CategoryID               *uint      `json:"category_id"`
-	PaymentMethod            *string    `json:"payment_method"`
-	LoginName                *string    `json:"login_name"`
-	TaxRate                  *float64   `json:"tax_rate"`
-	PriceType                *string    `json:"price_type"`
-	CustomerNumber           *string    `json:"customer_number"`
-	ContractNumber           *string    `json:"contract_number"`
+	PaymentMethod            *string    `json:"payment_method" binding:"omitempty,max=255"`
+	LoginName                *string    `json:"login_name" binding:"omitempty,max=255"`
+	TaxRate                  *float64   `json:"tax_rate" binding:"omitempty,min=0,max=100"`
+	PriceType                *string    `json:"price_type" binding:"omitempty,oneof=gross net"`
+	CustomerNumber           *string    `json:"customer_number" binding:"omitempty,max=255"`
+	ContractNumber           *string    `json:"contract_number" binding:"omitempty,max=255"`
 	StartDate                *time.Time `json:"start_date"`
 	RenewalDate              *time.Time `json:"renewal_date"`
 	CancellationDate         *time.Time `json:"cancellation_date"`
-	URL                      *string    `json:"url"`
-	IconURL                  *string    `json:"icon_url"`
-	Notes                    *string    `json:"notes"`
+	URL                      *string    `json:"url" binding:"omitempty,url,max=2048"`
+	IconURL                  *string    `json:"icon_url" binding:"omitempty,url,max=2048"`
+	Notes                    *string    `json:"notes" binding:"omitempty,max=5000"`
 	Usage                    *string    `json:"usage" binding:"omitempty,oneof=High Medium Low None"`
 	RenewalReminder          *bool      `json:"renewal_reminder"`
-	RenewalReminderDays      *int       `json:"renewal_reminder_days"`
+	RenewalReminderDays      *int       `json:"renewal_reminder_days" binding:"omitempty,min=1,max=365"`
 	CancellationReminder     *bool      `json:"cancellation_reminder"`
-	CancellationReminderDays *int       `json:"cancellation_reminder_days"`
+	CancellationReminderDays *int       `json:"cancellation_reminder_days" binding:"omitempty,min=1,max=365"`
 	HighCostAlert            *bool      `json:"high_cost_alert"`
 }
 
@@ -72,7 +72,7 @@ type UpdateSubscriptionRequest struct {
 func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 	var req CreateSubscriptionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		apiBadRequest(c, "Invalid request body. Check required fields and value constraints.")
 		return
 	}
 
@@ -127,7 +127,7 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 	created, err := h.service.Create(&subscription)
 	if err != nil {
 		slog.Error("failed to create subscription via API", "error", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		apiInternalError(c, "Failed to create subscription")
 		return
 	}
 
@@ -151,19 +151,19 @@ func (h *SubscriptionHandler) CreateSubscriptionAPI(c *gin.Context) {
 func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": ErrInvalidID})
+		apiBadRequest(c, ErrInvalidID)
 		return
 	}
 
 	original, err := h.service.GetByID(uint(id))
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": ErrSubscriptionNotFound})
+		apiNotFound(c, ErrSubscriptionNotFound)
 		return
 	}
 
 	var req UpdateSubscriptionRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		apiBadRequest(c, "Invalid request body. Check field types and value constraints.")
 		return
 	}
 
@@ -252,7 +252,8 @@ func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 
 	updated, err := h.service.Update(uint(id), &subscription)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		slog.Error("failed to update subscription via API", "error", err, "id", id)
+		apiInternalError(c, "Failed to update subscription")
 		return
 	}
 
@@ -276,18 +277,23 @@ func (h *SubscriptionHandler) UpdateSubscriptionAPI(c *gin.Context) {
 func (h *SubscriptionHandler) DeleteSubscriptionAPI(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": ErrInvalidID})
+		apiBadRequest(c, ErrInvalidID)
+		return
+	}
+
+	// Check if subscription exists first (for proper 404)
+	_, err = h.service.GetByID(uint(id))
+	if err != nil {
+		apiNotFound(c, ErrSubscriptionNotFound)
 		return
 	}
 
 	err = h.service.Delete(uint(id))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		slog.Error("failed to delete subscription via API", "error", err, "id", id)
+		apiInternalError(c, "Failed to delete subscription")
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Subscription deleted",
-		"id":      id,
-	})
+	c.Status(http.StatusNoContent)
 }

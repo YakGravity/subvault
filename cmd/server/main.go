@@ -458,7 +458,10 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 	}
 
 	// Public API routes (require API key authentication)
+	apiRateLimiter := middleware.NewRateLimiter(10, 20) // 10 req/s, burst 20
 	v1 := router.Group("/api/v1")
+	v1.Use(middleware.CORS())
+	v1.Use(apiRateLimiter.Middleware())
 	v1.Use(middleware.APIKeyAuth(apiKeyService))
 	{
 		// Subscription endpoints

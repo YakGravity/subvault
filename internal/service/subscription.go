@@ -36,6 +36,10 @@ func (s *SubscriptionService) GetAll() ([]models.Subscription, error) {
 	return s.repo.GetAll()
 }
 
+func (s *SubscriptionService) GetAllPaginated(limit, offset int) ([]models.Subscription, int64, error) {
+	return s.repo.GetAllPaginated(limit, offset)
+}
+
 func (s *SubscriptionService) GetAllSorted(sortBy, order string) ([]models.Subscription, error) {
 	return s.repo.GetAllSorted(sortBy, order)
 }
