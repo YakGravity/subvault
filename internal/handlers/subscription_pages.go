@@ -95,27 +95,6 @@ func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 		return
 	}
 
-	// Filter subscriptions with renewal dates and group by date
-	// Create a simplified structure for JavaScript
-	type Event struct {
-		Name    string  `json:"name"`
-		Cost    float64 `json:"cost"`
-		ID      uint    `json:"id"`
-		IconURL string  `json:"icon_url"`
-	}
-	eventsByDate := make(map[string][]Event)
-	for _, sub := range subscriptions {
-		if sub.RenewalDate != nil && sub.Status == "Active" {
-			dateKey := sub.RenewalDate.Format("2006-01-02")
-			eventsByDate[dateKey] = append(eventsByDate[dateKey], Event{
-				Name:    sub.Name,
-				Cost:    sub.Cost,
-				ID:      sub.ID,
-				IconURL: sub.IconURL,
-			})
-		}
-	}
-
 	// Get current month/year or from query params
 	now := time.Now()
 	year := now.Year()
@@ -138,6 +117,64 @@ func (h *SubscriptionHandler) Calendar(c *gin.Context) {
 	}
 	if month > 12 {
 		month = 12
+	}
+
+	// Project recurring renewal dates for the viewed month
+	type Event struct {
+		Name    string  `json:"name"`
+		Cost    float64 `json:"cost"`
+		ID      uint    `json:"id"`
+		IconURL string  `json:"icon_url"`
+		Color   string  `json:"color"`
+		Type    string  `json:"type"`
+	}
+	viewStart := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+	viewEnd := viewStart.AddDate(0, 1, 0)
+
+	eventsByDate := make(map[string][]Event)
+	for _, sub := range subscriptions {
+		// Renewal events for Active, Trial and Paused subscriptions
+		if sub.RenewalDate != nil && (sub.Status == "Active" || sub.Status == "Trial" || sub.Status == "Paused") {
+			color := "mediumseagreen"
+			switch sub.Status {
+			case "Trial":
+				color = "dodgerblue"
+			case "Paused":
+				color = "gray"
+			}
+			name := sub.Name
+			if sub.Status != "Active" {
+				name = fmt.Sprintf("%s (%s)", sub.Name, sub.Status)
+			}
+
+			// Calculate projected renewal dates in the viewed month
+			dates := projectRenewalDates(*sub.RenewalDate, sub.Schedule, viewStart, viewEnd)
+			for _, d := range dates {
+				dateKey := d.Format("2006-01-02")
+				eventsByDate[dateKey] = append(eventsByDate[dateKey], Event{
+					Name:    name,
+					Cost:    sub.Cost,
+					ID:      sub.ID,
+					IconURL: sub.IconURL,
+					Color:   color,
+					Type:    "renewal",
+				})
+			}
+		}
+		// Cancellation date events (one-time, no projection)
+		if sub.CancellationDate != nil {
+			if !sub.CancellationDate.Before(viewStart) && sub.CancellationDate.Before(viewEnd) {
+				dateKey := sub.CancellationDate.Format("2006-01-02")
+				eventsByDate[dateKey] = append(eventsByDate[dateKey], Event{
+					Name:    fmt.Sprintf("%s - Cancel By", sub.Name),
+					Cost:    sub.Cost,
+					ID:      sub.ID,
+					IconURL: sub.IconURL,
+					Color:   "tomato",
+					Type:    "cancel",
+				})
+			}
+		}
 	}
 
 	// Calculate previous and next month
@@ -226,4 +263,61 @@ func translateMonth(c *gin.Context, month int) string {
 		return "Unknown"
 	}
 	return tr(c, monthKeys[month-1], fallbacks[month-1])
+}
+
+// projectRenewalDates calculates all renewal dates that fall within [viewStart, viewEnd)
+// by stepping forward or backward from the base renewal date using the subscription schedule.
+func projectRenewalDates(baseDate time.Time, schedule string, viewStart, viewEnd time.Time) []time.Time {
+	var step func(t time.Time, n int) time.Time
+	switch schedule {
+	case "Daily":
+		step = func(t time.Time, n int) time.Time { return t.AddDate(0, 0, n) }
+	case "Weekly":
+		step = func(t time.Time, n int) time.Time { return t.AddDate(0, 0, 7*n) }
+	case "Monthly":
+		step = func(t time.Time, n int) time.Time { return t.AddDate(0, n, 0) }
+	case "Quarterly":
+		step = func(t time.Time, n int) time.Time { return t.AddDate(0, 3*n, 0) }
+	case "Annual":
+		step = func(t time.Time, n int) time.Time { return t.AddDate(n, 0, 0) }
+	default:
+		// Unknown schedule: just check if baseDate falls in range
+		if !baseDate.Before(viewStart) && baseDate.Before(viewEnd) {
+			return []time.Time{baseDate}
+		}
+		return nil
+	}
+
+	var dates []time.Time
+
+	// Step forward from baseDate
+	for i := 0; ; i++ {
+		d := step(baseDate, i)
+		if !d.Before(viewEnd) {
+			break
+		}
+		if !d.Before(viewStart) {
+			dates = append(dates, d)
+		}
+		// Safety: don't generate more than 31 dates for daily schedules
+		if len(dates) > 31 {
+			break
+		}
+	}
+
+	// Step backward from baseDate (skip i=0 already handled above)
+	for i := 1; ; i++ {
+		d := step(baseDate, -i)
+		if d.Before(viewStart) {
+			break
+		}
+		if d.Before(viewEnd) {
+			dates = append(dates, d)
+		}
+		if i > 366 {
+			break
+		}
+	}
+
+	return dates
 }

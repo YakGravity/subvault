@@ -153,8 +153,10 @@
                         }
 
                         const cost = (event.cost || 0).toFixed(2);
+                        const stripeColorMap = {'mediumseagreen':'#3cb371','dodgerblue':'#1e90ff','gray':'#808080','tomato':'#ff6347'};
+                        const stripe = stripeColorMap[event.color] || 'var(--accent)';
                         content += '<button'
-                            + ' style="width:100%;text-align:left;font-size:12px;padding:4px 8px;border-radius:var(--radius-sm);background:var(--accent-surface);color:var(--accent);border:1px solid var(--accent-light);cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s;"'
+                            + ' style="width:100%;text-align:left;font-size:12px;padding:4px 8px;border-radius:var(--radius-sm);background:var(--accent-surface);color:var(--accent);border:1px solid var(--accent-light);border-left:4px solid ' + stripe + ';cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .15s;"'
                             + ' onmouseover="this.style.background=\'var(--accent-light)\'"'
                             + ' onmouseout="this.style.background=\'var(--accent-surface)\'"'
                             + ' title="' + eventName + ' - ' + currencySymbol + cost + '"'

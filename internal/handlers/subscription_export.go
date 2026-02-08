@@ -275,6 +275,21 @@ func (h *SubscriptionHandler) generateICal(subscriptions []models.Subscription) 
 			icalContent += "STATUS:CONFIRMED\r\n"
 			icalContent += "SEQUENCE:0\r\n"
 
+			// RFC 7986 COLOR property based on status
+			switch sub.Status {
+			case "Active":
+				icalContent += "COLOR:mediumseagreen\r\n"
+			case "Trial":
+				icalContent += "COLOR:dodgerblue\r\n"
+			case "Paused":
+				icalContent += "COLOR:darkgray\r\n"
+			}
+
+			// Add category as CATEGORIES property
+			if sub.Category.Name != "" {
+				icalContent += fmt.Sprintf("CATEGORIES:%s\r\n", sub.Category.Name)
+			}
+
 			// Add recurrence rule for active subscriptions
 			if sub.Status == "Active" {
 				switch sub.Schedule {
@@ -311,6 +326,10 @@ func (h *SubscriptionHandler) generateICal(subscriptions []models.Subscription) 
 			icalContent += fmt.Sprintf("DESCRIPTION:%s\r\n", description)
 			icalContent += "STATUS:CONFIRMED\r\n"
 			icalContent += "SEQUENCE:0\r\n"
+			icalContent += "COLOR:tomato\r\n"
+			if sub.Category.Name != "" {
+				icalContent += fmt.Sprintf("CATEGORIES:%s\r\n", sub.Category.Name)
+			}
 			icalContent += "END:VEVENT\r\n"
 		}
 	}
