@@ -20,12 +20,15 @@ func (h *SettingsHandler) SettingsGeneral(c *gin.Context) {
 		displayFormat = "YYYY-MM-DD"
 	}
 
+	rateStatus := h.currency.GetStatus()
+
 	data := h.settingsBaseData(c, "general")
 	mergeTemplateData(data, gin.H{
 		"Title":      "Settings",
 		"Currency":   h.preferences.GetCurrency(),
 		"Language":   h.preferences.GetLanguage(),
 		"DateFormat": displayFormat,
+		"RateStatus": rateStatus,
 	})
 	c.HTML(http.StatusOK, "settings-general.html", data)
 }

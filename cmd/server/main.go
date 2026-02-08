@@ -61,8 +61,8 @@ func main() {
 
 	// Initialize services
 	categoryService := service.NewCategoryService(categoryRepo)
-	currencyService := service.NewCurrencyService(exchangeRateRepo)
 	settingsService := service.NewSettingsService(settingsRepo)
+	currencyService := service.NewCurrencyService(exchangeRateRepo, settingsService)
 	preferencesService := service.NewPreferencesService(settingsService)
 	authService := service.NewAuthService(settingsService, settingsRepo)
 	apiKeyService := service.NewAPIKeyService(settingsRepo)
@@ -105,7 +105,7 @@ func main() {
 
 	// Initialize handlers
 	subscriptionHandler := handlers.NewSubscriptionHandler(subscriptionService, preferencesService, settingsService, calendarService, currencyService, emailService, shoutrrrService, logoService)
-	settingsHandler := handlers.NewSettingsHandler(settingsService, authService, apiKeyService, preferencesService, notifConfigService, calendarService)
+	settingsHandler := handlers.NewSettingsHandler(settingsService, authService, apiKeyService, preferencesService, notifConfigService, calendarService, currencyService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	authHandler := handlers.NewAuthHandler(authService, sessionService, emailService, notifConfigService)
 	importHandler := handlers.NewImportHandler(subscriptionService, categoryService, settingsService)
@@ -294,6 +294,7 @@ func loadTemplates() *template.Template {
 		"templates/reset-password-success.html",
 		"templates/auth-message.html",
 		"templates/import-result.html",
+		"templates/exchange-rate-status.html",
 	}
 
 	var parsedCount int
@@ -412,6 +413,10 @@ func setupRoutes(router *gin.Engine, handler *handlers.SubscriptionHandler, sett
 
 		// Currency setting
 		api.POST("/settings/currency", settingsHandler.UpdateCurrency)
+
+		// Exchange rate management
+		api.POST("/settings/exchange-rates/refresh", settingsHandler.RefreshExchangeRates)
+		api.POST("/settings/currency-refresh", settingsHandler.UpdateCurrencyRefreshInterval)
 
 		// Language setting
 		api.POST("/settings/language", settingsHandler.UpdateLanguage)

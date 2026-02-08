@@ -4,7 +4,7 @@ var (
 	// GitCommit is the git commit SHA that will be set at build time
 	GitCommit = "unknown"
 	// Version is the semantic version tag that will be set at build time
-	Version = "dev"
+	Version = "v0.19.0"
 )
 
 // GetVersion returns the current version string

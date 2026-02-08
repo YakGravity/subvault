@@ -28,7 +28,8 @@ const (
 	SettingKeyAuthResetToken    = "auth_reset_token"
 	SettingKeyAuthResetExpiry   = "auth_reset_token_expiry"
 	SettingKeyShoutrrrConfig    = "shoutrrr_config"
-	SettingKeyPushoverConfig    = "pushover_config"
+	SettingKeyPushoverConfig       = "pushover_config"
+	SettingKeyCurrencyRefreshHours = "currency_refresh_hours"
 )
 
 type SettingsService struct {

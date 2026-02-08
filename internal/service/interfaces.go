@@ -93,6 +93,7 @@ type CurrencyServiceInterface interface {
 	GetExchangeRate(fromCurrency, toCurrency string) (float64, error)
 	ConvertAmount(amount float64, fromCurrency, toCurrency string) (float64, error)
 	RefreshRates() error
+	GetStatus() ExchangeRateStatus
 }
 
 // CategoryServiceInterface defines the contract for category operations.

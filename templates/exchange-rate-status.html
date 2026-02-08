@@ -1,0 +1,54 @@
+{{if .RefreshSuccess}}
+<div style="padding:8px 12px;background:var(--success-bg, rgba(34,197,94,0.1));border:1px solid var(--success, #22c55e);border-radius:6px;margin-bottom:12px;font-size:13px;color:var(--success, #22c55e);">
+    {{.T.Tr "exchange_rate_refresh_success"}}
+</div>
+{{end}}
+{{if .RefreshError}}
+<div style="padding:8px 12px;background:var(--danger-bg, rgba(239,68,68,0.1));border:1px solid var(--danger, #ef4444);border-radius:6px;margin-bottom:12px;font-size:13px;color:var(--danger, #ef4444);">
+    {{.T.Tr "exchange_rate_refresh_error"}}
+    {{if .RateStatus.LastError}}
+    <div style="margin-top:4px;font-size:12px;opacity:0.8;">{{.T.Tr "exchange_rate_error_label"}}: {{.RateStatus.LastError}}</div>
+    {{end}}
+</div>
+{{end}}
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;">
+    <div style="display:flex;align-items:center;gap:8px;">
+        {{if eq .RateStatus.Source "ecb"}}
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;"></span>
+        <span style="font-size:13px;color:var(--text);">{{.T.Tr "exchange_rate_source_ecb"}}</span>
+        {{else if eq .RateStatus.Source "db_cache"}}
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;"></span>
+        <span style="font-size:13px;color:var(--text);">{{.T.Tr "exchange_rate_source_db_cache"}}</span>
+        {{else if eq .RateStatus.Source "db_stale"}}
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;"></span>
+        <span style="font-size:13px;color:var(--text);">{{.T.Tr "exchange_rate_source_db_stale"}}</span>
+        {{else}}
+        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;"></span>
+        <span style="font-size:13px;color:var(--text);">{{.T.Tr "exchange_rate_source_none"}}</span>
+        {{end}}
+    </div>
+    {{if not .RateStatus.RateDate.IsZero}}
+    <div style="font-size:12px;color:var(--text-secondary);">
+        {{.T.Tr "exchange_rate_last_update"}}: {{.RateStatus.RateDate.Format "2006-01-02 15:04"}}
+    </div>
+    {{end}}
+    {{if gt .RateStatus.RateCount 0}}
+    <div style="font-size:12px;color:var(--text-secondary);">
+        {{.T.Tr "exchange_rate_count"}}: {{.RateStatus.RateCount}}
+    </div>
+    {{end}}
+</div>
+{{if .RateStatus.Rates}}
+<details style="margin-top:12px;">
+    <summary style="font-size:13px;color:var(--accent);cursor:pointer;user-select:none;">{{.T.Tr "exchange_rate_show_rates"}}</summary>
+    <div style="margin-top:8px;font-size:12px;color:var(--text-secondary);margin-bottom:6px;">{{.T.Tr "exchange_rate_base"}}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));gap:4px 16px;margin-top:4px;">
+        {{range .RateStatus.Rates}}
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--text);font-weight:500;">{{.Currency}}</span>
+            <span style="color:var(--text-secondary);">{{printf "%.4f" .Rate}}</span>
+        </div>
+        {{end}}
+    </div>
+</details>
+{{end}}
