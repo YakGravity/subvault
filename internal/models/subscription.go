@@ -92,15 +92,6 @@ func (s *Subscription) IsHighCost(threshold float64) bool {
 	return s.MonthlyCost() > threshold
 }
 
-// BeforeCreate hook to set renewal date for active subscriptions
-func (s *Subscription) BeforeCreate(tx *gorm.DB) error {
-	if s.Status == "Active" && s.RenewalDate == nil {
-		// Set renewal date based on schedule
-		s.calculateNextRenewalDate()
-	}
-	return nil
-}
-
 // AfterFind hook to auto-update renewal date if it has passed (Issue #29)
 // This ensures renewal dates are automatically updated when subscriptions are loaded
 func (s *Subscription) AfterFind(tx *gorm.DB) error {
@@ -110,7 +101,7 @@ func (s *Subscription) AfterFind(tx *gorm.DB) error {
 		if s.RenewalDate.Before(now) || s.RenewalDate.Equal(now) {
 			// Renewal date has passed, calculate the next one
 			oldRenewalDate := s.RenewalDate
-			s.calculateNextRenewalDate()
+			s.CalculateNextRenewalDate()
 
 			// Only update if the date actually changed to avoid unnecessary writes
 			if s.RenewalDate != nil && !s.RenewalDate.Equal(*oldRenewalDate) {
@@ -123,58 +114,7 @@ func (s *Subscription) AfterFind(tx *gorm.DB) error {
 	return nil
 }
 
-// BeforeUpdate hook to recalculate renewal date when schedule changes, start date changes, or date passes
-func (s *Subscription) BeforeUpdate(tx *gorm.DB) error {
-	// Get the original values to check for schedule or start date changes
-	var original Subscription
-	if err := tx.Model(&Subscription{}).Where("id = ?", s.ID).First(&original).Error; err == nil {
-		// If schedule changed and status is Active, recalculate renewal date
-		// Use start date if available to preserve billing anniversary
-		if original.Schedule != s.Schedule && s.Status == "Active" {
-			s.calculateNextRenewalDate()
-		}
-
-		// If start date changed and status is Active, recalculate renewal date
-		// This ensures renewal dates update when start dates are modified
-		if s.Status == "Active" {
-			startDateChanged := false
-			if original.StartDate == nil && s.StartDate != nil {
-				// Start date was added
-				startDateChanged = true
-			} else if original.StartDate != nil && s.StartDate == nil {
-				// Start date was removed
-				startDateChanged = true
-			} else if original.StartDate != nil && s.StartDate != nil {
-				// Both exist, check if they're different
-				if !original.StartDate.Equal(*s.StartDate) {
-					startDateChanged = true
-				}
-			}
-
-			if startDateChanged {
-				s.calculateNextRenewalDate()
-			}
-		}
-	}
-
-	// Calculate if renewal date is nil and status is Active
-	if s.RenewalDate == nil && s.Status == "Active" {
-		s.calculateNextRenewalDate()
-	}
-
-	// Auto-update renewal date if it has passed (Issue #29)
-	if s.RenewalDate != nil && s.Status == "Active" {
-		now := time.Now()
-		if s.RenewalDate.Before(now) || s.RenewalDate.Equal(now) {
-			// Renewal date has passed, calculate the next one
-			s.calculateNextRenewalDate()
-		}
-	}
-
-	return nil
-}
-
-// calculateNextRenewalDate calculates the next renewal date based on schedule and version.
+// CalculateNextRenewalDate calculates the next renewal date based on schedule and version.
 //
 // Version Selection Logic:
 // - V1 (default): Original calculation logic for backward compatibility
@@ -187,7 +127,7 @@ func (s *Subscription) BeforeUpdate(tx *gorm.DB) error {
 //   - Uses Carbon's AddMonthsNoOverflow/AddYearsNoOverflow for better handling
 //   - Example: Jan 31 + 1 month = Feb 28 (preserves month-end semantics)
 //   - Recommended for new subscriptions and can be migrated via migrate-dates command
-func (s *Subscription) calculateNextRenewalDate() {
+func (s *Subscription) CalculateNextRenewalDate() {
 	// Use versioned calculation approach
 	switch s.DateCalculationVersion {
 	case 2:

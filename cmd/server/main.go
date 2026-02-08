@@ -68,7 +68,8 @@ func main() {
 	apiKeyService := service.NewAPIKeyService(settingsRepo)
 	notifConfigService := service.NewNotificationConfigService(settingsService, settingsRepo)
 	calendarService := service.NewCalendarService(settingsService, settingsRepo)
-	subscriptionService := service.NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
+	renewalService := service.NewRenewalService()
+	subscriptionService := service.NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 	emailService := service.NewEmailService(preferencesService, notifConfigService, i18nService)
 	shoutrrrService := service.NewShoutrrrService(preferencesService, notifConfigService, i18nService)
 

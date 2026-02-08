@@ -41,7 +41,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders(t *testing.T) {
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	preferencesService := NewPreferencesService(settingsService)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
+	renewalService := NewRenewalService()
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 
 	now := time.Now()
 
@@ -289,7 +290,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DaysCalculation(t 
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	preferencesService := NewPreferencesService(settingsService)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
+	renewalService := NewRenewalService()
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 
 	now := time.Now()
 
@@ -327,7 +329,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_BoundaryCases(t *t
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	preferencesService := NewPreferencesService(settingsService)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
+	renewalService := NewRenewalService()
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 
 	now := time.Now()
 
@@ -406,7 +409,8 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DuplicatePreventio
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	preferencesService := NewPreferencesService(settingsService)
-	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService)
+	renewalService := NewRenewalService()
+	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 
 	now := time.Now()
 	renewalDate := now.AddDate(0, 0, 5)

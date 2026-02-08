@@ -47,7 +47,7 @@ func (dmsc *DateMigrationSafetyCheck) MigrateSubscriptionToV2(subscriptionID uin
 
 	// Calculate with V2
 	sub.DateCalculationVersion = 2
-	sub.calculateNextRenewalDate()
+	sub.CalculateNextRenewalDate()
 
 	// Create audit log entry
 	auditLog := DateMigrationLog{
@@ -78,13 +78,13 @@ func (dmsc *DateMigrationSafetyCheck) CompareCalculationVersions(subscriptionID 
 	// Calculate V1
 	subV1 := sub
 	subV1.DateCalculationVersion = 1
-	subV1.calculateNextRenewalDate()
+	subV1.CalculateNextRenewalDate()
 	V1Date = subV1.RenewalDate
 
 	// Calculate V2
 	subV2 := sub
 	subV2.DateCalculationVersion = 2
-	subV2.calculateNextRenewalDate()
+	subV2.CalculateNextRenewalDate()
 	V2Date = subV2.RenewalDate
 
 	return V1Date, V2Date, nil
@@ -155,7 +155,7 @@ func (dmsc *DateMigrationSafetyCheck) RollbackSubscriptionToV1(subscriptionID ui
 	} else {
 		// Recalculate with V1 if no audit record
 		sub.DateCalculationVersion = 1
-		sub.calculateNextRenewalDate()
+		sub.CalculateNextRenewalDate()
 	}
 
 	sub.DateCalculationVersion = 1
