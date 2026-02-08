@@ -5,6 +5,15 @@ All notable changes to SubVault will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.1] - 2026-02-08
+
+### Fixed
+- Wallos import now supports real Wallos export format (nested objects for currency, category, payment method)
+- Wallos import handles both float and string price values
+
+### Added
+- Wallos import extracts start_date field
+
 ## [v1.3.0] - 2026-02-08
 
 ### Fixed
@@ -137,6 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Comprehensive performance optimization
 
+[v1.3.1]: https://github.com/YakGravity/subvault/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/YakGravity/subvault/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/YakGravity/subvault/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/YakGravity/subvault/compare/v1.0.0...v1.1.0

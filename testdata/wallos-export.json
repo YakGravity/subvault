@@ -1,0 +1,64 @@
+{
+  "subscriptions": [
+    {
+      "name": "Netflix",
+      "price": "15.99",
+      "currency_code": "USD",
+      "cycle": 3,
+      "frequency": 1,
+      "next_payment": "2026-03-15",
+      "category_name": "Entertainment",
+      "url": "https://netflix.com",
+      "notes": "Premium Plan 4K",
+      "payment_method_name": "Credit Card"
+    },
+    {
+      "name": "Spotify",
+      "price": "11.99",
+      "currency_code": "EUR",
+      "cycle": 3,
+      "frequency": 1,
+      "next_payment": "2026-03-20",
+      "category_name": "Entertainment",
+      "url": "https://spotify.com",
+      "notes": "Family Plan",
+      "payment_method_name": "PayPal"
+    },
+    {
+      "name": "GitHub Pro",
+      "price": "4.00",
+      "currency_code": "USD",
+      "cycle": 3,
+      "frequency": 1,
+      "next_payment": "2026-03-01",
+      "category_name": "Development",
+      "url": "https://github.com",
+      "notes": "",
+      "payment_method_name": "Credit Card"
+    },
+    {
+      "name": "Adobe Creative Cloud",
+      "price": "54.99",
+      "currency_code": "EUR",
+      "cycle": 3,
+      "frequency": 1,
+      "next_payment": "2026-04-10",
+      "category_name": "Software",
+      "url": "https://adobe.com",
+      "notes": "All Apps Plan",
+      "payment_method_name": "SEPA"
+    },
+    {
+      "name": "AWS",
+      "price": "120.00",
+      "currency_code": "USD",
+      "cycle": 3,
+      "frequency": 3,
+      "next_payment": "2026-06-01",
+      "category_name": "Hosting",
+      "url": "https://aws.amazon.com",
+      "notes": "Reserved Instance t3.medium",
+      "payment_method_name": "Credit Card"
+    }
+  ]
+}

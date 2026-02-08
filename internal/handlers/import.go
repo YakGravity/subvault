@@ -37,18 +37,65 @@ type ImportResult struct {
 	Details  []string `json:"details"`
 }
 
+// wallosNameObj represents a nested Wallos object with a name field
+type wallosNameObj struct {
+	Name string `json:"name"`
+}
+
 // wallosSubscription represents a subscription from Wallos export
+// Supports both real Wallos format (nested objects) and flat format
 type wallosSubscription struct {
-	Name              string `json:"name"`
-	Price             string `json:"price"`
-	CurrencyCode      string `json:"currency_code"`
-	Cycle             int    `json:"cycle"`
-	Frequency         int    `json:"frequency"`
-	NextPayment       string `json:"next_payment"`
-	CategoryName      string `json:"category_name"`
-	URL               string `json:"url"`
-	Notes             string `json:"notes"`
-	PaymentMethodName string `json:"payment_method_name"`
+	Name              string          `json:"name"`
+	Price             json.RawMessage `json:"price"`
+	CurrencyCode      string          `json:"currency_code"`
+	Currency          wallosNameObj   `json:"currency"`
+	Cycle             int             `json:"cycle"`
+	Frequency         int             `json:"frequency"`
+	NextPayment       string          `json:"next_payment"`
+	StartDate         string          `json:"start_date"`
+	CategoryName      string          `json:"category_name"`
+	Category          wallosNameObj   `json:"category"`
+	URL               string          `json:"url"`
+	Notes             string          `json:"notes"`
+	PaymentMethodName string          `json:"payment_method_name"`
+	PaymentMethod     wallosNameObj   `json:"payment_method"`
+}
+
+// GetPrice returns the price as a string, handling both float and string JSON values
+func (ws *wallosSubscription) GetPrice() string {
+	if ws.Price == nil {
+		return "0"
+	}
+	s := strings.TrimSpace(string(ws.Price))
+	// Remove quotes if it's a JSON string
+	if len(s) >= 2 && s[0] == '"' && s[len(s)-1] == '"' {
+		return s[1 : len(s)-1]
+	}
+	return s
+}
+
+// GetCurrencyCode returns the currency code from either flat or nested format
+func (ws *wallosSubscription) GetCurrencyCode() string {
+	if ws.CurrencyCode != "" {
+		return ws.CurrencyCode
+	}
+	return ws.Currency.Name
+}
+
+// GetCategoryName returns the category name from either flat or nested format
+func (ws *wallosSubscription) GetCategoryName() string {
+	if ws.CategoryName != "" {
+		return ws.CategoryName
+	}
+	return ws.Category.Name
+}
+
+// GetPaymentMethodName returns the payment method from either flat or nested format
+func (ws *wallosSubscription) GetPaymentMethodName() string {
+	if ws.PaymentMethodName != "" {
+		return ws.PaymentMethodName
+	}
+	return ws.PaymentMethod.Name
 }
 
 type wallosExport struct {
@@ -140,8 +187,10 @@ func (h *ImportHandler) importWallos(data []byte) ImportResult {
 	existing, _ := h.subscriptionService.GetAll()
 
 	for _, ws := range export.Subscriptions {
+		priceStr := ws.GetPrice()
+
 		// Duplicate check
-		if h.isDuplicate(existing, ws.Name, ws.Price) {
+		if h.isDuplicate(existing, ws.Name, priceStr) {
 			result.Skipped++
 			result.Details = append(result.Details, fmt.Sprintf("Skipped (duplicate): %s", ws.Name))
 			continue
@@ -149,17 +198,17 @@ func (h *ImportHandler) importWallos(data []byte) ImportResult {
 
 		sub := models.Subscription{
 			Name:                   ws.Name,
-			OriginalCurrency:       ws.CurrencyCode,
+			OriginalCurrency:       ws.GetCurrencyCode(),
 			Status:                 "Active",
 			URL:                    ws.URL,
 			Notes:                  ws.Notes,
-			PaymentMethod:          ws.PaymentMethodName,
+			PaymentMethod:          ws.GetPaymentMethodName(),
 			DateCalculationVersion: 2,
 		}
 
 		// Parse price
 		var price float64
-		fmt.Sscanf(ws.Price, "%f", &price)
+		fmt.Sscanf(priceStr, "%f", &price)
 		sub.Cost = price
 
 		// Map cycle to schedule
@@ -187,9 +236,17 @@ func (h *ImportHandler) importWallos(data []byte) ImportResult {
 			}
 		}
 
+		// Parse start_date if available
+		if ws.StartDate != "" {
+			if t, err := time.Parse("2006-01-02", ws.StartDate); err == nil {
+				sub.StartDate = &t
+			}
+		}
+
 		// Map category
-		if ws.CategoryName != "" {
-			cat := h.getOrCreateCategory(ws.CategoryName)
+		catName := ws.GetCategoryName()
+		if catName != "" {
+			cat := h.getOrCreateCategory(catName)
 			if cat != nil {
 				sub.CategoryID = cat.ID
 			}
