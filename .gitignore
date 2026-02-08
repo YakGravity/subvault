@@ -7,13 +7,10 @@
 subvault
 main
 
-# Beads (keep issues.jsonl and interactions.jsonl for syncing)
-.beads/beads.db
-.beads/config.yaml
-.beads/metadata.json
-.beads/README.md
-.beads/.gitignore
-.beads/export-state/
+# Tool configurations (local only)
+.beads/
+.claude/
+.serena/
 
 # Test binary, built with `go test -c`
 *.test
