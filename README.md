@@ -7,6 +7,8 @@
 
 A self-hosted subscription management application built with Go and HTMX. Track recurring expenses, visualize spending analytics, and get renewal reminders — all on your own server.
 
+> **[Deutsche Version](README.de.md)**
+
 ## Screenshots
 
 <details open>
@@ -44,7 +46,7 @@ A self-hosted subscription management application built with Go and HTMX. Track 
 - **Calendar View** — Visual renewal calendar with iCal export (RFC 7986 colors)
 - **Analytics** — Spending trends by category, monthly projections, savings tracking
 - **Notifications** — Email (SMTP) and push notifications via [Shoutrrr](https://containrrr.dev/shoutrrr/)
-- **Multi-Currency** — 30+ currencies with automatic ECB exchange rates
+- **Multi-Currency** — 30+ currencies with automatic exchange rates from the [European Central Bank](https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml) (daily XML feed, EUR-based cross-rates, cached locally with offline fallback)
 - **12 Themes** — 6 color palettes with light/dark mode, accent colors, collapsible sidebar
 - **Data Export** — CSV, JSON, iCal, and encrypted backup format
 - **REST API** — Full CRUD API with key-based authentication
