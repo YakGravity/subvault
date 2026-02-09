@@ -29,12 +29,13 @@ func (h *SettingsHandler) UpdateLanguage(c *gin.Context) {
 
 	err := h.preferences.SetLanguage(lang)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		slog.Error("failed to set language", "error", err)
+		c.String(http.StatusBadRequest, "Invalid language")
 		return
 	}
 
 	c.Header("HX-Refresh", "true")
-	c.JSON(http.StatusOK, gin.H{"language": lang})
+	c.Status(http.StatusNoContent)
 }
 
 // GenerateCalendarToken creates a new calendar feed token

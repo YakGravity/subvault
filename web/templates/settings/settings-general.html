@@ -44,7 +44,7 @@
             <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_language"}}</h3>
             <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_language_desc"}}</p>
             <select id="language-select" name="language" class="form-input"
-                    onchange="htmx.ajax('POST', '/api/settings/language', {values: {language: this.value}, target: 'body'})"
+                    onchange="htmx.ajax('POST', '/api/settings/language', {values: {language: this.value}})"
                     style="max-width:320px;">
                 {{range .Languages}}
                 <option value="{{.Code}}" {{if eq .Code $.Language}}selected{{end}}>{{.Name}}</option>

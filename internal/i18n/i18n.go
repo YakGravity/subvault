@@ -77,12 +77,14 @@ func NewI18nService(localeDir string) *I18nService {
 					continue
 				}
 				langSet[code] = true
-				if selfName := readLangSelfFile(fullPath, code); selfName != "" {
+				if selfName := readLangSelfFile(fullPath, code); selfName != code {
 					langNames[code] = selfName
 				}
 				slog.Info("loaded locale file", "path", fullPath, "lang", code)
 			}
-		} else if !os.IsNotExist(err) {
+		} else if os.IsNotExist(err) {
+			slog.Info("locale directory not found, using built-in locales only", "dir", localeDir)
+		} else {
 			slog.Warn("failed to read locale directory", "dir", localeDir, "error", err)
 		}
 	}
