@@ -5,6 +5,29 @@ All notable changes to SubVault will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.4.0] - 2026-02-09
+
+### Added
+- Dynamic locale loading via `LOCALE_DIR` environment variable
+- Custom languages supported by placing `active.XX.json` files in locale directory
+- Native language display names via `lang_self` JSON key
+- `LanguageProvider` interface for decoupled language validation
+- Docker volume and environment variable for custom locales
+- Unraid template fields for custom locale configuration
+- Example French translation file (`docs/active.fr.json.example`)
+- Documentation for custom language setup
+
+### Changed
+- Language selector changed from hardcoded radio buttons to dynamic dropdown
+- Supported languages now derived dynamically from loaded locale files
+- Languages sorted alphabetically in UI
+- i18n fallback: missing keys fall back to English instead of showing message ID
+
+### Fixed
+- UpdateLanguage handler returns 204 No Content instead of JSON (HTMX compatibility)
+- lang_self override only applies when filesystem file provides a real value
+- Log info when configured LOCALE_DIR directory does not exist
+
 ## [v1.3.2] - 2026-02-09
 
 ### Fixed
