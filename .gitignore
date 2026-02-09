@@ -76,3 +76,6 @@ subvault
 
 # Release notes (draft files, not committed)
 RELEASE_NOTES*.md
+
+# Unraid forum post drafts
+docs/unraid-forum-post.*
