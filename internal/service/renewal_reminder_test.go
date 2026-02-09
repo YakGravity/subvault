@@ -40,7 +40,7 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders(t *testing.T) {
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	currencyService := NewCurrencyService(exchangeRateRepo, settingsService)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 	renewalService := NewRenewalService()
 	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 
@@ -227,7 +227,7 @@ func TestEmailService_SendRenewalReminder_NoSMTP(t *testing.T) {
 	db := setupRenewalReminderTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
 	emailService := NewEmailService(preferencesService, notifConfigService)
 
@@ -249,7 +249,7 @@ func TestEmailService_SendRenewalReminder_WithSMTPConfig(t *testing.T) {
 	db := setupRenewalReminderTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
 	emailService := NewEmailService(preferencesService, notifConfigService)
 
@@ -289,7 +289,7 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DaysCalculation(t 
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	currencyService := NewCurrencyService(exchangeRateRepo, settingsService)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 	renewalService := NewRenewalService()
 	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 
@@ -328,7 +328,7 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_BoundaryCases(t *t
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	currencyService := NewCurrencyService(exchangeRateRepo, settingsService)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 	renewalService := NewRenewalService()
 	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 
@@ -408,7 +408,7 @@ func TestSubscriptionService_GetSubscriptionsNeedingReminders_DuplicatePreventio
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
 	currencyService := NewCurrencyService(exchangeRateRepo, settingsService)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 	renewalService := NewRenewalService()
 	subscriptionService := NewSubscriptionService(subscriptionRepo, categoryService, currencyService, preferencesService, settingsService, renewalService)
 

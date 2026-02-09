@@ -43,7 +43,7 @@ func setupShoutrrrServices(t *testing.T) (*SettingsService, *PreferencesService,
 	db := setupShoutrrrTestDB(t)
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 	notifConfigService := NewNotificationConfigService(settingsService, settingsRepo)
 	shoutrrrService := NewShoutrrrService(preferencesService, notifConfigService)
 	return settingsService, preferencesService, notifConfigService, shoutrrrService

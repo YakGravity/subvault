@@ -57,13 +57,13 @@ func main() {
 	exchangeRateRepo := repository.NewExchangeRateRepository(db)
 
 	// Initialize i18n service
-	i18nService := i18n.NewI18nService()
+	i18nService := i18n.NewI18nService(cfg.LocaleDir)
 
 	// Initialize services
 	categoryService := service.NewCategoryService(categoryRepo)
 	settingsService := service.NewSettingsService(settingsRepo)
 	currencyService := service.NewCurrencyService(exchangeRateRepo, settingsService)
-	preferencesService := service.NewPreferencesService(settingsService)
+	preferencesService := service.NewPreferencesService(settingsService, i18nService)
 	authService := service.NewAuthService(settingsService, settingsRepo)
 	apiKeyService := service.NewAPIKeyService(settingsRepo)
 	notifConfigService := service.NewNotificationConfigService(settingsService, settingsRepo)
@@ -105,7 +105,7 @@ func main() {
 
 	// Initialize handlers
 	subscriptionHandler := handlers.NewSubscriptionHandler(subscriptionService, preferencesService, settingsService, calendarService, currencyService, emailService, shoutrrrService, logoService)
-	settingsHandler := handlers.NewSettingsHandler(settingsService, authService, apiKeyService, preferencesService, notifConfigService, calendarService, currencyService)
+	settingsHandler := handlers.NewSettingsHandler(settingsService, authService, apiKeyService, preferencesService, notifConfigService, calendarService, currencyService, i18nService)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 	authHandler := handlers.NewAuthHandler(authService, sessionService, emailService, notifConfigService)
 	importHandler := handlers.NewImportHandler(subscriptionService, categoryService, settingsService)

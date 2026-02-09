@@ -51,7 +51,7 @@ A self-hosted subscription management application built with Go and HTMX. Track 
 - **12 Themes** — 6 color palettes with light/dark mode, accent colors, collapsible sidebar
 - **Data Export** — CSV, JSON, iCal, and encrypted backup format
 - **REST API** — Full CRUD API with key-based authentication
-- **i18n** — English and German
+- **i18n** — English and German built-in, custom languages via locale files
 - **Mobile Responsive** — Optimized for all screen sizes
 - **Self-Hosted** — SQLite database, no external dependencies
 
@@ -95,7 +95,7 @@ Open [http://localhost:8080](http://localhost:8080) — no initial setup require
 | Database | SQLite (via GORM) |
 | Frontend | HTMX, custom CSS design system |
 | Auth | Session-based + API keys, CSRF protection |
-| i18n | go-i18n (English, German) |
+| i18n | go-i18n (English, German + custom locales) |
 | Container | Multi-arch Docker (amd64, arm64) |
 
 ## Built with AI

@@ -7,16 +7,16 @@ import (
 )
 
 func TestNewI18nService(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	assert.NotNil(t, svc)
 	assert.NotNil(t, svc.bundle)
 	assert.Equal(t, "en", svc.defaultLang)
-	assert.Equal(t, []string{"en", "de"}, svc.supportedLangs)
+	assert.Equal(t, []string{"de", "en"}, svc.supportedLangs)
 }
 
 func TestI18nService_T_English(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	tests := []struct {
 		name      string
@@ -50,7 +50,7 @@ func TestI18nService_T_English(t *testing.T) {
 }
 
 func TestI18nService_T_German(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	// German localizer falls back to English since active.de.json may not exist.
 	// "Dashboard" is the same in both languages for nav_dashboard.
@@ -60,7 +60,7 @@ func TestI18nService_T_German(t *testing.T) {
 }
 
 func TestI18nService_T_FallbackToEnglish(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	tests := []struct {
 		name      string
@@ -98,7 +98,7 @@ func TestI18nService_T_FallbackToEnglish(t *testing.T) {
 }
 
 func TestI18nService_T_FallbackToMessageID(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	tests := []struct {
 		name      string
@@ -124,7 +124,7 @@ func TestI18nService_T_FallbackToMessageID(t *testing.T) {
 }
 
 func TestTranslationHelper_Tr(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	tests := []struct {
 		name      string
@@ -163,7 +163,7 @@ func TestTranslationHelper_Tr(t *testing.T) {
 }
 
 func TestTranslationHelper_TrCount(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	tests := []struct {
 		name      string
@@ -202,7 +202,7 @@ func TestTranslationHelper_TrCount(t *testing.T) {
 }
 
 func TestI18nService_TData(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	tests := []struct {
 		name      string
@@ -234,9 +234,9 @@ func TestI18nService_TData(t *testing.T) {
 }
 
 func TestI18nService_SupportedLanguages(t *testing.T) {
-	svc := NewI18nService()
+	svc := NewI18nService("")
 
 	langs := svc.SupportedLanguages()
-	assert.Equal(t, []string{"en", "de"}, langs)
+	assert.Equal(t, []string{"de", "en"}, langs)
 	assert.Len(t, langs, 2)
 }

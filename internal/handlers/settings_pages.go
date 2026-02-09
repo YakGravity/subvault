@@ -27,6 +27,7 @@ func (h *SettingsHandler) SettingsGeneral(c *gin.Context) {
 		"Title":      "Settings",
 		"Currency":   h.preferences.GetCurrency(),
 		"Language":   h.preferences.GetLanguage(),
+		"Languages":  h.i18nService.Languages(),
 		"DateFormat": displayFormat,
 		"RateStatus": rateStatus,
 	})

@@ -51,7 +51,7 @@ Eine selbst gehostete Abo-Verwaltung, gebaut mit Go und HTMX. Verfolge wiederkeh
 - **12 Themes** — 6 Farbpaletten mit Hell-/Dunkelmodus, Akzentfarben, einklappbare Seitenleiste
 - **Datenexport** — CSV, JSON, iCal und verschlüsseltes Backup-Format
 - **REST API** — Vollständige CRUD-API mit schlüsselbasierter Authentifizierung
-- **i18n** — Englisch und Deutsch
+- **i18n** — Englisch und Deutsch eingebaut, eigene Sprachen per Locale-Dateien
 - **Mobil optimiert** — Für alle Bildschirmgrößen angepasst
 - **Self-Hosted** — SQLite-Datenbank, keine externen Abhängigkeiten
 
@@ -95,7 +95,7 @@ docker compose up -d
 | Datenbank | SQLite (via GORM) |
 | Frontend | HTMX, eigenes CSS-Design-System |
 | Auth | Session-basiert + API-Keys, CSRF-Schutz |
-| i18n | go-i18n (Englisch, Deutsch) |
+| i18n | go-i18n (Englisch, Deutsch + eigene Locales) |
 | Container | Multi-Arch Docker (amd64, arm64) |
 
 ## Mit KI entwickelt

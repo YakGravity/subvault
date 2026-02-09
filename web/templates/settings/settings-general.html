@@ -43,22 +43,13 @@
         <div style="padding:20px;">
             <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_language"}}</h3>
             <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_language_desc"}}</p>
-            <div style="display:flex;gap:16px;">
-                <label style="display:flex;align-items:center;">
-                    <input type="radio" name="language" value="en"
-                           {{if eq .Language "en"}}checked{{end}}
-                           hx-post="/api/settings/language" hx-trigger="change" hx-vals='{"language": "en"}'
-                           style="margin-right:8px;accent-color:var(--accent);">
-                    <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "lang_en"}}</span>
-                </label>
-                <label style="display:flex;align-items:center;">
-                    <input type="radio" name="language" value="de"
-                           {{if eq .Language "de"}}checked{{end}}
-                           hx-post="/api/settings/language" hx-trigger="change" hx-vals='{"language": "de"}'
-                           style="margin-right:8px;accent-color:var(--accent);">
-                    <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "lang_de"}}</span>
-                </label>
-            </div>
+            <select id="language-select" name="language" class="form-input"
+                    onchange="htmx.ajax('POST', '/api/settings/language', {values: {language: this.value}})"
+                    style="max-width:320px;">
+                {{range .Languages}}
+                <option value="{{.Code}}" {{if eq .Code $.Language}}selected{{end}}>{{.Name}}</option>
+                {{end}}
+            </select>
         </div>
     </div>
 

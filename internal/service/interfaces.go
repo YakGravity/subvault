@@ -142,6 +142,12 @@ type RenewalServiceInterface interface {
 	RecalculateIfNeeded(existing, updated *models.Subscription)
 }
 
+// LanguageProvider defines a minimal interface for querying supported languages.
+// Implemented by i18n.I18nService to avoid a circular dependency.
+type LanguageProvider interface {
+	SupportedLanguages() []string
+}
+
 // Compile-time interface satisfaction checks.
 var _ SubscriptionServiceInterface = (*SubscriptionService)(nil)
 var _ SettingsServiceInterface = (*SettingsService)(nil)
