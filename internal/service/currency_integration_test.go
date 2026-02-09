@@ -176,7 +176,7 @@ func TestSettingsService_GetCurrencySymbol_BDT(t *testing.T) {
 
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 
 	err = preferencesService.SetCurrency("BDT")
 	assert.NoError(t, err)
@@ -201,7 +201,7 @@ func TestSettingsService_SetCurrency_Validation(t *testing.T) {
 
 	settingsRepo := repository.NewSettingsRepository(db)
 	settingsService := NewSettingsService(settingsRepo)
-	preferencesService := NewPreferencesService(settingsService)
+	preferencesService := NewPreferencesService(settingsService, defaultLangProvider())
 
 	tests := []struct {
 		name           string

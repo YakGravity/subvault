@@ -78,6 +78,26 @@ Features:
     Mask="false">/mnt/user/appdata/subvault</Config>
 
   <Config
+    Name="Custom Locales"
+    Target="/app/locales"
+    Default="/mnt/user/appdata/subvault/locales"
+    Description="Optional: Directory for custom locale files (active.XX.json). Place translation files here to add new languages without rebuilding."
+    Type="Path"
+    Display="advanced"
+    Required="false"
+    Mask="false">/mnt/user/appdata/subvault/locales</Config>
+
+  <Config
+    Name="LOCALE_DIR"
+    Target="LOCALE_DIR"
+    Default="/app/locales"
+    Description="Path to custom locale files inside the container"
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">/app/locales</Config>
+
+  <Config
     Name="GIN_MODE"
     Target="GIN_MODE"
     Default="release"

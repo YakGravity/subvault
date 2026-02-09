@@ -5,11 +5,12 @@ import (
 )
 
 type PreferencesService struct {
-	settings *SettingsService
+	settings     *SettingsService
+	langProvider LanguageProvider
 }
 
-func NewPreferencesService(settings *SettingsService) *PreferencesService {
-	return &PreferencesService{settings: settings}
+func NewPreferencesService(settings *SettingsService, langProvider LanguageProvider) *PreferencesService {
+	return &PreferencesService{settings: settings, langProvider: langProvider}
 }
 
 // GetTheme retrieves the current theme setting
@@ -71,7 +72,7 @@ func (p *PreferencesService) GetCurrencySymbol() string {
 // SetLanguage saves the language preference
 func (p *PreferencesService) SetLanguage(lang string) error {
 	isValid := false
-	for _, l := range SupportedLanguages {
+	for _, l := range p.langProvider.SupportedLanguages() {
 		if lang == l {
 			isValid = true
 			break

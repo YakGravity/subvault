@@ -1,0 +1,45 @@
+{
+  "lang_self": "Fran\u00e7ais",
+
+  "nav_dashboard": {
+    "other": "Tableau de bord"
+  },
+  "nav_subscriptions": {
+    "other": "Abonnements"
+  },
+  "nav_calendar": {
+    "other": "Calendrier"
+  },
+  "nav_add": {
+    "other": "Ajouter"
+  },
+  "nav_settings": {
+    "other": "Param\u00e8tres"
+  },
+  "nav_system": {
+    "other": "SYST\u00c8ME"
+  },
+
+  "settings_language": {
+    "other": "Langue"
+  },
+  "settings_language_desc": {
+    "other": "Choisissez votre langue pr\u00e9f\u00e9r\u00e9e"
+  },
+
+  "btn_save": {
+    "other": "Enregistrer"
+  },
+  "btn_cancel": {
+    "other": "Annuler"
+  },
+  "btn_delete": {
+    "other": "Supprimer"
+  },
+  "btn_edit": {
+    "other": "Modifier"
+  },
+  "btn_add": {
+    "other": "Ajouter"
+  }
+}

@@ -247,5 +247,3 @@ func CurrencySymbolForCode(code string) string {
 	}
 }
 
-// SupportedLanguages defines the available UI languages
-var SupportedLanguages = []string{"en", "de"}

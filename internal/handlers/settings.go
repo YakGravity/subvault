@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"subvault/internal/i18n"
 	"subvault/internal/service"
 
 	"github.com/gin-gonic/gin"
@@ -14,9 +15,10 @@ type SettingsHandler struct {
 	notifConfig service.NotificationConfigServiceInterface
 	calendar    service.CalendarServiceInterface
 	currency    service.CurrencyServiceInterface
+	i18nService *i18n.I18nService
 }
 
-func NewSettingsHandler(settings service.SettingsServiceInterface, auth service.AuthServiceInterface, apiKey service.APIKeyServiceInterface, preferences service.PreferencesServiceInterface, notifConfig service.NotificationConfigServiceInterface, calendar service.CalendarServiceInterface, currency service.CurrencyServiceInterface) *SettingsHandler {
+func NewSettingsHandler(settings service.SettingsServiceInterface, auth service.AuthServiceInterface, apiKey service.APIKeyServiceInterface, preferences service.PreferencesServiceInterface, notifConfig service.NotificationConfigServiceInterface, calendar service.CalendarServiceInterface, currency service.CurrencyServiceInterface, i18nService *i18n.I18nService) *SettingsHandler {
 	return &SettingsHandler{
 		settings:    settings,
 		auth:        auth,
@@ -25,6 +27,7 @@ func NewSettingsHandler(settings service.SettingsServiceInterface, auth service.
 		notifConfig: notifConfig,
 		calendar:    calendar,
 		currency:    currency,
+		i18nService: i18nService,
 	}
 }
 

@@ -8,6 +8,7 @@ type Config struct {
 	DatabasePath string
 	Port         string
 	Environment  string
+	LocaleDir    string
 }
 
 func Load() *Config {
@@ -15,6 +16,7 @@ func Load() *Config {
 		DatabasePath: getEnv("DATABASE_PATH", "./data/subvault.db"),
 		Port:         getEnv("PORT", "8080"),
 		Environment:  getEnv("GIN_MODE", "debug"),
+		LocaleDir:    getEnv("LOCALE_DIR", ""),
 	}
 }
 
