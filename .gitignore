@@ -79,3 +79,8 @@ RELEASE_NOTES*.md
 
 # Unraid forum post drafts
 docs/unraid-forum-post.*
+
+# Private test data / real exports
+testdata/*real*
+testdata/*export*
+testdata/*private*
