@@ -239,6 +239,7 @@ func (h *SubscriptionHandler) GetSubscriptionForm(c *gin.Context) {
 		"Subscription":      subscription,
 		"IsEdit":            isEdit,
 		"CurrencySymbol":    h.preferences.GetCurrencySymbol(),
+		"PreferredCurrency": h.preferences.GetCurrency(),
 		"Categories":        categories,
 		"DefaultCategoryID": defaultCategoryID,
 	})

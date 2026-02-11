@@ -85,18 +85,18 @@
                 <label for="original_currency" class="form-label">{{.T.Tr "sub_form_currency"}} *</label>
                 <select id="original_currency" name="original_currency" required
                         class="form-input form-select">
-                    <option value="USD" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "USD"}}selected{{end}}{{else}}selected{{end}}>$ USD</option>
-                    <option value="EUR" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "EUR"}}selected{{end}}{{end}}>&#8364; EUR</option>
-                    <option value="GBP" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "GBP"}}selected{{end}}{{end}}>&#163; GBP</option>
-                    <option value="JPY" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "JPY"}}selected{{end}}{{end}}>&#165; JPY</option>
-                    <option value="RUB" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "RUB"}}selected{{end}}{{end}}>&#8381; RUB</option>
-                    <option value="SEK" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "SEK"}}selected{{end}}{{end}}>kr SEK</option>
-                    <option value="PLN" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "PLN"}}selected{{end}}{{end}}>z&#322; PLN</option>
-                    <option value="INR" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "INR"}}selected{{end}}{{end}}>&#8377; INR</option>
-                    <option value="CHF" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "CHF"}}selected{{end}}{{end}}>Fr. CHF</option>
-                    <option value="BRL" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "BRL"}}selected{{end}}{{end}}>R$ BRL</option>
-                    <option value="COP" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "COP"}}selected{{end}}{{end}}>$ COP</option>
-                    <option value="BDT" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "BDT"}}selected{{end}}{{end}}>&#2547; BDT</option>
+                    <option value="USD" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "USD"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "USD"}}selected{{end}}{{end}}>$ USD</option>
+                    <option value="EUR" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "EUR"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "EUR"}}selected{{end}}{{end}}>&#8364; EUR</option>
+                    <option value="GBP" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "GBP"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "GBP"}}selected{{end}}{{end}}>&#163; GBP</option>
+                    <option value="JPY" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "JPY"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "JPY"}}selected{{end}}{{end}}>&#165; JPY</option>
+                    <option value="RUB" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "RUB"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "RUB"}}selected{{end}}{{end}}>&#8381; RUB</option>
+                    <option value="SEK" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "SEK"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "SEK"}}selected{{end}}{{end}}>kr SEK</option>
+                    <option value="PLN" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "PLN"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "PLN"}}selected{{end}}{{end}}>z&#322; PLN</option>
+                    <option value="INR" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "INR"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "INR"}}selected{{end}}{{end}}>&#8377; INR</option>
+                    <option value="CHF" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "CHF"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "CHF"}}selected{{end}}{{end}}>Fr. CHF</option>
+                    <option value="BRL" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "BRL"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "BRL"}}selected{{end}}{{end}}>R$ BRL</option>
+                    <option value="COP" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "COP"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "COP"}}selected{{end}}{{end}}>$ COP</option>
+                    <option value="BDT" {{if .Subscription}}{{if eq .Subscription.OriginalCurrency "BDT"}}selected{{end}}{{else}}{{if eq .PreferredCurrency "BDT"}}selected{{end}}{{end}}>&#2547; BDT</option>
                 </select>
             </div>
 

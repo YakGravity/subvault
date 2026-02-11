@@ -144,6 +144,9 @@
   "settings_email_notifications": {
     "other": "E-Mail-Benachrichtigungen"
   },
+  "settings_email_notifications_desc": {
+    "other": "E-Mail-Benachrichtigungen bei Verlängerungen und Kündigungsfristen per SMTP versenden"
+  },
   "settings_smtp_config": {
     "other": "SMTP-Konfiguration"
   },
@@ -177,11 +180,17 @@
   "btn_save_smtp": {
     "other": "SMTP-Einstellungen speichern"
   },
+  "settings_cost_monitoring": {
+    "other": "Kostenüberwachung"
+  },
+  "settings_cost_monitoring_desc": {
+    "other": "Kostenüberwachung für teure Abos und monatliches Ausgabenlimit konfigurieren"
+  },
   "settings_high_cost_threshold": {
     "other": "Kostenschwelle"
   },
   "settings_high_cost_threshold_desc": {
-    "other": "Monatlicher Schwellenwert für Kostenwarnungen (in {{.Symbol}})"
+    "other": "Abos über diesem Betrag ({{.Symbol}}) werden im Dashboard als kostenintensiv markiert. Aktiviere die Kostenwarnung pro Abo, um benachrichtigt zu werden."
   },
   "settings_shoutrrr": {
     "other": "Push-Benachrichtigungen (Shoutrrr)"
@@ -1050,7 +1059,7 @@
     "other": "Monatsbudget"
   },
   "settings_monthly_budget_desc": {
-    "other": "Lege ein monatliches Ausgabenlimit fest. Auf 0 setzen zum Deaktivieren."
+    "other": "Dein monatliches Ausgabenlimit. Wird im Dashboard als Fortschrittsbalken angezeigt. Auf 0 setzen zum Deaktivieren."
   },
   "dashboard_budget": {
     "other": "Monatsbudget"
