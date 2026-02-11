@@ -866,6 +866,15 @@
   "sort_category": {
     "other": "Kategorie"
   },
+  "sort_schedule": {
+    "other": "Zyklus"
+  },
+  "search_placeholder": {
+    "other": "Abos durchsuchen..."
+  },
+  "search_no_results": {
+    "other": "Keine Abos gefunden."
+  },
   "sub_list_uncategorized": {
     "other": "Ohne Kategorie"
   },

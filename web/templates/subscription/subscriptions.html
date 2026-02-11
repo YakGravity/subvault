@@ -54,12 +54,17 @@
                 </button>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
+                <input type="text" class="form-input" id="sub-search"
+                       placeholder="{{.T.Tr "search_placeholder"}}"
+                       oninput="filterBySearch(this.value)"
+                       style="width:180px;padding:5px 10px;font-size:12px;">
                 <div class="sort-buttons" id="sort-buttons">
                     <button class="sort-btn active" data-sort="name" data-order="asc" onclick="toggleSort(this)">{{.T.Tr "sort_name"}} <span class="sort-arrow">↑</span></button>
                     <button class="sort-btn" data-sort="cost" data-order="desc" onclick="toggleSort(this)">{{.T.Tr "sort_cost"}}</button>
                     <button class="sort-btn" data-sort="date" data-order="asc" onclick="toggleSort(this)">{{.T.Tr "sort_date"}}</button>
                     <button class="sort-btn" data-sort="category" data-order="asc" onclick="toggleSort(this)">{{.T.Tr "sort_category"}}</button>
                     <button class="sort-btn" data-sort="status" data-order="asc" onclick="toggleSort(this)">{{.T.Tr "sort_status"}}</button>
+                    <button class="sort-btn" data-sort="schedule" data-order="asc" onclick="toggleSort(this)">{{.T.Tr "sort_schedule"}}</button>
                 </div>
                 <div class="view-toggle">
                     <button class="active" id="view-grid" onclick="setView('grid')" title="Grid">
@@ -77,7 +82,7 @@
         <!-- Grid View -->
         <div class="sub-grid" id="sub-grid">
             {{range .Subscriptions}}
-            <div class="sub-card" data-status="{{.Status}}" data-name="{{.Name}}" data-cost="{{if .ShowConversion}}{{printf "%.2f" .ConvertedCost}}{{else}}{{printf "%.2f" .Cost}}{{end}}" data-date="{{if .RenewalDate}}{{.RenewalDate.Format "2006-01-02"}}{{end}}" data-category="{{.Category.Name}}"{{if eq .Status "Cancelled"}} style="border-left: 3px solid var(--danger);cursor:pointer;"{{else}} style="cursor:pointer;"{{end}}
+            <div class="sub-card" data-status="{{.Status}}" data-name="{{.Name}}" data-cost="{{if .ShowConversion}}{{printf "%.2f" .ConvertedCost}}{{else}}{{printf "%.2f" .Cost}}{{end}}" data-date="{{if .RenewalDate}}{{.RenewalDate.Format "2006-01-02"}}{{end}}" data-category="{{.Category.Name}}" data-schedule="{{.Schedule}}"{{if eq .Status "Cancelled"}} style="border-left: 3px solid var(--danger);cursor:pointer;"{{else}} style="cursor:pointer;"{{end}}
                  onclick="htmx.ajax('GET', '/form/subscription/{{.ID}}', '#modal-content'); document.getElementById('modal').classList.add('active')">
                 <button class="sub-card-close"
                     onclick="event.stopPropagation(); if(confirm('{{$.T.Tr "confirm_delete_subscription"}}')) { fetch('/api/subscriptions/{{.ID}}', {method:'DELETE'}).then(function(){window.location.reload()}) }"
@@ -121,6 +126,7 @@
             </div>
             {{end}}
         </div>
+        <div id="no-results-grid" class="empty-row" style="display:none;padding:40px 20px;text-align:center;color:var(--text-muted);">{{.T.Tr "search_no_results"}}</div>
 
         <!-- Table View (hidden by default) -->
         <div class="sub-table-wrap" id="sub-table" style="display:none;">
@@ -130,7 +136,7 @@
                         <th class="sortable" data-sort="name" onclick="sortByColumn(this)">{{.T.Tr "sub_list_name"}} <span class="sort-arrow"></span></th>
                         <th class="sortable" data-sort="category" onclick="sortByColumn(this)">{{.T.Tr "sub_list_category"}} <span class="sort-arrow"></span></th>
                         <th class="sortable" data-sort="cost" style="text-align:right;" onclick="sortByColumn(this)">{{.T.Tr "sub_list_cost"}} <span class="sort-arrow"></span></th>
-                        <th>{{.T.Tr "sub_list_schedule"}}</th>
+                        <th class="sortable" data-sort="schedule" onclick="sortByColumn(this)">{{.T.Tr "sub_list_schedule"}} <span class="sort-arrow"></span></th>
                         <th class="sortable" data-sort="status" onclick="sortByColumn(this)">{{.T.Tr "sub_list_status"}} <span class="sort-arrow"></span></th>
                         <th class="sortable" data-sort="date" onclick="sortByColumn(this)">{{.T.Tr "sub_list_renewal"}} <span class="sort-arrow"></span></th>
                         <th></th>
@@ -138,7 +144,7 @@
                 </thead>
                 <tbody>
                     {{range .Subscriptions}}
-                    <tr data-status="{{.Status}}" data-name="{{.Name}}" data-cost="{{if .ShowConversion}}{{printf "%.2f" .ConvertedCost}}{{else}}{{printf "%.2f" .Cost}}{{end}}" data-date="{{if .RenewalDate}}{{.RenewalDate.Format "2006-01-02"}}{{end}}" data-category="{{.Category.Name}}"
+                    <tr data-status="{{.Status}}" data-name="{{.Name}}" data-cost="{{if .ShowConversion}}{{printf "%.2f" .ConvertedCost}}{{else}}{{printf "%.2f" .Cost}}{{end}}" data-date="{{if .RenewalDate}}{{.RenewalDate.Format "2006-01-02"}}{{end}}" data-category="{{.Category.Name}}" data-schedule="{{.Schedule}}"
                         style="cursor:pointer;"
                         onclick="htmx.ajax('GET', '/form/subscription/{{.ID}}', '#modal-content'); document.getElementById('modal').classList.add('active')">
                         <td>
@@ -174,6 +180,7 @@
                 </tbody>
             </table>
         </div>
+        <div id="no-results-table" class="empty-row" style="display:none;padding:40px 20px;text-align:center;color:var(--text-muted);">{{.T.Tr "search_no_results"}}</div>
         {{else}}
         <div class="empty-row" style="padding:60px 20px;">
             <svg style="width:48px;height:48px;color:var(--text-muted);margin:0 auto 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -214,11 +221,42 @@
             var activeStatuses = [];
             document.querySelectorAll('.filter-btn.active').forEach(function(b) { activeStatuses.push(b.dataset.status); });
             document.querySelectorAll('.sub-card').forEach(function(c) {
-                c.style.display = activeStatuses.indexOf(c.dataset.status) >= 0 ? '' : 'none';
+                c.dataset.statusHidden = activeStatuses.indexOf(c.dataset.status) < 0 ? '1' : '';
             });
             document.querySelectorAll('.sub-table tbody tr').forEach(function(r) {
-                r.style.display = activeStatuses.indexOf(r.dataset.status) >= 0 ? '' : 'none';
+                r.dataset.statusHidden = activeStatuses.indexOf(r.dataset.status) < 0 ? '1' : '';
             });
+            applyVisibility();
+        }
+
+        function filterBySearch(query) {
+            var q = (query || '').toLowerCase().trim();
+            document.querySelectorAll('.sub-card').forEach(function(c) {
+                c.dataset.searchHidden = (q && (c.dataset.name || '').toLowerCase().indexOf(q) < 0) ? '1' : '';
+            });
+            document.querySelectorAll('.sub-table tbody tr').forEach(function(r) {
+                r.dataset.searchHidden = (q && (r.dataset.name || '').toLowerCase().indexOf(q) < 0) ? '1' : '';
+            });
+            applyVisibility();
+        }
+
+        function applyVisibility() {
+            var gridVisible = 0, tableVisible = 0;
+            document.querySelectorAll('.sub-card').forEach(function(c) {
+                var hidden = c.dataset.statusHidden || c.dataset.searchHidden;
+                c.style.display = hidden ? 'none' : '';
+                if (!hidden) gridVisible++;
+            });
+            document.querySelectorAll('.sub-table tbody tr').forEach(function(r) {
+                var hidden = r.dataset.statusHidden || r.dataset.searchHidden;
+                r.style.display = hidden ? 'none' : '';
+                if (!hidden) tableVisible++;
+            });
+            var noGrid = document.getElementById('no-results-grid');
+            var noTable = document.getElementById('no-results-table');
+            var isGrid = document.getElementById('sub-grid') && document.getElementById('sub-grid').style.display !== 'none';
+            if (noGrid) noGrid.style.display = (isGrid && gridVisible === 0) ? '' : 'none';
+            if (noTable) noTable.style.display = (!isGrid && tableVisible === 0) ? '' : 'none';
         }
 
         // Sort buttons
@@ -265,6 +303,8 @@
             }
         }
 
+        var scheduleOrder = { 'daily': 1, 'weekly': 2, 'monthly': 3, 'quarterly': 4, 'annual': 5 };
+
         function sortContainer(container, selector, field, order) {
             if (!container) return;
             var items = Array.from(container.querySelectorAll(selector));
@@ -272,6 +312,7 @@
                 var va = (a.dataset[field] || '').toLowerCase();
                 var vb = (b.dataset[field] || '').toLowerCase();
                 if (field === 'cost') { va = parseFloat(va) || 0; vb = parseFloat(vb) || 0; }
+                else if (field === 'schedule') { va = scheduleOrder[va] || 99; vb = scheduleOrder[vb] || 99; }
                 if (va < vb) return order === 'asc' ? -1 : 1;
                 if (va > vb) return order === 'asc' ? 1 : -1;
                 return 0;

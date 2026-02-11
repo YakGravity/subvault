@@ -866,6 +866,15 @@
   "sort_category": {
     "other": "Category"
   },
+  "sort_schedule": {
+    "other": "Cycle"
+  },
+  "search_placeholder": {
+    "other": "Search subscriptions..."
+  },
+  "search_no_results": {
+    "other": "No subscriptions match your search."
+  },
   "sub_list_uncategorized": {
     "other": "Uncategorized"
   },
