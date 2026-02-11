@@ -5,6 +5,23 @@ All notable changes to SubVault will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.5.0] - 2026-02-12
+
+### Added
+- Sort by billing cycle (Daily < Weekly < Monthly < Quarterly < Annual) in subscription list
+- Live search field to filter subscriptions by name
+- "No results" placeholder when search/filter yields no matches
+- Schedule column sortable in table view
+- i18n keys: `sort_schedule`, `search_placeholder`, `search_no_results` (DE/EN)
+
+### Changed
+- Default currency now pre-selects preferred currency when adding new subscriptions (#25)
+- Notifications page UX improvements (#23)
+
+### Fixed
+- Favicon aligned with app branding (#27)
+- Status filter and search filter work independently via dual-attribute pattern
+
 ## [v1.4.0] - 2026-02-09
 
 ### Added
