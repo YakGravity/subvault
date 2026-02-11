@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{.CSRFToken}}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#c2410c">
+    <link rel="icon" type="image/svg+xml" href="/static/images/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/static/images/apple-touch-icon.png">
     <link rel="manifest" href="/manifest.json">
@@ -38,10 +39,50 @@
 
 <div style="display:flex;flex-direction:column;gap:32px;">
 
+    <!-- Push Notifications (Shoutrrr) — moved above SMTP -->
+    <div class="card">
+        <div style="padding:20px;">
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_shoutrrr"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_desc"}}</p>
+
+            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_config"}}</h4>
+            <form id="shoutrrr-form" hx-post="/api/settings/shoutrrr" hx-trigger="submit" hx-target="#shoutrrr-message" hx-swap="innerHTML">
+                <div style="margin-bottom:16px;">
+                    <label for="shoutrrr_urls" class="form-label">{{.T.Tr "shoutrrr_urls_label"}}</label>
+                    <textarea id="shoutrrr_urls" name="shoutrrr_urls" rows="4" placeholder="pushover://shoutrrr:token@userkey/&#10;telegram://token@telegram?channels=@channel&#10;discord://token@id"
+                              class="form-input" style="font-family:var(--mono);">{{if .ShoutrrrConfig}}{{range $i, $url := .ShoutrrrConfig.URLs}}{{if $i}}&#10;{{end}}{{$url}}{{end}}{{end}}</textarea>
+                    <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">{{.T.Tr "shoutrrr_urls_hint"}} <a href="https://containrrr.dev/shoutrrr/latest/services/overview/" target="_blank" style="color:var(--accent);text-decoration:underline;">containrrr.dev/shoutrrr</a></p>
+                </div>
+                <div style="margin-bottom:16px;">
+                    <div id="shoutrrr-message"></div>
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
+                    <button type="button"
+                            id="test-shoutrrr-btn"
+                            hx-post="/api/settings/shoutrrr/test"
+                            hx-include="#shoutrrr-form"
+                            hx-target="#shoutrrr-message"
+                            hx-indicator="#shoutrrr-spinner"
+                            class="btn btn-ghost" style="position:relative;justify-content:center;min-width:160px;">
+                        <svg id="shoutrrr-spinner" class="htmx-indicator" style="position:absolute;left:12px;width:16px;height:16px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        {{.T.Tr "btn_test_connection"}}
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        {{.T.Tr "btn_save_shoutrrr"}}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Email Notifications (SMTP) -->
     <div class="card">
         <div style="padding:20px;">
-            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_email_notifications"}}</h3>
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_email_notifications"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_email_notifications_desc"}}</p>
 
             <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_smtp_config"}}</h4>
             <form id="smtp-form" hx-post="/api/settings/smtp" hx-trigger="submit" hx-target="#smtp-message" hx-swap="innerHTML">
@@ -93,8 +134,8 @@
                             hx-include="#smtp-form"
                             hx-target="#smtp-message"
                             hx-indicator="#smtp-spinner"
-                            class="btn btn-ghost" style="display:inline-flex;align-items:center;">
-                        <svg id="smtp-spinner" class="htmx-indicator" style="width:16px;height:16px;margin-right:8px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            class="btn btn-ghost" style="position:relative;justify-content:center;min-width:160px;">
+                        <svg id="smtp-spinner" class="htmx-indicator" style="position:absolute;left:12px;width:16px;height:16px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
@@ -108,59 +149,17 @@
         </div>
     </div>
 
-    <!-- Shoutrrr Notifications -->
-    <div class="card">
-        <div style="padding:20px;">
-            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_shoutrrr"}}</h3>
-            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_desc"}}</p>
-
-            <h4 style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_shoutrrr_config"}}</h4>
-            <form id="shoutrrr-form" hx-post="/api/settings/shoutrrr" hx-trigger="submit" hx-target="#shoutrrr-message" hx-swap="innerHTML">
-                <div style="margin-bottom:16px;">
-                    <label for="shoutrrr_urls" class="form-label">{{.T.Tr "shoutrrr_urls_label"}}</label>
-                    <textarea id="shoutrrr_urls" name="shoutrrr_urls" rows="4" placeholder="pushover://shoutrrr:token@userkey/&#10;telegram://token@telegram?channels=@channel&#10;discord://token@id"
-                              class="form-input" style="font-family:var(--mono);">{{if .ShoutrrrConfig}}{{range $i, $url := .ShoutrrrConfig.URLs}}{{if $i}}&#10;{{end}}{{$url}}{{end}}{{end}}</textarea>
-                    <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">{{.T.Tr "shoutrrr_urls_hint"}} <a href="https://containrrr.dev/shoutrrr/latest/services/overview/" target="_blank" style="color:var(--accent);text-decoration:underline;">containrrr.dev/shoutrrr</a></p>
-                </div>
-                <div style="margin-bottom:16px;">
-                    <div id="shoutrrr-message"></div>
-                </div>
-                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:16px;">
-                    <button type="button"
-                            id="test-shoutrrr-btn"
-                            hx-post="/api/settings/shoutrrr/test"
-                            hx-include="#shoutrrr-form"
-                            hx-target="#shoutrrr-message"
-                            hx-indicator="#shoutrrr-spinner"
-                            class="btn btn-ghost" style="display:inline-flex;align-items:center;">
-                        <svg id="shoutrrr-spinner" class="htmx-indicator" style="width:16px;height:16px;margin-right:8px;animation:spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle style="opacity:.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path style="opacity:.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        {{.T.Tr "btn_test_connection"}}
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        {{.T.Tr "btn_save_shoutrrr"}}
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Notification Preferences -->
     <div class="card">
         <div style="padding:20px;">
-            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;">{{.T.Tr "settings_high_cost_threshold"}}</h3>
-
-            <div style="background:var(--info-light);border:1px solid var(--info);border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;">
-                <p style="font-size:13px;color:var(--info);">{{.T.Tr "settings_notifications_moved"}}</p>
-            </div>
+            <h3 style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">{{.T.Tr "settings_cost_monitoring"}}</h3>
+            <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">{{.T.Tr "settings_cost_monitoring_desc"}}</p>
 
             <div style="display:flex;flex-direction:column;gap:16px;">
                 <div style="display:flex;align-items:center;justify-content:space-between;">
                     <div>
                         <h4 style="font-size:13px;font-weight:600;color:var(--text);">{{.T.Tr "settings_high_cost_threshold"}}</h4>
-                        <p style="font-size:13px;color:var(--text-secondary);">{{.T.TrData "settings_high_cost_threshold_desc" (dict "Symbol" .CurrencySymbol)}}</p>
+                        <p style="font-size:12px;color:var(--text-muted);">{{.T.TrData "settings_high_cost_threshold_desc" (dict "Symbol" .CurrencySymbol)}}</p>
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;">
                         <span style="font-size:13px;color:var(--text-secondary);">{{.CurrencySymbol}}</span>
@@ -180,7 +179,7 @@
                 <!-- Monthly Budget -->
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;">
                     <div style="flex:1;">
-                        <span style="font-size:13px;font-weight:500;color:var(--text);">{{.T.Tr "settings_monthly_budget"}}</span>
+                        <h4 style="font-size:13px;font-weight:600;color:var(--text);">{{.T.Tr "settings_monthly_budget"}}</h4>
                         <p style="font-size:12px;color:var(--text-muted);">{{.T.Tr "settings_monthly_budget_desc"}}</p>
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;">

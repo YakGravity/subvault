@@ -144,6 +144,9 @@
   "settings_email_notifications": {
     "other": "Email Notifications"
   },
+  "settings_email_notifications_desc": {
+    "other": "Send email notifications for renewals and cancellation deadlines via SMTP"
+  },
   "settings_smtp_config": {
     "other": "SMTP Configuration"
   },
@@ -177,11 +180,17 @@
   "btn_save_smtp": {
     "other": "Save SMTP Settings"
   },
+  "settings_cost_monitoring": {
+    "other": "Cost Monitoring"
+  },
+  "settings_cost_monitoring_desc": {
+    "other": "Configure cost monitoring for expensive subscriptions and monthly spending limit"
+  },
   "settings_high_cost_threshold": {
     "other": "High Cost Threshold"
   },
   "settings_high_cost_threshold_desc": {
-    "other": "Monthly cost threshold for high cost alerts (in {{.Symbol}})"
+    "other": "Subscriptions above this amount ({{.Symbol}}) are flagged as high-cost on the dashboard. Enable the cost alert per subscription to get notified."
   },
   "settings_shoutrrr": {
     "other": "Push Notifications (Shoutrrr)"
@@ -1050,7 +1059,7 @@
     "other": "Monthly Budget"
   },
   "settings_monthly_budget_desc": {
-    "other": "Set a monthly spending limit. Set to 0 to disable."
+    "other": "Your monthly spending limit. Displayed as a progress bar on the dashboard. Set to 0 to disable."
   },
   "dashboard_budget": {
     "other": "Monthly Budget"
